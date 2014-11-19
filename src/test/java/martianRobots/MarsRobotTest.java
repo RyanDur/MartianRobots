@@ -2,6 +2,8 @@ package martianRobots;
 
 import martianRobots.exceptions.InvalidGridSizeException;
 import martianRobots.exceptions.InvalidMoveException;
+import martianRobots.factories.PositionFactory;
+import martianRobots.factories.PositionFactoryImpl;
 import martianRobots.lang.Constants;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,19 +23,11 @@ public class MarsRobotTest {
 
     @Before
     public void setup() throws InvalidGridSizeException {
-        marsRobot = new MarsRobotImpl();
+        PositionFactory positionFactory = new PositionFactoryImpl();
+        marsRobot = new MarsRobotImpl(positionFactory);
         int row = 5;
         int column = 3;
         marsRobot.setup(row, column);
-    }
-
-    @Test
-    public void shouldBeAbleToGetThePositionOfARobot() throws InvalidMoveException {
-        int row = 1;
-        int column = 1;
-        char orientation = Constants.EAST;
-        marsRobot.setPosition(row, column, orientation);
-        assertThat(marsRobot.getPosition(), is(equalTo(row + " " + column + " " + orientation)));
     }
 
     @Test
@@ -62,34 +56,6 @@ public class MarsRobotTest {
         exception.expect(InvalidMoveException.class);
         char orientation = Constants.EAST;
         marsRobot.setPosition(3, 4, orientation);
-    }
-
-    @Test
-    public void shouldBeAbleToOrientARobotNorth() throws InvalidMoveException {
-        char orientation = Constants.NORTH;
-        marsRobot.setPosition(1, 2, orientation);
-        assertThat(marsRobot.getPosition(), is(equalTo("1 2 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToOrientARobotEast() throws InvalidMoveException {
-        char orientation = Constants.EAST;
-        marsRobot.setPosition(1, 2, orientation);
-        assertThat(marsRobot.getPosition(), is(equalTo("1 2 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToOrientARobotSouth() throws InvalidMoveException {
-        char orientation = Constants.SOUTH;
-        marsRobot.setPosition(1, 2, orientation);
-        assertThat(marsRobot.getPosition(), is(equalTo("1 2 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToOrientARobotWest() throws InvalidMoveException {
-        char orientation = Constants.WEST;
-        marsRobot.setPosition(1, 2, orientation);
-        assertThat(marsRobot.getPosition(), is(equalTo("1 2 " + orientation)));
     }
 
     @Test
@@ -124,48 +90,9 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardEast() throws InvalidMoveException {
-        char orientation = Constants.EAST;
-        marsRobot.setPosition(1, 2, orientation);
-        marsRobot.move(String.valueOf(Constants.FORWARD));
-        assertThat(marsRobot.getPosition(), is(equalTo("2 2 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToMoveARobotForwardNorth() throws InvalidMoveException {
-        char orientation = Constants.NORTH;
-        marsRobot.setPosition(1, 2, orientation);
-        marsRobot.move(String.valueOf(Constants.FORWARD));
-        assertThat(marsRobot.getPosition(), is(equalTo("1 3 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToMoveARobotForwardSouth() throws InvalidMoveException {
-        char orientation = Constants.SOUTH;
-        marsRobot.setPosition(1, 2, orientation);
-        marsRobot.move(String.valueOf(Constants.FORWARD));
-        assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToMoveARobotForwardWest() throws InvalidMoveException {
-        char orientation = Constants.WEST;
-        marsRobot.setPosition(1, 2, orientation);
-        marsRobot.move(String.valueOf(Constants.FORWARD));
-        assertThat(marsRobot.getPosition(), is(equalTo("0 2 " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToTurnRight() throws InvalidMoveException {
-        marsRobot.setPosition(1, 2, Constants.SOUTH);
-        marsRobot.move(String.valueOf(Constants.RIGHT));
-        assertThat(marsRobot.getPosition(), is(equalTo("1 2 " + Constants.WEST)));
-    }
-
-    @Test
-    public void shouldBeAbleToTurnLeft() throws InvalidMoveException {
-        marsRobot.setPosition(1, 2, Constants.SOUTH);
-        marsRobot.move(String.valueOf(Constants.LEFT));
-        assertThat(marsRobot.getPosition(), is(equalTo("1 2 " + Constants.EAST)));
+    public void shouldIndicateWhenARobotIsLost() throws InvalidMoveException {
+        marsRobot.setPosition(1, 1, Constants.WEST);
+        marsRobot.move("LFFLLFF");
+        assertThat(marsRobot.getPosition(), is(equalTo("1 0 " + Constants.SOUTH + " " + Constants.LOST)));
     }
 }

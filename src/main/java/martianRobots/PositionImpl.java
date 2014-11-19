@@ -64,9 +64,9 @@ public class PositionImpl implements Position {
 
     @Override
     public int hashCode() {
-        int result = x;
-        result = 31 * result + y;
-        result = 31 * result + (int) orientation;
+        int result = getX();
+        result = 31 * result + getY();
+        result = 31 * result + (int) getOrientation();
         return result;
     }
 }

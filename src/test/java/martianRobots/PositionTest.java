@@ -12,11 +12,11 @@ public class PositionTest {
 
     @Test
     public void shouldBeAbleToDisplayThePosition() throws InvalidMoveException {
-        int row = 1;
-        int column = 1;
+        int x = 1;
+        int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(row, column, orientation);
-        assertThat(position.toString(), is(equalTo(row + " " + column + " " + orientation)));
+        Position position = new PositionImpl(x, y, orientation);
+        assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test

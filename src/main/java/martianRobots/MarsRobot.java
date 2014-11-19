@@ -5,7 +5,7 @@ import martianRobots.exceptions.InvalidMoveException;
 
 public interface MarsRobot {
 
-    void setPosition(int row, int column, char orientation) throws InvalidMoveException;
+    void setPosition(int x, int y, char orientation) throws InvalidMoveException;
 
     String getPosition();
 

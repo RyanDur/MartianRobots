@@ -4,7 +4,7 @@ import martianRobots.lang.Constants;
 
 public class InvalidMoveException extends Exception {
 
-    public InvalidMoveException(int row, int column, char orientation) {
-        super(row + " " + column + " " + orientation + " " + Constants.NOT_EXISTS);
+    public InvalidMoveException(int x, int y, char orientation) {
+        super(x + " " + y + " " + orientation + " " + Constants.NOT_EXISTS);
     }
 }

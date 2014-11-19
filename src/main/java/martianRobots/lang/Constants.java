@@ -15,4 +15,5 @@ public interface Constants {
     char RIGHT = 'R';
     char LEFT = 'L';
     List<Character> COMPASS = Arrays.asList(WEST, NORTH, EAST, SOUTH);
+    String LOST = "LOST";
 }

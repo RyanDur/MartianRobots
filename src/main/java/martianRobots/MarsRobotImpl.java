@@ -1,6 +1,9 @@
 package martianRobots;
 
 import martianRobots.exceptions.InvalidMoveException;
+import martianRobots.lang.Constants;
+
+import java.util.Arrays;
 
 public class MarsRobotImpl implements MarsRobot {
 
@@ -18,10 +21,14 @@ public class MarsRobotImpl implements MarsRobot {
 
     @Override
     public void setPosition(int row, int column, char orientation) throws InvalidMoveException {
-        if (outOfBounds(row, column)) throw new InvalidMoveException();
+        if (outOfBounds(row, column) || invalidOrientation(orientation)) throw new InvalidMoveException(row, column, orientation);
         this.row = row;
         this.column = column;
         this.orientation = orientation;
+    }
+
+    private boolean invalidOrientation(char orientation) {
+        return !Arrays.asList(Constants.EAST, Constants.NORTH, Constants.SOUTH, Constants.WEST).contains(orientation);
     }
 
     @Override

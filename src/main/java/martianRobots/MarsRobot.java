@@ -10,4 +10,6 @@ public interface MarsRobot {
     String getPosition();
 
     void setup(int row, int column) throws InvalidGridSizeException;
+
+    void move(String move);
 }

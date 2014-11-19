@@ -1,5 +1,6 @@
 package martianRobots;
 
+import martianRobots.exceptions.InvalidGridSizeException;
 import martianRobots.exceptions.InvalidMoveException;
 import martianRobots.lang.Constants;
 import org.junit.Before;
@@ -19,7 +20,7 @@ public class MarsRobotTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Before
-    public void setup() {
+    public void setup() throws InvalidGridSizeException {
         marsRobot = new MarsRobotImpl();
         int row = 5;
         int column = 3;
@@ -96,5 +97,29 @@ public class MarsRobotTest {
         exception.expect(InvalidMoveException.class);
         char orientation = 'R';
         marsRobot.setPosition(1, 2, orientation);
+    }
+
+    @Test
+    public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws InvalidGridSizeException {
+        exception.expect(InvalidGridSizeException.class);
+        marsRobot.setup(3, 51);
+    }
+
+    @Test
+    public void shouldNotBeAbleToSetupAGridToSmallOfAYCoordinate() throws InvalidGridSizeException {
+        exception.expect(InvalidGridSizeException.class);
+        marsRobot.setup(3, -1);
+    }
+
+    @Test
+    public void shouldNotBeAbleToSetupAGridToLargeOfAnXCoordinate() throws InvalidGridSizeException {
+        exception.expect(InvalidGridSizeException.class);
+        marsRobot.setup(67, 50);
+    }
+
+    @Test
+    public void shouldNotBeAbleToSetupAGridToSmallOfAnXCoordinate() throws InvalidGridSizeException {
+        exception.expect(InvalidGridSizeException.class);
+        marsRobot.setup(-3, 1);
     }
 }

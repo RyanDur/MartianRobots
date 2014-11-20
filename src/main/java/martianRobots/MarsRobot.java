@@ -1,6 +1,7 @@
 package martianRobots;
 
 import martianRobots.exceptions.InvalidGridSizeException;
+import martianRobots.exceptions.InvalidInstructions;
 import martianRobots.exceptions.InvalidMoveException;
 
 public interface MarsRobot {
@@ -11,5 +12,5 @@ public interface MarsRobot {
 
     void setup(int row, int column) throws InvalidGridSizeException;
 
-    void move(String move);
+    void move(String move) throws InvalidInstructions;
 }

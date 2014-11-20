@@ -1,6 +1,7 @@
 package martianRobots;
 
 import martianRobots.exceptions.InvalidGridSizeException;
+import martianRobots.exceptions.InvalidInstructions;
 import martianRobots.exceptions.InvalidMoveException;
 
 import java.util.Arrays;
@@ -24,20 +25,21 @@ public class MarsRobotImpl implements MarsRobot {
 
     @Override
     public void setup(int x, int y) throws InvalidGridSizeException {
-        if (invalidGridSize(x, y)) throw new InvalidGridSizeException(x, y);
+        if (invalid(x, y)) throw new InvalidGridSizeException(x, y);
         this.x = x;
         this.y = y;
     }
 
     @Override
-    public void move(String instructions) {
+    public void move(String instructions) throws InvalidInstructions {
+        if (invalid(instructions)) throw new InvalidInstructions(instructions);
         for (int i = 0; i < instructions.length() && !lost; i++)
             execute(instructions.charAt(i));
     }
 
     @Override
     public void setPosition(int x, int y, char orientation) throws InvalidMoveException {
-        if (outOfBounds(x, y) || invalidOrientation(orientation)) throw new InvalidMoveException(x, y, orientation);
+        if (outOfBounds(x, y) || invalid(orientation)) throw new InvalidMoveException(x, y, orientation);
         lost = false;
         this.orientation = orientation;
         position = Arrays.asList(x, y);
@@ -81,11 +83,15 @@ public class MarsRobotImpl implements MarsRobot {
         return x < 0 || x > this.x || y < 0 || y > this.y;
     }
 
-    private boolean invalidOrientation(char orientation) {
+    private boolean invalid(char orientation) {
         return !COMPASS.contains(orientation);
     }
 
-    private boolean invalidGridSize(int x, int y) {
+    private boolean invalid(int x, int y) {
         return x > MAX_SIZE || x < 0 || y > MAX_SIZE || y < 0;
+    }
+
+    private boolean invalid(String instructions) {
+        return instructions.chars().filter(c -> c != LEFT && c != RIGHT && c != FORWARD).count() > 0;
     }
 }

@@ -8,16 +8,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static martianRobots.lang.Constants.*;
 
 public class MarsRobotImpl implements MarsRobot {
-    private int x;
-    private int y;
     private boolean lost;
     private char orientation;
     private List<Integer> pos;
     private Set<List<Integer>> scents;
+    private BiPredicate<Integer, Integer> outOfBounds;
 
     public MarsRobotImpl() {
         scents = new HashSet<>();
@@ -25,21 +27,20 @@ public class MarsRobotImpl implements MarsRobot {
 
     @Override
     public void setup(int x, int y) throws InvalidGridSizeException {
-        if (invalid(x, y)) throw new InvalidGridSizeException(x, y);
-        this.x = x;
-        this.y = y;
+        if (invalidSize.test(x, y)) throw new InvalidGridSizeException(x, y);
+        setBoundary.accept(x, y);
     }
 
     @Override
     public void move(String instructions) throws InvalidInstructions {
-        if (invalid(instructions)) throw new InvalidInstructions(instructions);
-        for (int i = 0; i < instructions.length() && !lost; i++)
-            execute(instructions.charAt(i));
+        if (invalid.test(instructions)) throw new InvalidInstructions(instructions);
+        for (int i = 0; i < instructions.length() && !lost; i++) execute(instructions.charAt(i));
     }
 
     @Override
     public void setPosition(int x, int y, char orientation) throws InvalidMoveException {
-        if (outOfBounds(x, y) || invalid(orientation)) throw new InvalidMoveException(x, y, orientation);
+        if (outOfBounds.test(x, y) || invalidCompass.test(orientation))
+            throw new InvalidMoveException(x, y, orientation);
         lost = false;
         this.orientation = orientation;
         pos = Arrays.asList(x, y);
@@ -47,14 +48,15 @@ public class MarsRobotImpl implements MarsRobot {
 
     @Override
     public String getPosition() {
-        return pos.get(0) + " " + pos.get(1) + " " + orientation + (lost ? " " + LOST : "");
+        return Stream.of(pos.get(0), pos.get(1), orientation, lost ? LOST : "")
+                .map(word -> word.toString()).collect(Collectors.joining(" ")).trim();
     }
 
     private void execute(char direction) {
         if (direction == FORWARD) {
             List<Integer> newPos = moveForward(pos.get(0), pos.get(1), orientation);
             if (!scents.contains(newPos)) {
-                if (outOfBounds(newPos.get(0), newPos.get(1))) {
+                if (outOfBounds.test(newPos.get(0), newPos.get(1))) {
                     lost = true;
                     scents.add(newPos);
                 } else pos = newPos;
@@ -77,20 +79,15 @@ public class MarsRobotImpl implements MarsRobot {
         return Arrays.asList(x, y);
     }
 
-    private boolean outOfBounds(int x, int y) {
-        return x < 0 || x > this.x || y < 0 || y > this.y;
-    }
+    private BiFunction<Integer, Integer, BiPredicate<Integer, Integer>> setValidation = (maxX, maxY) ->
+            (x, y) -> x < 0 || x > maxX || y < 0 || y > maxY;
 
-    private boolean invalid(char orientation) {
-        return !COMPASS.contains(orientation);
-    }
+    private BiConsumer<Integer, Integer> setBoundary = (x, y) -> outOfBounds = setValidation.apply(x, y);
 
-    private boolean invalid(int x, int y) {
-        return x > MAX_SIZE || x < 0 || y > MAX_SIZE || y < 0;
-    }
+    private Predicate<Character> invalidCompass = orientation -> !COMPASS.contains(orientation);
 
-    private boolean invalid(String instructions) {
-        return instructions.length() >= MAX_INSTRUCTION_SIZE ||
-                instructions.chars().filter(c -> c != LEFT && c != RIGHT && c != FORWARD).count() > 0;
-    }
+    private BiPredicate<Integer, Integer> invalidSize = (x, y) -> setValidation.apply(MAX_SIZE, MAX_SIZE).test(x, y);
+
+    private Predicate<String> invalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE ||
+            instructions.chars().filter(c -> c != LEFT && c != RIGHT && c != FORWARD).count() > 0;
 }

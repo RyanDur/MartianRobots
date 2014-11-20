@@ -2,9 +2,10 @@ package martianRobots;
 
 import martianRobots.exceptions.InvalidGridSizeException;
 import martianRobots.exceptions.InvalidMoveException;
-import martianRobots.factories.PositionFactory;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static martianRobots.lang.Constants.*;
@@ -13,12 +14,11 @@ public class MarsRobotImpl implements MarsRobot {
     private int x;
     private int y;
     private boolean lost;
-    private Position position;
-    private Set<Position> scents;
-    private PositionFactory positionFactory;
+    private char orientation;
+    private List<Integer> position;
+    private Set<List<Integer>> scents;
 
-    public MarsRobotImpl(PositionFactory positionFactory) {
-        this.positionFactory = positionFactory;
+    public MarsRobotImpl() {
         scents = new HashSet<>();
     }
 
@@ -39,24 +39,42 @@ public class MarsRobotImpl implements MarsRobot {
     public void setPosition(int x, int y, char orientation) throws InvalidMoveException {
         if (outOfBounds(x, y) || invalidOrientation(orientation)) throw new InvalidMoveException(x, y, orientation);
         lost = false;
-        position = positionFactory.createPosition(x, y, orientation);
+        this.orientation = orientation;
+        position = Arrays.asList(x, y);
     }
 
     @Override
     public String getPosition() {
-        return position + (lost ? " " + LOST : "");
+        return position.get(0) + " " + position.get(1) + " " + orientation + (lost ? " " + LOST : "");
     }
 
     private void execute(char direction) {
         if (direction == FORWARD) {
-            Position newPosition = position.moveForward();
+            List<Integer> newPosition = moveForward();
             if (!scents.contains(newPosition)) {
-                if (outOfBounds(newPosition.getX(), newPosition.getY())) {
+                if (outOfBounds(newPosition.get(0), newPosition.get(1))) {
                     lost = true;
                     scents.add(newPosition);
                 } else position = newPosition;
             }
-        } else position = position.turn(direction);
+        } else orientation = turn(direction);
+    }
+
+    private char turn(char direction) {
+        int index = COMPASS.indexOf(orientation);
+        if (direction == RIGHT) index = index + 1 > COMPASS.size() - 1 ? 0 : index + 1;
+        else index = index - 1 < 0 ? COMPASS.size() - 1 : index - 1;
+        return COMPASS.get(index);
+    }
+
+    private List<Integer> moveForward() {
+        int x = position.get(0);
+        int y = position.get(1);
+        if (orientation == NORTH) y += 1;
+        else if (orientation == SOUTH) y -= 1;
+        else if (orientation == EAST) x += 1;
+        else x -= 1;
+        return Arrays.asList(x, y);
     }
 
     private boolean outOfBounds(int x, int y) {

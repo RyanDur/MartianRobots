@@ -17,4 +17,5 @@ public interface Constants {
     List<Character> COMPASS = Arrays.asList(WEST, NORTH, EAST, SOUTH);
     String LOST = "LOST";
     String INVALID_INSTRUCTIONS = "are invalid, please correct your input.";
+    int MAX_INSTRUCTION_SIZE = 100;
 }

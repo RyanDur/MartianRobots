@@ -94,6 +94,24 @@ public class MarsRobotTest {
     }
 
     @Test
+    public void shouldNotBeAbleToInputAHundredOrMoreInstructions() throws InvalidInstructions {
+        exception.expect(InvalidInstructions.class);
+        String instructions = new String(new char[100]).replace('\0', 'F');
+        marsRobot.move(instructions);
+    }
+
+    @Test
+    public void shouldBeAbleToInputJustUnderAHundred() throws InvalidInstructions, InvalidMoveException {
+        String instructions = new String(new char[99]).replace('\0', 'F');
+        int x = 1;
+        int y = 1;
+        char orientation = Constants.EAST;
+        marsRobot.setPosition(x, y, orientation);
+        marsRobot.move(instructions);
+        assertThat(marsRobot.getPosition(), is(equalTo(5 + " " + y + " " + orientation + " " + Constants.LOST)));
+    }
+
+    @Test
     public void shouldBeAbleToDisplayThePosition() throws InvalidMoveException {
         int x = 1;
         int y = 1;

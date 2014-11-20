@@ -16,7 +16,7 @@ public class MarsRobotImpl implements MarsRobot {
     private int y;
     private boolean lost;
     private char orientation;
-    private List<Integer> position;
+    private List<Integer> pos;
     private Set<List<Integer>> scents;
 
     public MarsRobotImpl() {
@@ -42,36 +42,34 @@ public class MarsRobotImpl implements MarsRobot {
         if (outOfBounds(x, y) || invalid(orientation)) throw new InvalidMoveException(x, y, orientation);
         lost = false;
         this.orientation = orientation;
-        position = Arrays.asList(x, y);
+        pos = Arrays.asList(x, y);
     }
 
     @Override
     public String getPosition() {
-        return position.get(0) + " " + position.get(1) + " " + orientation + (lost ? " " + LOST : "");
+        return pos.get(0) + " " + pos.get(1) + " " + orientation + (lost ? " " + LOST : "");
     }
 
     private void execute(char direction) {
         if (direction == FORWARD) {
-            List<Integer> newPosition = moveForward();
-            if (!scents.contains(newPosition)) {
-                if (outOfBounds(newPosition.get(0), newPosition.get(1))) {
+            List<Integer> newPos = moveForward(pos.get(0), pos.get(1), orientation);
+            if (!scents.contains(newPos)) {
+                if (outOfBounds(newPos.get(0), newPos.get(1))) {
                     lost = true;
-                    scents.add(newPosition);
-                } else position = newPosition;
+                    scents.add(newPos);
+                } else pos = newPos;
             }
-        } else orientation = turn(direction);
+        } else orientation = turn(direction, orientation);
     }
 
-    private char turn(char direction) {
+    private char turn(char direction, char orientation) {
         int index = COMPASS.indexOf(orientation);
-        if (direction == RIGHT) index = index + 1 > COMPASS.size() - 1 ? 0 : index + 1;
-        else index = index - 1 < 0 ? COMPASS.size() - 1 : index - 1;
-        return COMPASS.get(index);
+        return COMPASS.get(direction == RIGHT ?
+                index + 1 > COMPASS.size() - 1 ? 0 : index + 1 :
+                index - 1 < 0 ? COMPASS.size() - 1 : index - 1);
     }
 
-    private List<Integer> moveForward() {
-        int x = position.get(0);
-        int y = position.get(1);
+    private List<Integer> moveForward(int x, int y, char orientation) {
         if (orientation == NORTH) y += 1;
         else if (orientation == SOUTH) y -= 1;
         else if (orientation == EAST) x += 1;
@@ -92,6 +90,7 @@ public class MarsRobotImpl implements MarsRobot {
     }
 
     private boolean invalid(String instructions) {
-        return instructions.chars().filter(c -> c != LEFT && c != RIGHT && c != FORWARD).count() > 0;
+        return instructions.length() >= MAX_INSTRUCTION_SIZE ||
+                instructions.chars().filter(c -> c != LEFT && c != RIGHT && c != FORWARD).count() > 0;
     }
 }

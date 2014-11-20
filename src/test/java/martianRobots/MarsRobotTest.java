@@ -95,4 +95,27 @@ public class MarsRobotTest {
         marsRobot.move("LFFLLFF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 0 " + Constants.SOUTH + " " + Constants.LOST)));
     }
+
+    @Test
+    public void shouldBeAbleToEndUpInTheSamePlace() throws InvalidMoveException {
+        marsRobot.setPosition(1, 1, Constants.EAST);
+        marsRobot.move("RFRFRFRF");
+        assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + Constants.EAST)));
+    }
+
+    @Test
+    public void shouldBeAbleToFallOffTheGrid() throws InvalidMoveException {
+        marsRobot.setPosition(3, 2, Constants.NORTH);
+        marsRobot.move("FRRFLLFFRRFLL");
+        assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + Constants.NORTH + " " + Constants.LOST)));
+    }
+
+    @Test
+    public void shouldNotLetAnotherRobotFallOffTheGridAtAPointWhereAPastRobotFell() throws InvalidMoveException {
+        marsRobot.setPosition(3, 2, Constants.NORTH);
+        marsRobot.move("FRRFLLFFRRFLL");
+        marsRobot.setPosition(0, 3, Constants.WEST);
+        marsRobot.move("LLFFFLFLFL");
+        assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
+    }
 }

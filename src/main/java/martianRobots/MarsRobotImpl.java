@@ -4,6 +4,9 @@ import martianRobots.exceptions.InvalidGridSizeException;
 import martianRobots.exceptions.InvalidMoveException;
 import martianRobots.factories.PositionFactory;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static martianRobots.lang.Constants.*;
 
 public class MarsRobotImpl implements MarsRobot {
@@ -11,10 +14,12 @@ public class MarsRobotImpl implements MarsRobot {
     private int y;
     private boolean lost;
     private Position position;
+    private Set<Position> scents;
     private PositionFactory positionFactory;
 
     public MarsRobotImpl(PositionFactory positionFactory) {
         this.positionFactory = positionFactory;
+        scents = new HashSet<>();
     }
 
     @Override
@@ -43,12 +48,15 @@ public class MarsRobotImpl implements MarsRobot {
     }
 
     private void execute(char direction) {
-        if (direction == RIGHT || direction == LEFT) position = position.turn(direction);
-        else {
+        if (direction == FORWARD) {
             Position newPosition = position.moveForward();
-            if (outOfBounds(newPosition.getX(), newPosition.getY())) lost = true;
-            else position = newPosition;
-        }
+            if (!scents.contains(newPosition)) {
+                if (outOfBounds(newPosition.getX(), newPosition.getY())) {
+                    lost = true;
+                    scents.add(newPosition);
+                } else position = newPosition;
+            }
+        } else position = position.turn(direction);
     }
 
     private boolean outOfBounds(int x, int y) {

@@ -7,9 +7,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 public class MarsRobotTest {
 
@@ -21,68 +24,76 @@ public class MarsRobotTest {
     @Before
     public void setup() throws InvalidException {
         marsRobot = new MarsRobotImpl();
-        int row = 5;
-        int column = 3;
-        marsRobot.setup(row, column);
+        List<Integer> coordinates = Arrays.asList(5, 3);
+        marsRobot.setup(coordinates);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotLessThanTheRowOfTheGrid() throws InvalidException {
         exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
-        marsRobot.setPosition(-1, 2, orientation);
+        List<Integer> coordinates = Arrays.asList(-1, 2);
+        marsRobot.setPosition(coordinates, orientation);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws InvalidException {
         exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
-        marsRobot.setPosition(6, 2, orientation);
+        List<Integer> coordinates = Arrays.asList(6, 2);
+        marsRobot.setPosition(coordinates, orientation);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotLessThanTheColumnOfTheGrid() throws InvalidException {
         exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
-        marsRobot.setPosition(1, -2, orientation);
+        List<Integer> coordinates = Arrays.asList(1, -2);
+        marsRobot.setPosition(coordinates, orientation);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheColumnOfTheGrid() throws InvalidException {
         exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
-        marsRobot.setPosition(3, 4, orientation);
+        List<Integer> coordinates = Arrays.asList(3, 4);
+        marsRobot.setPosition(coordinates, orientation);
     }
 
     @Test
     public void shouldNotBeAbleToSetAnOrientationThatDoesNotExist() throws InvalidException {
         exception.expect(InvalidException.class);
         char orientation = 'R';
-        marsRobot.setPosition(1, 2, orientation);
+        List<Integer> coordinates = Arrays.asList(1, 2);
+        marsRobot.setPosition(coordinates, orientation);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws InvalidException {
         exception.expect(InvalidException.class);
-        marsRobot.setup(3, 51);
+        List<Integer> coordinates = Arrays.asList(3, 51);
+        marsRobot.setup(coordinates);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToSmallOfAYCoordinate() throws InvalidException {
         exception.expect(InvalidException.class);
-        marsRobot.setup(3, -1);
+        List<Integer> coordinates = Arrays.asList(3, -1);
+        marsRobot.setup(coordinates);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToLargeOfAnXCoordinate() throws InvalidException {
         exception.expect(InvalidException.class);
-        marsRobot.setup(67, 50);
+        List<Integer> coordinates = Arrays.asList(67, 50);
+        marsRobot.setup(coordinates);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToSmallOfAnXCoordinate() throws InvalidException {
         exception.expect(InvalidException.class);
-        marsRobot.setup(-3, 1);
+        List<Integer> coordinates = Arrays.asList(-3, 1);
+        marsRobot.setup(coordinates);
     }
 
     @Test
@@ -92,19 +103,20 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldNotBeAbleToInputAHundredOrMoreInstructions() throws InvalidException {
+    public void shouldNotBeAbleToInputMoreOrEqualToTheMaxInstructionSizeInstructions() throws InvalidException {
         exception.expect(InvalidException.class);
-        String instructions = new String(new char[100]).replace('\0', 'F');
+        String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE]).replace('\0', 'F');
         marsRobot.move(instructions);
     }
 
     @Test
-    public void shouldBeAbleToInputJustUnderAHundred() throws InvalidException {
-        String instructions = new String(new char[99]).replace('\0', 'F');
+    public void shouldBeAbleToInputJustUnderTheMaxInstructionSize() throws InvalidException {
+        String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE - 1]).replace('\0', 'F');
         int x = 1;
         int y = 1;
+        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
-        marsRobot.setPosition(x, y, orientation);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move(instructions);
         assertThat(marsRobot.getPosition(), is(equalTo(5 + " " + y + " " + orientation + " " + Constants.LOST)));
     }
@@ -113,8 +125,9 @@ public class MarsRobotTest {
     public void shouldBeAbleToDisplayThePosition() throws InvalidException {
         int x = 1;
         int y = 1;
+        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
-        marsRobot.setPosition(x, y, orientation);
+        marsRobot.setPosition(coordinates, orientation);
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -123,7 +136,8 @@ public class MarsRobotTest {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -132,7 +146,8 @@ public class MarsRobotTest {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -141,7 +156,8 @@ public class MarsRobotTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -150,7 +166,8 @@ public class MarsRobotTest {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -159,7 +176,8 @@ public class MarsRobotTest {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move("F");
         assertThat(marsRobot.getPosition(), is(equalTo(2 + " " + y + " " + orientation)));
     }
@@ -169,7 +187,8 @@ public class MarsRobotTest {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move("F");
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + 3 + " " + orientation)));
     }
@@ -179,7 +198,8 @@ public class MarsRobotTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move("F");
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + 1 + " " + orientation)));
     }
@@ -189,7 +209,8 @@ public class MarsRobotTest {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move("F");
         assertThat(marsRobot.getPosition(), is(equalTo(0 + " " + y + " " + orientation)));
     }
@@ -199,7 +220,8 @@ public class MarsRobotTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move("R");
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + Constants.WEST)));
     }
@@ -209,64 +231,75 @@ public class MarsRobotTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        marsRobot.setPosition(x, y, orientation);
+        List<Integer> coordinates = Arrays.asList(x, y);
+        marsRobot.setPosition(coordinates, orientation);
         marsRobot.move("L");
         assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + Constants.EAST)));
     }
 
     @Test
     public void shouldIndicateWhenARobotIsLost() throws InvalidException {
-        marsRobot.setPosition(1, 1, Constants.WEST);
+        List<Integer> coordinates = Arrays.asList(1, 1);
+        marsRobot.setPosition(coordinates, Constants.WEST);
         marsRobot.move("LFFLLFF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 0 " + Constants.SOUTH + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldBeAbleToEndUpInTheSamePlace() throws InvalidException {
-        marsRobot.setPosition(1, 1, Constants.EAST);
+        List<Integer> coordinates = Arrays.asList(1, 1);
+        marsRobot.setPosition(coordinates, Constants.EAST);
         marsRobot.move("RFRFRFRF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + Constants.EAST)));
     }
 
     @Test
     public void shouldBeAbleToFallOffTheGrid() throws InvalidException {
-        marsRobot.setPosition(3, 2, Constants.NORTH);
+        List<Integer> coordinates = Arrays.asList(3, 2);
+        marsRobot.setPosition(coordinates, Constants.NORTH);
         marsRobot.move("FRRFLLFFRRFLL");
         assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + Constants.NORTH + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldNotLetAnotherRobotFallOffTheGridAtAPointWhereAPastRobotFell() throws InvalidException {
-        marsRobot.setPosition(3, 2, Constants.NORTH);
+        List<Integer> coordinates = Arrays.asList(3, 2);
+        marsRobot.setPosition(coordinates, Constants.NORTH);
         marsRobot.move("FRRFLLFFRRFLL");
-        marsRobot.setPosition(0, 3, Constants.WEST);
+        List<Integer> coordinates1 = Arrays.asList(0, 3);
+        marsRobot.setPosition(coordinates1, Constants.WEST);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
     }
 
     @Test
     public void shouldBeAbleToFallOffTheEdgeIfResetTheGrid() throws InvalidException {
-        marsRobot.setPosition(3, 2, Constants.NORTH);
+        List<Integer> coordinates = Arrays.asList(3, 2);
+        marsRobot.setPosition(coordinates, Constants.NORTH);
         marsRobot.move("FRRFLLFFRRFLL");
-        marsRobot.setPosition(0, 3, Constants.WEST);
+        List<Integer> coordinates1 = Arrays.asList(0, 3);
+        marsRobot.setPosition(coordinates1, Constants.WEST);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
-        marsRobot.setup(5, 3);
-        marsRobot.setPosition(0, 3, Constants.WEST);
+        marsRobot.setup(Arrays.asList(5, 3));
+        marsRobot.setPosition(coordinates1, Constants.WEST);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + Constants.NORTH + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldSatisfyRequirementsOfChallenge() throws InvalidException {
-        marsRobot.setup(5,3);
-        marsRobot.setPosition(1, 1, Constants.EAST);
+        marsRobot.setup(Arrays.asList(5, 3));
+        List<Integer> coordinates = Arrays.asList(1, 1);
+        marsRobot.setPosition(coordinates, Constants.EAST);
         marsRobot.move("RFRFRFRF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + Constants.EAST)));
-        marsRobot.setPosition(3, 2, Constants.NORTH);
+        List<Integer> coordinates1 = Arrays.asList(3, 2);
+        marsRobot.setPosition(coordinates1, Constants.NORTH);
         marsRobot.move("FRRFLLFFRRFLL");
         assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + Constants.NORTH + " " + Constants.LOST)));
-        marsRobot.setPosition(0, 3, Constants.WEST);
+        List<Integer> coordinates2 = Arrays.asList(0, 3);
+        marsRobot.setPosition(coordinates2, Constants.WEST);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
     }

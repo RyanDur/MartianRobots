@@ -15,20 +15,20 @@ import static martianRobots.lang.Constants.*;
 public class MarsRobotImpl implements MarsRobot {
     private Supplier<String> lost;
     private Supplier<Character> orientation;
-    private Supplier<Integer> x;
-    private Supplier<Integer> y;
     private Set<List<Integer>> scents;
-    private BiPredicate<Integer, Integer> isOutOfBounds;
+    private Predicate<List<Integer>> isOutOfBounds;
+    private Supplier<List<Integer>> coordinates;
+
 
     @Override
-    public void setup(int x, int y) throws InvalidException {
-        if (isInvalidSize.test(x, y)) throw new InvalidException(x, y);
-        setBounds.accept(x, y);
+    public void setup(List<Integer> bounds) throws InvalidException {
+        if (isInvalidSize.test(bounds)) throw new InvalidException(bounds);
+        setBounds.accept(bounds);
         scents = new HashSet<>();
     }
 
     @Override
-    public void move(String instructions) throws InvalidException {
+    public void move(final String instructions) throws InvalidException {
         if (isInvalid.test(instructions)) throw new InvalidException(instructions);
         for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++) {
             char direction = instructions.charAt(i);
@@ -38,36 +38,41 @@ public class MarsRobotImpl implements MarsRobot {
     }
 
     @Override
-    public void setPosition(int x, int y, char orientation) throws InvalidException {
-        if (isOutOfBounds.test(x, y) || !COMPASS.contains(orientation)) throw new InvalidException(x, y, orientation);
+    public void setPosition(final List<Integer> location, final char orientation) throws InvalidException {
+        if (isOutOfBounds.test(location) || !COMPASS.contains(orientation))
+            throw new InvalidException(location, orientation);
         setLost.accept("");
-        setCoordinates(x, y);
+        setCoordinates.accept(location);
         setOrientation.accept(orientation);
     }
 
     @Override
     public String getPosition() {
-        return Stream.of(x, y, orientation, lost).map(word -> word.get().toString()).collect(joining(" ")).trim();
+        return Stream.of(coordinates, orientation, lost).map(word -> word.get().toString())
+                .collect(joining(" ")).replaceAll("\\[*\\]*\\,*", "").trim();
     }
 
     private void moveForward() {
-        List<Integer> newPos = getMove(x.get(), y.get());
+        List<Integer> newPos = getMove(coordinates);
         if (!scents.contains(newPos)) {
-            if (isOutOfBounds.test(newPos.get(0), newPos.get(1))) {
+            if (isOutOfBounds.test(newPos)) {
                 setLost.accept(LOST);
                 scents.add(newPos);
-            } else setCoordinates(newPos.get(0), newPos.get(1));
+            } else setCoordinates.accept(newPos);
         }
     }
 
-    private void turn(char direction) {
+    private void turn(final char direction) {
         int index = COMPASS.indexOf(orientation.get());
         setOrientation.accept(COMPASS.get(direction == RIGHT ?
                 index + 1 > COMPASS.size() - 1 ? 0 : index + 1 :
                 index - 1 < 0 ? COMPASS.size() - 1 : index - 1));
     }
 
-    private List<Integer> getMove(int x, int y) {
+    private List<Integer> getMove(Supplier<List<Integer>> coordinates) {
+        List<Integer> c = coordinates.get();
+        int x = c.get(0);
+        int y = c.get(1);
         if (orientation.get() == NORTH) y += 1;
         else if (orientation.get() == SOUTH) y -= 1;
         else if (orientation.get() == EAST) x += 1;
@@ -75,21 +80,18 @@ public class MarsRobotImpl implements MarsRobot {
         return Arrays.asList(x, y);
     }
 
-    private void setCoordinates(int x, int y) {
-        this.x = () -> x;
-        this.y = () -> y;
-    }
+    private Consumer<List<Integer>> setCoordinates = coordinates -> this.coordinates = () -> coordinates;
 
     private Consumer<String> setLost = message -> lost = () -> message;
 
     private Consumer<Character> setOrientation = orientation -> this.orientation = () -> orientation;
 
-    private BiFunction<Integer, Integer, BiPredicate<Integer, Integer>> getBoundary = (maxX, maxY) ->
-            (x, y) -> x < 0 || x > maxX || y < 0 || y > maxY;
+    private Function<List<Integer>, Predicate<List<Integer>>> getBoundary = maxLoc ->
+            loc -> loc.get(0) < 0 || loc.get(0) > maxLoc.get(0) || loc.get(1) < 0 || loc.get(1) > maxLoc.get(1);
 
-    private BiConsumer<Integer, Integer> setBounds = (x, y) -> isOutOfBounds = getBoundary.apply(x, y);
+    private Consumer<List<Integer>> setBounds = location -> isOutOfBounds = getBoundary.apply(location);
 
-    private BiPredicate<Integer, Integer> isInvalidSize = (x, y) -> getBoundary.apply(MAX_SIZE, MAX_SIZE).test(x, y);
+    private Predicate<List<Integer>> isInvalidSize = loc -> getBoundary.apply(MAX_BOUNDS).test(loc);
 
     private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE ||
             instructions.chars().filter(c -> c != LEFT && c != RIGHT && c != FORWARD).count() > 0;

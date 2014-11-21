@@ -2,13 +2,15 @@ package martianRobots;
 
 import martianRobots.exceptions.InvalidException;
 
+import java.util.List;
+
 public interface MarsRobot {
 
-    void setPosition(int x, int y, char orientation) throws InvalidException;
+    void setPosition(List<Integer> coordinates, char orientation) throws InvalidException;
 
     String getPosition();
 
-    void setup(int row, int column) throws InvalidException;
+    void setup(List<Integer> bounds) throws InvalidException;
 
     void move(String move) throws InvalidException;
 }

@@ -5,6 +5,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Arrays;
+
 public class InvalidExceptionTest {
 
     @Rule
@@ -15,7 +17,7 @@ public class InvalidExceptionTest {
         int row = 1;
         int column = 2;
         exception.expectMessage(row + " " + column + " " + Constants.INVALID_GRID_SIZE);
-        throw new InvalidException(row, column);
+        throw new InvalidException(Arrays.asList(row, column));
     }
 
     @Test
@@ -31,6 +33,6 @@ public class InvalidExceptionTest {
         int column = 2;
         char orientation = 'E';
         exception.expectMessage(row + " " + column + " " + orientation + " " + Constants.NOT_EXISTS);
-        throw new InvalidException(row, column, orientation);
+        throw new InvalidException(Arrays.asList(row, column), orientation);
     }
 }

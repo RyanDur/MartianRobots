@@ -20,14 +20,11 @@ public class MarsRobotImpl implements MarsRobot {
     private Set<List<Integer>> scents;
     private BiPredicate<Integer, Integer> isOutOfBounds;
 
-    public MarsRobotImpl() {
-        scents = new HashSet<>();
-    }
-
     @Override
     public void setup(int x, int y) throws InvalidException {
         if (isInvalidSize.test(x, y)) throw new InvalidException(x, y);
         setBounds.accept(x, y);
+        scents = new HashSet<>();
     }
 
     @Override
@@ -35,7 +32,7 @@ public class MarsRobotImpl implements MarsRobot {
         if (isInvalid.test(instructions)) throw new InvalidException(instructions);
         for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++) {
             char direction = instructions.charAt(i);
-            if (direction == FORWARD) move();
+            if (direction == FORWARD) moveForward();
             else turn(direction);
         }
     }
@@ -44,8 +41,8 @@ public class MarsRobotImpl implements MarsRobot {
     public void setPosition(int x, int y, char orientation) throws InvalidException {
         if (isOutOfBounds.test(x, y) || !COMPASS.contains(orientation)) throw new InvalidException(x, y, orientation);
         setLost.accept("");
-        setOrientation.accept(orientation);
         setCoordinates(x, y);
+        setOrientation.accept(orientation);
     }
 
     @Override
@@ -53,8 +50,8 @@ public class MarsRobotImpl implements MarsRobot {
         return Stream.of(x, y, orientation, lost).map(word -> word.get().toString()).collect(joining(" ")).trim();
     }
 
-    private void move() {
-        List<Integer> newPos = moveForward(x.get(), y.get());
+    private void moveForward() {
+        List<Integer> newPos = getMove(x.get(), y.get());
         if (!scents.contains(newPos)) {
             if (isOutOfBounds.test(newPos.get(0), newPos.get(1))) {
                 setLost.accept(LOST);
@@ -70,7 +67,7 @@ public class MarsRobotImpl implements MarsRobot {
                 index - 1 < 0 ? COMPASS.size() - 1 : index - 1));
     }
 
-    private List<Integer> moveForward(int x, int y) {
+    private List<Integer> getMove(int x, int y) {
         if (orientation.get() == NORTH) y += 1;
         else if (orientation.get() == SOUTH) y -= 1;
         else if (orientation.get() == EAST) x += 1;

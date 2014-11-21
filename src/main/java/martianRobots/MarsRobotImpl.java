@@ -33,8 +33,11 @@ public class MarsRobotImpl implements MarsRobot {
     @Override
     public void move(String instructions) throws InvalidException {
         if (isInvalid.test(instructions)) throw new InvalidException(instructions);
-        for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++)
-            execute(instructions.charAt(i));
+        for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++) {
+            char direction = instructions.charAt(i);
+            if (direction == FORWARD) move();
+            else turn(direction);
+        }
     }
 
     @Override
@@ -50,23 +53,21 @@ public class MarsRobotImpl implements MarsRobot {
         return Stream.of(x, y, orientation, lost).map(word -> word.get().toString()).collect(joining(" ")).trim();
     }
 
-    private void execute(char direction) {
-        if (direction == FORWARD) {
-            List<Integer> newPos = moveForward(x.get(), y.get());
-            if (!scents.contains(newPos)) {
-                if (isOutOfBounds.test(newPos.get(0), newPos.get(1))) {
-                    setLost.accept(LOST);
-                    scents.add(newPos);
-                } else setCoordinates(newPos.get(0), newPos.get(1));
-            }
-        } else setOrientation.accept(turn(direction));
+    private void move() {
+        List<Integer> newPos = moveForward(x.get(), y.get());
+        if (!scents.contains(newPos)) {
+            if (isOutOfBounds.test(newPos.get(0), newPos.get(1))) {
+                setLost.accept(LOST);
+                scents.add(newPos);
+            } else setCoordinates(newPos.get(0), newPos.get(1));
+        }
     }
 
-    private char turn(char direction) {
+    private void turn(char direction) {
         int index = COMPASS.indexOf(orientation.get());
-        return COMPASS.get(direction == RIGHT ?
+        setOrientation.accept(COMPASS.get(direction == RIGHT ?
                 index + 1 > COMPASS.size() - 1 ? 0 : index + 1 :
-                index - 1 < 0 ? COMPASS.size() - 1 : index - 1);
+                index - 1 < 0 ? COMPASS.size() - 1 : index - 1));
     }
 
     private List<Integer> moveForward(int x, int y) {

@@ -1,8 +1,6 @@
 package martianRobots;
 
-import martianRobots.exceptions.InvalidInstructions;
-import martianRobots.exceptions.InvalidGridSizeException;
-import martianRobots.exceptions.InvalidMoveException;
+import martianRobots.exceptions.InvalidException;
 import martianRobots.lang.Constants;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,7 +19,7 @@ public class MarsRobotTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Before
-    public void setup() throws InvalidGridSizeException {
+    public void setup() throws InvalidException {
         marsRobot = new MarsRobotImpl();
         int row = 5;
         int column = 3;
@@ -29,79 +27,79 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldNotBeAbleToSetARobotLessThanTheRowOfTheGrid() throws InvalidMoveException {
-        exception.expect(InvalidMoveException.class);
+    public void shouldNotBeAbleToSetARobotLessThanTheRowOfTheGrid() throws InvalidException {
+        exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
         marsRobot.setPosition(-1, 2, orientation);
     }
 
     @Test
-    public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws InvalidMoveException {
-        exception.expect(InvalidMoveException.class);
+    public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws InvalidException {
+        exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
         marsRobot.setPosition(6, 2, orientation);
     }
 
     @Test
-    public void shouldNotBeAbleToSetARobotLessThanTheColumnOfTheGrid() throws InvalidMoveException {
-        exception.expect(InvalidMoveException.class);
+    public void shouldNotBeAbleToSetARobotLessThanTheColumnOfTheGrid() throws InvalidException {
+        exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
         marsRobot.setPosition(1, -2, orientation);
     }
 
     @Test
-    public void shouldNotBeAbleToSetARobotGreaterThanTheColumnOfTheGrid() throws InvalidMoveException {
-        exception.expect(InvalidMoveException.class);
+    public void shouldNotBeAbleToSetARobotGreaterThanTheColumnOfTheGrid() throws InvalidException {
+        exception.expect(InvalidException.class);
         char orientation = Constants.EAST;
         marsRobot.setPosition(3, 4, orientation);
     }
 
     @Test
-    public void shouldNotBeAbleToSetAnOrientationThatDoesNotExist() throws InvalidMoveException {
-        exception.expect(InvalidMoveException.class);
+    public void shouldNotBeAbleToSetAnOrientationThatDoesNotExist() throws InvalidException {
+        exception.expect(InvalidException.class);
         char orientation = 'R';
         marsRobot.setPosition(1, 2, orientation);
     }
 
     @Test
-    public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws InvalidGridSizeException {
-        exception.expect(InvalidGridSizeException.class);
+    public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws InvalidException {
+        exception.expect(InvalidException.class);
         marsRobot.setup(3, 51);
     }
 
     @Test
-    public void shouldNotBeAbleToSetupAGridToSmallOfAYCoordinate() throws InvalidGridSizeException {
-        exception.expect(InvalidGridSizeException.class);
+    public void shouldNotBeAbleToSetupAGridToSmallOfAYCoordinate() throws InvalidException {
+        exception.expect(InvalidException.class);
         marsRobot.setup(3, -1);
     }
 
     @Test
-    public void shouldNotBeAbleToSetupAGridToLargeOfAnXCoordinate() throws InvalidGridSizeException {
-        exception.expect(InvalidGridSizeException.class);
+    public void shouldNotBeAbleToSetupAGridToLargeOfAnXCoordinate() throws InvalidException {
+        exception.expect(InvalidException.class);
         marsRobot.setup(67, 50);
     }
 
     @Test
-    public void shouldNotBeAbleToSetupAGridToSmallOfAnXCoordinate() throws InvalidGridSizeException {
-        exception.expect(InvalidGridSizeException.class);
+    public void shouldNotBeAbleToSetupAGridToSmallOfAnXCoordinate() throws InvalidException {
+        exception.expect(InvalidException.class);
         marsRobot.setup(-3, 1);
     }
 
     @Test
-    public void shouldNotBeAbleToInputInvalidInstructions() throws InvalidInstructions {
-        exception.expect(InvalidInstructions.class);
+    public void shouldNotBeAbleToInputInvalidException() throws InvalidException {
+        exception.expect(InvalidException.class);
         marsRobot.move("FFFLLLFlubber");
     }
 
     @Test
-    public void shouldNotBeAbleToInputAHundredOrMoreInstructions() throws InvalidInstructions {
-        exception.expect(InvalidInstructions.class);
+    public void shouldNotBeAbleToInputAHundredOrMoreInstructions() throws InvalidException {
+        exception.expect(InvalidException.class);
         String instructions = new String(new char[100]).replace('\0', 'F');
         marsRobot.move(instructions);
     }
 
     @Test
-    public void shouldBeAbleToInputJustUnderAHundred() throws InvalidInstructions, InvalidMoveException {
+    public void shouldBeAbleToInputJustUnderAHundred() throws InvalidException {
         String instructions = new String(new char[99]).replace('\0', 'F');
         int x = 1;
         int y = 1;
@@ -112,7 +110,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToDisplayThePosition() throws InvalidMoveException {
+    public void shouldBeAbleToDisplayThePosition() throws InvalidException {
         int x = 1;
         int y = 1;
         char orientation = Constants.EAST;
@@ -121,7 +119,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionNorth() throws InvalidMoveException {
+    public void shouldBeAbleToOrientAPositionNorth() throws InvalidException {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
@@ -130,7 +128,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionEast() throws InvalidMoveException {
+    public void shouldBeAbleToOrientAPositionEast() throws InvalidException {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
@@ -139,7 +137,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionSouth() throws InvalidMoveException {
+    public void shouldBeAbleToOrientAPositionSouth() throws InvalidException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -148,7 +146,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionWest() throws InvalidMoveException {
+    public void shouldBeAbleToOrientAPositionWest() throws InvalidException {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
@@ -157,7 +155,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveAPositionForwardEast() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToMoveAPositionForwardEast() throws InvalidException {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
@@ -167,7 +165,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardNorth() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToMoveARobotForwardNorth() throws InvalidException {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
@@ -177,7 +175,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardSouth() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToMoveARobotForwardSouth() throws InvalidException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -187,7 +185,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardWest() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToMoveARobotForwardWest() throws InvalidException {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
@@ -197,7 +195,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToTurnRight() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToTurnRight() throws InvalidException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -207,7 +205,7 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldBeAbleToTurnLeft() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToTurnLeft() throws InvalidException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -217,28 +215,28 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldIndicateWhenARobotIsLost() throws InvalidMoveException, InvalidInstructions {
+    public void shouldIndicateWhenARobotIsLost() throws InvalidException {
         marsRobot.setPosition(1, 1, Constants.WEST);
         marsRobot.move("LFFLLFF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 0 " + Constants.SOUTH + " " + Constants.LOST)));
     }
 
     @Test
-    public void shouldBeAbleToEndUpInTheSamePlace() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToEndUpInTheSamePlace() throws InvalidException {
         marsRobot.setPosition(1, 1, Constants.EAST);
         marsRobot.move("RFRFRFRF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + Constants.EAST)));
     }
 
     @Test
-    public void shouldBeAbleToFallOffTheGrid() throws InvalidMoveException, InvalidInstructions {
+    public void shouldBeAbleToFallOffTheGrid() throws InvalidException {
         marsRobot.setPosition(3, 2, Constants.NORTH);
         marsRobot.move("FRRFLLFFRRFLL");
         assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + Constants.NORTH + " " + Constants.LOST)));
     }
 
     @Test
-    public void shouldNotLetAnotherRobotFallOffTheGridAtAPointWhereAPastRobotFell() throws InvalidMoveException, InvalidInstructions {
+    public void shouldNotLetAnotherRobotFallOffTheGridAtAPointWhereAPastRobotFell() throws InvalidException {
         marsRobot.setPosition(3, 2, Constants.NORTH);
         marsRobot.move("FRRFLLFFRRFLL");
         marsRobot.setPosition(0, 3, Constants.WEST);

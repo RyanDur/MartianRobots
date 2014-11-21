@@ -1,16 +1,14 @@
 package martianRobots;
 
-import martianRobots.exceptions.InvalidGridSizeException;
-import martianRobots.exceptions.InvalidInstructions;
-import martianRobots.exceptions.InvalidMoveException;
+import martianRobots.exceptions.InvalidException;
 
 public interface MarsRobot {
 
-    void setPosition(int x, int y, char orientation) throws InvalidMoveException;
+    void setPosition(int x, int y, char orientation) throws InvalidException;
 
     String getPosition();
 
-    void setup(int row, int column) throws InvalidGridSizeException;
+    void setup(int row, int column) throws InvalidException;
 
-    void move(String move) throws InvalidInstructions;
+    void move(String move) throws InvalidException;
 }

@@ -1,8 +1,6 @@
 package martianRobots;
 
-import martianRobots.exceptions.InvalidGridSizeException;
-import martianRobots.exceptions.InvalidInstructions;
-import martianRobots.exceptions.InvalidMoveException;
+import martianRobots.exceptions.InvalidException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,23 +25,23 @@ public class MarsRobotImpl implements MarsRobot {
     }
 
     @Override
-    public void setup(int x, int y) throws InvalidGridSizeException {
-        if (isInvalidSize.test(x, y)) throw new InvalidGridSizeException(x, y);
+    public void setup(int x, int y) throws InvalidException {
+        if (isInvalidSize.test(x, y)) throw new InvalidException(x, y);
         setBounds.accept(x, y);
     }
 
     @Override
-    public void move(String instructions) throws InvalidInstructions {
-        if (isInvalid.test(instructions)) throw new InvalidInstructions(instructions);
+    public void move(String instructions) throws InvalidException {
+        if (isInvalid.test(instructions)) throw new InvalidException(instructions);
         for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++)
             execute(instructions.charAt(i));
     }
 
     @Override
-    public void setPosition(int x, int y, char direction) throws InvalidMoveException {
-        if (isOutOfBounds.test(x, y) || !COMPASS.contains(direction)) throw new InvalidMoveException(x, y, direction);
+    public void setPosition(int x, int y, char orientation) throws InvalidException {
+        if (isOutOfBounds.test(x, y) || !COMPASS.contains(orientation)) throw new InvalidException(x, y, orientation);
         setLost.accept("");
-        setOrientation.accept(direction);
+        setOrientation.accept(orientation);
         setCoordinates(x, y);
     }
 

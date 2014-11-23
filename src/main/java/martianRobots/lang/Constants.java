@@ -19,4 +19,5 @@ public interface Constants {
     final String INVALID_INSTRUCTIONS = "are invalid, please correct your input.";
     final List<Integer> MAX_BOUNDS = Arrays.asList(MAX_SIZE, MAX_SIZE);
     final int MAX_INSTRUCTION_SIZE = 100;
+    char DOT = '.';
 }

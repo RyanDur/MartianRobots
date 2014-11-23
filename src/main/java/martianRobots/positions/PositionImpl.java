@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
+import static martianRobots.lang.Constants.DOT;
 
 public class PositionImpl implements Position {
     private Supplier<Integer> x;
@@ -30,9 +31,9 @@ public class PositionImpl implements Position {
     }
 
     @Override
-    public Position move(char direction) {
+    public Position move(final char direction) {
         try {
-            return (Position) Class.forName("martianRobots.positions." + direction + "Position")
+            return (Position) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
                     .getDeclaredConstructor(List.class, char.class).newInstance(location.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                 InstantiationException | InvocationTargetException e) {
@@ -47,7 +48,7 @@ public class PositionImpl implements Position {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PositionImpl position = (PositionImpl) o;

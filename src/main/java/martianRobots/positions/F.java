@@ -5,9 +5,9 @@ import java.util.List;
 
 import static martianRobots.lang.Constants.*;
 
-class FPosition extends PositionImpl {
+class F extends PositionImpl {
 
-    public FPosition(List<Integer> location, char orientation) {
+    public F(List<Integer> location, char orientation) {
         super(location, orientation);
         setLocation.accept(getMove(location));
     }

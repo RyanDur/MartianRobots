@@ -1,6 +1,8 @@
 package martianRobots.exceptions;
 
 import martianRobots.lang.Constants;
+import martianRobots.positions.Position;
+import martianRobots.positions.PositionImpl;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,7 +34,8 @@ public class InvalidExceptionTest {
         int row = 1;
         int column = 2;
         char orientation = 'E';
+        Position position = new PositionImpl(Arrays.asList(row, column), orientation);
         exception.expectMessage(row + " " + column + " " + orientation + " " + Constants.NOT_EXISTS);
-        throw new InvalidException(Arrays.asList(row, column), orientation);
+        throw new InvalidException(position);
     }
 }

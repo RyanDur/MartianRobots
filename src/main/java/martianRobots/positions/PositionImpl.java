@@ -1,24 +1,22 @@
 package martianRobots.positions;
 
-import java.util.Arrays;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static martianRobots.lang.Constants.*;
 
 public class PositionImpl implements Position {
-    private final Supplier<Integer> x;
-    private final Supplier<Integer> y;
-    private final Supplier<List<Integer>> location;
-    private final Supplier<Character> orientation;
+    private Supplier<Integer> x;
+    private Supplier<Integer> y;
+    private Supplier<List<Integer>> location;
+    private Supplier<Character> orientation;
 
-    public PositionImpl(List<Integer> coordinates, char orientation) {
-        location = () -> coordinates;
-        x = ()-> coordinates.get(0);
-        y = ()-> coordinates.get(1);
-        this.orientation = () -> orientation;
+    public PositionImpl(List<Integer> location, char orientation) {
+        setOrientation.accept(orientation);
+        setLocation.accept(location);
     }
 
     @Override
@@ -33,8 +31,14 @@ public class PositionImpl implements Position {
 
     @Override
     public Position move(char direction) {
-        if (direction == FORWARD) return new PositionImpl(getMove(x.get(), y.get()), getOrientation());
-        else return new PositionImpl(getLocation(), turn(direction));
+        try {
+            return (Position) Class.forName("martianRobots.positions." + direction + "Position")
+                    .getDeclaredConstructor(List.class, char.class).newInstance(location.get(), orientation.get());
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+            return this;
+        }
     }
 
     @Override
@@ -57,17 +61,11 @@ public class PositionImpl implements Position {
         return result;
     }
 
-    private Character turn(final char direction) {
-        int index = COMPASS.indexOf(orientation.get());
-        return COMPASS.get(direction == RIGHT ?
-                index + 1 > COMPASS.size() - 1 ? 0 : index + 1 :
-                index - 1 < 0 ? COMPASS.size() - 1 : index - 1);
-    }
+    Consumer<List<Integer>> setLocation = loc -> {
+        x = () -> loc.get(0);
+        y = () -> loc.get(1);
+        location = () -> loc;
+    };
 
-    private List<Integer> getMove(int x, int y) {
-        if (orientation.get() == NORTH) return Arrays.asList(x, y + 1);
-        else if (orientation.get() == SOUTH) return Arrays.asList(x, y - 1);
-        else if (orientation.get() == EAST) return Arrays.asList(x + 1, y);
-        else return Arrays.asList(x - 1, y);
-    }
+    Consumer<Character> setOrientation = orientation -> this.orientation = () -> orientation;
 }

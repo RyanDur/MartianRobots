@@ -3,7 +3,9 @@ package martianRobots.positions;
 import java.util.Arrays;
 import java.util.List;
 
-import static martianRobots.lang.Constants.*;
+import static martianRobots.lang.Constants.EAST;
+import static martianRobots.lang.Constants.NORTH;
+import static martianRobots.lang.Constants.SOUTH;
 
 class F extends PositionImpl {
 

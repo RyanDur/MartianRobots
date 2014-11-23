@@ -1,6 +1,7 @@
 package martianRobots;
 
 import martianRobots.exceptions.InvalidException;
+import martianRobots.lang.Constants;
 import martianRobots.positions.Position;
 
 import java.util.HashSet;
@@ -13,7 +14,15 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static martianRobots.lang.Constants.*;
+import static martianRobots.lang.Constants.COMPASS;
+import static martianRobots.lang.Constants.EMPTY;
+import static martianRobots.lang.Constants.FORWARD;
+import static martianRobots.lang.Constants.LEFT;
+import static martianRobots.lang.Constants.LOST;
+import static martianRobots.lang.Constants.MAX_BOUNDS;
+import static martianRobots.lang.Constants.MAX_INSTRUCTION_SIZE;
+import static martianRobots.lang.Constants.RIGHT;
+
 
 public class MarsRobotImpl implements MarsRobot {
     private Supplier<Position> position;
@@ -23,7 +32,7 @@ public class MarsRobotImpl implements MarsRobot {
 
 
     @Override
-    public void setup(List<Integer> bounds) throws InvalidException {
+    public void setup(final List<Integer> bounds) throws InvalidException {
         if (isInvalidSize.test(bounds)) throw new InvalidException(bounds);
         setBounds.accept(bounds);
         scents = new HashSet<>();
@@ -44,16 +53,16 @@ public class MarsRobotImpl implements MarsRobot {
     }
 
     @Override
-    public void setPosition(Position position) throws InvalidException {
+    public void setPosition(final Position position) throws InvalidException {
         if (isOutOfBounds.test(position.getLocation()) || !COMPASS.contains(position.getOrientation()))
             throw new InvalidException(position);
-        setLost.accept("");
+        setLost.accept(EMPTY);
         setPosition.accept(position);
     }
 
     @Override
     public String getPosition() {
-        return Stream.of(position, lost).map(word -> word.get().toString()).collect(joining(" ")).trim();
+        return Stream.of(position, lost).map(word -> word.get().toString()).collect(joining(Constants.SPACE)).trim();
     }
 
     private Consumer<Position> setPosition = pos -> position = () -> pos;

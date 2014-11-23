@@ -20,4 +20,6 @@ public interface Constants {
     final List<Integer> MAX_BOUNDS = Arrays.asList(MAX_SIZE, MAX_SIZE);
     final int MAX_INSTRUCTION_SIZE = 100;
     char DOT = '.';
+    String SPACE = " ";
+    String EMPTY = "";
 }

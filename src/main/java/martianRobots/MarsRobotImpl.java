@@ -1,23 +1,25 @@
 package martianRobots;
 
 import martianRobots.exceptions.InvalidException;
+import martianRobots.positions.Position;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static martianRobots.lang.Constants.*;
 
 public class MarsRobotImpl implements MarsRobot {
+    private Supplier<Position> position;
     private Supplier<String> lost;
-    private Supplier<Character> orientation;
-    private Set<List<Integer>> scents;
+    private Set<Position> scents;
     private Predicate<List<Integer>> isOutOfBounds;
-    private Supplier<List<Integer>> coordinates;
 
 
     @Override
@@ -31,60 +33,32 @@ public class MarsRobotImpl implements MarsRobot {
     public void move(final String instructions) throws InvalidException {
         if (isInvalid.test(instructions)) throw new InvalidException(instructions);
         for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++) {
-            char direction = instructions.charAt(i);
-            if (direction == FORWARD) moveForward();
-            else turn(direction);
+            Position newPos = position.get().move(instructions.charAt(i));
+            if (!scents.contains(newPos)) {
+                if (isOutOfBounds.test(newPos.getLocation())) {
+                    setLost.accept(LOST);
+                    scents.add(newPos);
+                } else setPosition.accept(newPos);
+            }
         }
     }
 
     @Override
-    public void setPosition(final List<Integer> location, final char orientation) throws InvalidException {
-        if (isOutOfBounds.test(location) || !COMPASS.contains(orientation))
-            throw new InvalidException(location, orientation);
+    public void setPosition(Position position) throws InvalidException {
+        if (isOutOfBounds.test(position.getLocation()) || !COMPASS.contains(position.getOrientation()))
+            throw new InvalidException(position);
         setLost.accept("");
-        setCoordinates.accept(location);
-        setOrientation.accept(orientation);
+        setPosition.accept(position);
     }
 
     @Override
     public String getPosition() {
-        return Stream.of(coordinates, orientation, lost).map(word -> word.get().toString())
-                .collect(joining(" ")).replaceAll("\\[*\\]*\\,*", "").trim();
+        return Stream.of(position, lost).map(word -> word.get().toString()).collect(joining(" ")).trim();
     }
 
-    private void moveForward() {
-        List<Integer> newPos = getMove(coordinates);
-        if (!scents.contains(newPos)) {
-            if (isOutOfBounds.test(newPos)) {
-                setLost.accept(LOST);
-                scents.add(newPos);
-            } else setCoordinates.accept(newPos);
-        }
-    }
-
-    private void turn(final char direction) {
-        int index = COMPASS.indexOf(orientation.get());
-        setOrientation.accept(COMPASS.get(direction == RIGHT ?
-                index + 1 > COMPASS.size() - 1 ? 0 : index + 1 :
-                index - 1 < 0 ? COMPASS.size() - 1 : index - 1));
-    }
-
-    private List<Integer> getMove(Supplier<List<Integer>> coordinates) {
-        List<Integer> c = coordinates.get();
-        int x = c.get(0);
-        int y = c.get(1);
-        if (orientation.get() == NORTH) y += 1;
-        else if (orientation.get() == SOUTH) y -= 1;
-        else if (orientation.get() == EAST) x += 1;
-        else x -= 1;
-        return Arrays.asList(x, y);
-    }
-
-    private Consumer<List<Integer>> setCoordinates = coordinates -> this.coordinates = () -> coordinates;
+    private Consumer<Position> setPosition = pos -> position = () -> pos;
 
     private Consumer<String> setLost = message -> lost = () -> message;
-
-    private Consumer<Character> setOrientation = orientation -> this.orientation = () -> orientation;
 
     private Function<List<Integer>, Predicate<List<Integer>>> getBoundary = maxLoc ->
             loc -> loc.get(0) < 0 || loc.get(0) > maxLoc.get(0) || loc.get(1) < 0 || loc.get(1) > maxLoc.get(1);

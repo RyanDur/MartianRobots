@@ -34,8 +34,7 @@ public class MarsRobotTest {
     public void shouldNotBeAbleToSetARobotLessThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        List<Integer> coordinates = Arrays.asList(-1, 2);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(-1, 2, orientation);
         marsRobot.setPosition(position);
     }
 
@@ -44,9 +43,8 @@ public class MarsRobotTest {
         char orientation = Constants.EAST;
         int x = -1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
         exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
     }
 
@@ -54,8 +52,7 @@ public class MarsRobotTest {
     public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        List<Integer> coordinates = Arrays.asList(6, 2);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(6, 2, orientation);
         marsRobot.setPosition(position);
     }
 
@@ -63,8 +60,7 @@ public class MarsRobotTest {
     public void shouldNotBeAbleToSetARobotLessThanTheColumnOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        List<Integer> coordinates = Arrays.asList(1, -2);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(1, -2, orientation);
         marsRobot.setPosition(position);
     }
 
@@ -72,8 +68,7 @@ public class MarsRobotTest {
     public void shouldNotBeAbleToSetARobotGreaterThanTheColumnOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        List<Integer> coordinates = Arrays.asList(3, 4);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(3, 4, orientation);
         marsRobot.setPosition(position);
     }
 
@@ -81,8 +76,7 @@ public class MarsRobotTest {
     public void shouldNotBeAbleToSetAnOrientationThatDoesNotExist() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = 'R';
-        List<Integer> coordinates = Arrays.asList(1, 2);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(1, 2, orientation);
         marsRobot.setPosition(position);
     }
 
@@ -148,10 +142,9 @@ public class MarsRobotTest {
         exception.expect(ValidationException.class);
         int x = 1;
         int y = 1;
-        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(coordinates, orientation);
-        Position position1 = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
+        Position position1 = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.setPosition(position1);
     }
@@ -160,11 +153,10 @@ public class MarsRobotTest {
     public void shouldGiveHelpfulMessageIfSpotIsTakenOnPlacement() throws ValidationException {
         int x = 1;
         int y = 1;
-        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
         exception.expectMessage(x + " " + y + " " + orientation + Constants.IS_TAKEN);
-        Position position = new PositionImpl(coordinates, orientation);
-        Position position1 = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
+        Position position1 = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.setPosition(position1);
     }
@@ -173,10 +165,9 @@ public class MarsRobotTest {
     public void shouldIgnoreInstructionIfMoveSpaceIsOccupied() throws ValidationException {
         int x = 1;
         int y = 1;
-        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(coordinates, orientation);
-        Position position1 = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
+        Position position1 = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.move("F");
         marsRobot.setPosition(position1);
@@ -190,9 +181,8 @@ public class MarsRobotTest {
         String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE - 1]).replace('\0', 'F');
         int x = 1;
         int y = 1;
-        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.move(instructions);
         assertThat(marsRobot.getPosition(), is(equalTo(5 + " " + y + " " + orientation + " " + Constants.LOST)));
@@ -200,44 +190,50 @@ public class MarsRobotTest {
 
     @Test
     public void shouldIndicateWhenARobotIsLost() throws ValidationException {
-        List<Integer> coordinates = Arrays.asList(1, 1);
+        int x = 1;
+        int y = 1;
         char orientation = Constants.WEST;
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.move("LFFLLFF");
-        assertThat(marsRobot.getPosition(), is(equalTo("1 0 " + Constants.SOUTH + " " + Constants.LOST)));
+        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + 0 + " " + Constants.SOUTH + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldBeAbleToEndUpInTheSamePlace() throws ValidationException {
-        List<Integer> coordinates = Arrays.asList(1, 1);
+        int x = 1;
+        int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.move("RFRFRFRF");
-        assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + orientation)));
+        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test
     public void shouldBeAbleToFallOffTheGrid() throws ValidationException {
-        List<Integer> coordinates = Arrays.asList(3, 2);
+        int x = 3;
+        int y = 2;
         char orientation = Constants.NORTH;
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         marsRobot.setPosition(position);
         marsRobot.move("FRRFLLFFRRFLL");
-        assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + orientation + " " + Constants.LOST)));
+        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + 3 + " " + orientation  + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldNotLetAnotherRobotFallOffTheGridAtAPointWhereAPastRobotFell() throws ValidationException {
-        List<Integer> coordinates = Arrays.asList(3, 2);
+        int x = 3;
+        int y = 2;
         char north = Constants.NORTH;
-        Position position = new PositionImpl(coordinates, north);
+        Position position = new PositionImpl(x, y, north);
         marsRobot.setPosition(position);
         marsRobot.move("FRRFLLFFRRFLL");
-        List<Integer> coordinates1 = Arrays.asList(0, 3);
+
+        int x1 = 0;
+        int y1 = 3;
         char west = Constants.WEST;
-        Position position1 = new PositionImpl(coordinates1, west);
+        Position position1 = new PositionImpl(x1, y1, west);
         marsRobot.setPosition(position1);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
@@ -245,14 +241,17 @@ public class MarsRobotTest {
 
     @Test
     public void shouldBeAbleToFallOffTheEdgeIfResetTheGrid() throws ValidationException {
-        List<Integer> coordinates = Arrays.asList(3, 2);
+        int x = 3;
+        int y = 2;
         char north = Constants.NORTH;
-        Position position = new PositionImpl(coordinates, north);
+        Position position = new PositionImpl(x, y, north);
         marsRobot.setPosition(position);
         marsRobot.move("FRRFLLFFRRFLL");
-        List<Integer> coordinates1 = Arrays.asList(0, 3);
+
+        int x1 = 0;
+        int y1 = 3;
         char west = Constants.WEST;
-        Position position1 = new PositionImpl(coordinates1, west);
+        Position position1 = new PositionImpl(x1, y1, west);
         marsRobot.setPosition(position1);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
@@ -267,23 +266,26 @@ public class MarsRobotTest {
     public void shouldSatisfyRequirementsOfChallenge() throws ValidationException {
         marsRobot.setup(Arrays.asList(5, 3));
 
-        List<Integer> coordinates = Arrays.asList(1, 1);
+        int x = 1;
+        int y = 1;
         char east = Constants.EAST;
-        Position position = new PositionImpl(coordinates, east);
+        Position position = new PositionImpl(x, y, east);
         marsRobot.setPosition(position);
         marsRobot.move("RFRFRFRF");
         assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + east)));
 
-        List<Integer> coordinates1 = Arrays.asList(3, 2);
+        int x1 = 3;
+        int y1 = 2;
         char north = Constants.NORTH;
-        Position position1 = new PositionImpl(coordinates1, north);
+        Position position1 = new PositionImpl(x1, y1, north);
         marsRobot.setPosition(position1);
         marsRobot.move("FRRFLLFFRRFLL");
         assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
 
-        List<Integer> coordinates2 = Arrays.asList(0, 3);
+        int x2 = 0;
+        int y2 = 3;
         char west = Constants.WEST;
-        Position position2 = new PositionImpl(coordinates2, west);
+        Position position2 = new PositionImpl(x2, y2, west);
         marsRobot.setPosition(position2);
         marsRobot.move("LLFFFLFLFL");
         assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));

@@ -4,9 +4,6 @@ import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static martianRobots.lang.Constants.SPACE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -17,10 +14,9 @@ public class RTest {
     public void shouldTurnEastIfNorth() throws ValidationException {
         int x = 1;
         int y = 2;
-        List<Integer> list = Arrays.asList(x, y);
         char orientation = Constants.NORTH;
         char turn = Constants.EAST;
-        Position position = new R(list, orientation);
+        Position position = new R(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 
@@ -28,10 +24,9 @@ public class RTest {
     public void shouldTurnWestIfSouth() throws ValidationException {
         int x = 1;
         int y = 2;
-        List<Integer> list = Arrays.asList(x, y);
         char orientation = Constants.SOUTH;
         char turn = Constants.WEST;
-        Position position = new R(list, orientation);
+        Position position = new R(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 
@@ -39,10 +34,9 @@ public class RTest {
     public void shouldTurnNorthIfWest() throws ValidationException {
         int x = 1;
         int y = 2;
-        List<Integer> list = Arrays.asList(x, y);
         char orientation = Constants.WEST;
         char turn = Constants.NORTH;
-        Position position = new R(list, orientation);
+        Position position = new R(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 
@@ -50,10 +44,9 @@ public class RTest {
     public void shouldTurnSouthIfEast() throws ValidationException {
         int x = 1;
         int y = 2;
-        List<Integer> list = Arrays.asList(x, y);
         char orientation = Constants.EAST;
         char turn = Constants.SOUTH;
-        Position position = new R(list, orientation);
+        Position position = new R(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 }

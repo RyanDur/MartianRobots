@@ -3,9 +3,11 @@ package martianRobots.positions;
 import martianRobots.exceptions.ValidationException;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static martianRobots.lang.Constants.COMPASS;
@@ -15,17 +17,19 @@ import static martianRobots.lang.Constants.SPACE;
 
 public class PositionImpl implements Position {
     private Supplier<Character> orientation;
-    private Supplier<List<Integer>> location;
+    private Supplier<Integer> x;
+    private Supplier<Integer> y;
 
-    public PositionImpl(final List<Integer> location, final char orientation) throws ValidationException {
+    public PositionImpl(final int x, final int y, final char orientation) throws ValidationException {
         if (!COMPASS.contains(orientation)) throw new ValidationException(orientation + NOT_EXISTS);
+        setX.accept(x);
+        setY.accept(y);
         setOrientation.accept(orientation);
-        setLocation.accept(location);
     }
 
     @Override
     public List<Integer> getLocation() {
-        return location.get();
+        return Arrays.asList(x.get(), y.get());
     }
 
     @Override
@@ -37,7 +41,8 @@ public class PositionImpl implements Position {
     public Position move(final char direction) {
         try {
             return (Position) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
-                    .getDeclaredConstructor(List.class, char.class).newInstance(getLocation(), getOrientation());
+                    .getDeclaredConstructor(int.class, int.class, char.class)
+                    .newInstance(x.get(), y.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                 InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
@@ -47,8 +52,7 @@ public class PositionImpl implements Position {
 
     @Override
     public String toString() {
-        return location.get().stream().map(Object::toString).collect(joining(SPACE))
-                .concat(SPACE).concat(orientation.get().toString());
+        return Stream.of(x, y, orientation).map(word -> word.get().toString()).collect(joining(SPACE));
     }
 
     @Override
@@ -66,6 +70,7 @@ public class PositionImpl implements Position {
         return result;
     }
 
-    Consumer<List<Integer>> setLocation = loc -> location = () -> loc;
+    Consumer<Integer> setX = x -> this.x = () -> x;
+    Consumer<Integer> setY = y -> this.y = () -> y;
     Consumer<Character> setOrientation = orientation -> this.orientation = () -> orientation;
 }

@@ -6,9 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -22,17 +20,17 @@ public class PositionTest {
 
     @Test
     public void shouldBeAbleToCheckTheEqualityOfPositions() throws ValidationException {
-        Position position = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
-        Position position1 = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
+        Position position = new PositionImpl(1, 2, Constants.EAST);
+        Position position1 = new PositionImpl(1, 2, Constants.EAST);
         assertThat(position.equals(position1), is(true));
     }
 
     @Test
     public void shouldBeAbleToCheckTheContentsOfPositions() throws ValidationException {
         Set<Position> scents = new HashSet<>();
-        Position position = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
+        Position position = new PositionImpl(1, 2, Constants.EAST);
         scents.add(position);
-        Position position1 = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
+        Position position1 = new PositionImpl(1, 2, Constants.EAST);
         assertThat(scents.contains(position1), is(true));
     }
 
@@ -41,18 +39,16 @@ public class PositionTest {
         char orientation = 'R';
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
         exception.expectMessage(orientation + Constants.NOT_EXISTS);
-        new PositionImpl(coordinates, orientation);
+        new PositionImpl(x, y, orientation);
     }
 
     @Test
     public void shouldBeAbleToDisplayThePosition() throws ValidationException {
         int x = 1;
         int y = 1;
-        List<Integer> coordinates = Arrays.asList(x, y);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + " " + x + " " + orientation)));
     }
 
@@ -61,8 +57,7 @@ public class PositionTest {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -71,8 +66,7 @@ public class PositionTest {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -81,8 +75,7 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -91,8 +84,7 @@ public class PositionTest {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
@@ -101,8 +93,7 @@ public class PositionTest {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         position = position.move('F');
         assertThat(position.toString(), is(equalTo(2 + " " + y + " " + orientation)));
     }
@@ -112,8 +103,7 @@ public class PositionTest {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         position = position.move('F');
         assertThat(position.toString(), is(equalTo(x + " " + 3 + " " + orientation)));
     }
@@ -123,8 +113,7 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         position = position.move('F');
         assertThat(position.toString(), is(equalTo(x + " " + 1 + " " + orientation)));
     }
@@ -134,8 +123,7 @@ public class PositionTest {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         position = position.move('F');
         assertThat(position.toString(), is(equalTo(0 + " " + y + " " + orientation)));
     }
@@ -145,8 +133,7 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         position = position.move('R');
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + Constants.WEST)));
     }
@@ -156,8 +143,7 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        Position position = new PositionImpl(coordinates, orientation);
+        Position position = new PositionImpl(x, y, orientation);
         position = position.move('L');
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + Constants.EAST)));
     }

@@ -24,7 +24,6 @@ import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
 import static martianRobots.lang.Constants.VALID_INSTRUCTIONS;
 
-
 public class MarsRobotImpl implements MarsRobot {
     private Supplier<Position> position;
     private Supplier<String> lost;

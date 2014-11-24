@@ -19,6 +19,7 @@ import static martianRobots.lang.Constants.EMPTY;
 import static martianRobots.lang.Constants.FORWARD;
 import static martianRobots.lang.Constants.INVALID_GRID_SIZE;
 import static martianRobots.lang.Constants.INVALID_INSTRUCTIONS;
+import static martianRobots.lang.Constants.IS_TAKEN;
 import static martianRobots.lang.Constants.LEFT;
 import static martianRobots.lang.Constants.LOST;
 import static martianRobots.lang.Constants.MAX_BOUNDS;
@@ -31,35 +32,42 @@ public class MarsRobotImpl implements MarsRobot {
     private Supplier<Position> position;
     private Supplier<String> lost;
     private Set<Position> scents;
+    private Set<List<Integer>> occupied;
     private Predicate<List<Integer>> isOutOfBounds;
+    private boolean isLost;
 
     @Override
     public void setup(final List<Integer> bounds) throws ValidationException {
         if (isInvalidSize.test(bounds)) throw new ValidationException(bounds + INVALID_GRID_SIZE);
         setBounds.accept(bounds);
         scents = new HashSet<>();
+        occupied = new HashSet<>();
     }
 
     @Override
     public void move(final String instructions) throws ValidationException {
         if (isInvalid.test(instructions)) throw new ValidationException(instructions + INVALID_INSTRUCTIONS);
-        for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++) {
+        occupied.remove(position.get().getLocation());
+        for (int i = 0; i < instructions.length() && !isLost; i++) {
             Position newPos = position.get().move(instructions.charAt(i));
-            if (!scents.contains(newPos)) {
+            if (!scents.contains(newPos) && !occupied.contains(newPos.getLocation())) {
                 if (isOutOfBounds.test(newPos.getLocation())) {
                     setLost.accept(LOST);
                     scents.add(newPos);
                 } else setPosition.accept(newPos);
             }
         }
+        if (!isLost) occupied.add(position.get().getLocation());
     }
 
     @Override
     public void setPosition(final Position position) throws ValidationException {
         if (isOutOfBounds.test(position.getLocation()) || !COMPASS.contains(position.getOrientation()))
             throw new ValidationException(position + NOT_EXISTS);
+        if (occupied.contains(position.getLocation())) throw new ValidationException(position + IS_TAKEN);
         setLost.accept(EMPTY);
         setPosition.accept(position);
+        occupied.add(position.getLocation());
     }
 
     @Override
@@ -69,7 +77,10 @@ public class MarsRobotImpl implements MarsRobot {
 
     private Consumer<Position> setPosition = pos -> position = () -> pos;
 
-    private Consumer<String> setLost = message -> lost = () -> message;
+    private Consumer<String> setLost = message -> {
+        isLost = message.length() != 0;
+        lost = () -> message;
+    };
 
     private Function<List<Integer>, Predicate<List<Integer>>> getBoundary = maxLoc ->
             loc -> loc.get(0) < 0 || loc.get(0) > maxLoc.get(0) || loc.get(1) < 0 || loc.get(1) > maxLoc.get(1);

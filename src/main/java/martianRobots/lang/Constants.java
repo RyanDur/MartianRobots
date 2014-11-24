@@ -22,4 +22,5 @@ public interface Constants {
     char DOT = '.';
     String SPACE = " ";
     String EMPTY = "";
+    String IS_TAKEN = " is occupied, please choose another";
 }

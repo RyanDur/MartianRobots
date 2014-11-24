@@ -117,6 +117,48 @@ public class MarsRobotTest {
     }
 
     @Test
+    public void shouldNotBeAbleToSetARobotOnAnother() throws ValidationException {
+        exception.expect(ValidationException.class);
+        int x = 1;
+        int y = 1;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        char orientation = Constants.EAST;
+        Position position = new PositionImpl(coordinates, orientation);
+        Position position1 = new PositionImpl(coordinates, orientation);
+        marsRobot.setPosition(position);
+        marsRobot.setPosition(position1);
+    }
+
+    @Test
+    public void shouldGiveHelpfulMessageIfSpotIsTakenOnPlacement() throws ValidationException {
+        int x = 1;
+        int y = 1;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        char orientation = Constants.EAST;
+        exception.expectMessage(x + " " + y + " " + orientation + Constants.IS_TAKEN);
+        Position position = new PositionImpl(coordinates, orientation);
+        Position position1 = new PositionImpl(coordinates, orientation);
+        marsRobot.setPosition(position);
+        marsRobot.setPosition(position1);
+    }
+
+    @Test
+    public void shouldIgnoreInstructionIfMoveSpaceIsOccupied() throws ValidationException {
+        int x = 1;
+        int y = 1;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        char orientation = Constants.EAST;
+        Position position = new PositionImpl(coordinates, orientation);
+        Position position1 = new PositionImpl(coordinates, orientation);
+        marsRobot.setPosition(position);
+        marsRobot.move("F");
+        marsRobot.setPosition(position1);
+        marsRobot.move("FFFFFFFFFFFFFFFFFFFFF");
+        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
+
+    }
+
+    @Test
     public void shouldBeAbleToInputJustUnderTheMaxInstructionSize() throws ValidationException {
         String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE - 1]).replace('\0', 'F');
         int x = 1;

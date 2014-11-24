@@ -40,6 +40,17 @@ public class MarsRobotTest {
     }
 
     @Test
+    public void shouldNGetHelpfulMessageForInvalidCoordinates() throws ValidationException {
+        char orientation = Constants.EAST;
+        int x = -1;
+        int y = 2;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
+        Position position = new PositionImpl(coordinates, orientation);
+        marsRobot.setPosition(position);
+    }
+
+    @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
@@ -76,9 +87,29 @@ public class MarsRobotTest {
     }
 
     @Test
+    public void shouldNGetHelpfulMessageForInvalidOrientation() throws ValidationException {
+        char orientation = 'R';
+        int x = 1;
+        int y = 2;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
+        Position position = new PositionImpl(coordinates, orientation);
+        marsRobot.setPosition(position);
+    }
+
+    @Test
     public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws ValidationException {
         exception.expect(ValidationException.class);
         List<Integer> coordinates = Arrays.asList(3, 51);
+        marsRobot.setup(coordinates);
+    }
+
+    @Test
+    public void shouldNGetHelpfulMessageForInvalidGridSetup() throws ValidationException {
+        int x = -1;
+        int y = 2;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        exception.expectMessage("[" + x + ", " + y + "]" + Constants.INVALID_GRID_SIZE);
         marsRobot.setup(coordinates);
     }
 
@@ -104,9 +135,16 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldNotBeAbleToInputInvalidException() throws ValidationException {
+    public void shouldNotBeAbleToInputInvalidInstructions() throws ValidationException {
         exception.expect(ValidationException.class);
         marsRobot.move("FFFLLLFlubber");
+    }
+
+    @Test
+    public void shouldGetHelpfulMesageForInvalidInstructions() throws ValidationException {
+        String instructions = "FFFLLLFlubber";
+        exception.expectMessage(instructions + Constants.INVALID_INSTRUCTIONS);
+        marsRobot.move(instructions);
     }
 
     @Test

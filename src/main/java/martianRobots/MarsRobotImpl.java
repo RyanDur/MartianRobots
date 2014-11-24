@@ -48,15 +48,8 @@ public class MarsRobotImpl implements MarsRobot {
     public void move(final String instructions) throws ValidationException {
         if (isInvalid.test(instructions)) throw new ValidationException(instructions + INVALID_INSTRUCTIONS);
         occupied.remove(position.get().getLocation());
-        for (int i = 0; i < instructions.length() && !isLost; i++) {
-            Position newPos = position.get().move(instructions.charAt(i));
-            if (!scents.contains(newPos) && !occupied.contains(newPos.getLocation())) {
-                if (isOutOfBounds.test(newPos.getLocation())) {
-                    setLost.accept(LOST);
-                    scents.add(newPos);
-                } else setPosition.accept(newPos);
-            }
-        }
+        for (int i = 0; i < instructions.length() && !isLost; i++)
+            execute(instructions.charAt(i));
         if (!isLost) occupied.add(position.get().getLocation());
     }
 
@@ -73,6 +66,16 @@ public class MarsRobotImpl implements MarsRobot {
     @Override
     public String getPosition() {
         return Stream.of(position, lost).map(word -> word.get().toString()).collect(joining(Constants.SPACE)).trim();
+    }
+
+    private void execute(char instruction) {
+        Position newPos = position.get().move(instruction);
+        if (!scents.contains(newPos) && !occupied.contains(newPos.getLocation())) {
+            if (isOutOfBounds.test(newPos.getLocation())) {
+                setLost.accept(LOST);
+                scents.add(newPos);
+            } else setPosition.accept(newPos);
+        }
     }
 
     private Consumer<Position> setPosition = pos -> position = () -> pos;

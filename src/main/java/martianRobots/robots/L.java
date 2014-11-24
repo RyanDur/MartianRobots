@@ -1,10 +1,10 @@
-package martianRobots.positions;
+package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 
 import static martianRobots.lang.Constants.COMPASS;
 
-class L extends PositionImpl {
+class L extends RobotImpl {
     public L(final int x, final int y, final char orientation) throws ValidationException {
         super(x, y, orientation);
         int index = COMPASS.indexOf(orientation);

@@ -1,4 +1,4 @@
-package martianRobots.positions;
+package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 
@@ -15,14 +15,13 @@ import static martianRobots.lang.Constants.DOT;
 import static martianRobots.lang.Constants.INVALID_DIRECTION;
 import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
-import static martianRobots.lang.Constants.VALID_DIRECTIONS;
 
-public class PositionImpl implements Position {
+public class RobotImpl implements Robot {
     private Supplier<Character> orientation;
     private Supplier<Integer> x;
     private Supplier<Integer> y;
 
-    public PositionImpl(final int x, final int y, final char orientation) throws ValidationException {
+    public RobotImpl(final int x, final int y, final char orientation) throws ValidationException {
         if (!COMPASS.contains(orientation)) throw new ValidationException(orientation + NOT_EXISTS);
         setX.accept(x);
         setY.accept(y);
@@ -40,16 +39,14 @@ public class PositionImpl implements Position {
     }
 
     @Override
-    public Position move(final char direction) throws ValidationException {
-        if (!VALID_DIRECTIONS.contains(direction)) throw new ValidationException(direction + INVALID_DIRECTION);
+    public Robot move(final char direction) throws ValidationException {
         try {
-            return (Position) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
+            return (Robot) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
                     .getDeclaredConstructor(int.class, int.class, char.class)
                     .newInstance(x.get(), y.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                 InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
-            return this;
+            throw new ValidationException(direction + INVALID_DIRECTION);
         }
     }
 
@@ -62,7 +59,7 @@ public class PositionImpl implements Position {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PositionImpl position = (PositionImpl) o;
+        RobotImpl position = (RobotImpl) o;
         return getLocation().equals(position.getLocation()) && getOrientation().equals(position.getOrientation());
     }
 

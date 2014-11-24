@@ -1,4 +1,4 @@
-package martianRobots.positions;
+package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
@@ -16,8 +16,8 @@ public class RTest {
         int y = 2;
         char orientation = Constants.NORTH;
         char turn = Constants.EAST;
-        Position position = new R(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
+        Robot robot = new R(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 
     @Test
@@ -26,8 +26,8 @@ public class RTest {
         int y = 2;
         char orientation = Constants.SOUTH;
         char turn = Constants.WEST;
-        Position position = new R(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
+        Robot robot = new R(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 
     @Test
@@ -36,8 +36,8 @@ public class RTest {
         int y = 2;
         char orientation = Constants.WEST;
         char turn = Constants.NORTH;
-        Position position = new R(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
+        Robot robot = new R(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class RTest {
         int y = 2;
         char orientation = Constants.EAST;
         char turn = Constants.SOUTH;
-        Position position = new R(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
+        Robot robot = new R(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
 }

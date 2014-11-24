@@ -1,13 +1,13 @@
-package martianRobots.positions;
+package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 
 import java.util.List;
 
-public interface Position {
+public interface Robot {
     List<Integer> getLocation();
 
     Character getOrientation();
 
-    Position move(char direction) throws ValidationException;
+    Robot move(char direction) throws ValidationException;
 }

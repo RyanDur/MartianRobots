@@ -1,4 +1,4 @@
-package martianRobots.positions;
+package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
@@ -13,25 +13,25 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PositionTest {
+public class RobotTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void shouldBeAbleToCheckTheEqualityOfPositions() throws ValidationException {
-        Position position = new PositionImpl(1, 2, Constants.EAST);
-        Position position1 = new PositionImpl(1, 2, Constants.EAST);
-        assertThat(position.equals(position1), is(true));
+        Robot robot = new RobotImpl(1, 2, Constants.EAST);
+        Robot robot1 = new RobotImpl(1, 2, Constants.EAST);
+        assertThat(robot.equals(robot1), is(true));
     }
 
     @Test
     public void shouldBeAbleToCheckTheContentsOfPositions() throws ValidationException {
-        Set<Position> scents = new HashSet<>();
-        Position position = new PositionImpl(1, 2, Constants.EAST);
-        scents.add(position);
-        Position position1 = new PositionImpl(1, 2, Constants.EAST);
-        assertThat(scents.contains(position1), is(true));
+        Set<Robot> scents = new HashSet<>();
+        Robot robot = new RobotImpl(1, 2, Constants.EAST);
+        scents.add(robot);
+        Robot robot1 = new RobotImpl(1, 2, Constants.EAST);
+        assertThat(scents.contains(robot1), is(true));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class PositionTest {
         int x = 1;
         int y = 2;
         exception.expectMessage(orientation + Constants.NOT_EXISTS);
-        new PositionImpl(x, y, orientation);
+        new RobotImpl(x, y, orientation);
     }
 
     @Test
@@ -48,8 +48,8 @@ public class PositionTest {
         int x = 1;
         int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + " " + x + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + " " + x + " " + orientation)));
     }
 
     @Test
@@ -57,8 +57,8 @@ public class PositionTest {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test
@@ -66,8 +66,8 @@ public class PositionTest {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test
@@ -75,8 +75,8 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test
@@ -84,8 +84,8 @@ public class PositionTest {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        assertThat(position.toString(), is(equalTo(x + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        assertThat(robot.toString(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test
@@ -93,9 +93,9 @@ public class PositionTest {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position = position.move('F');
-        assertThat(position.toString(), is(equalTo(2 + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot = robot.move('F');
+        assertThat(robot.toString(), is(equalTo(2 + " " + y + " " + orientation)));
     }
 
     @Test
@@ -103,9 +103,9 @@ public class PositionTest {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position = position.move('F');
-        assertThat(position.toString(), is(equalTo(x + " " + 3 + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot = robot.move('F');
+        assertThat(robot.toString(), is(equalTo(x + " " + 3 + " " + orientation)));
     }
 
     @Test
@@ -113,9 +113,9 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position = position.move('F');
-        assertThat(position.toString(), is(equalTo(x + " " + 1 + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot = robot.move('F');
+        assertThat(robot.toString(), is(equalTo(x + " " + 1 + " " + orientation)));
     }
 
     @Test
@@ -123,9 +123,9 @@ public class PositionTest {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position = position.move('F');
-        assertThat(position.toString(), is(equalTo(0 + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot = robot.move('F');
+        assertThat(robot.toString(), is(equalTo(0 + " " + y + " " + orientation)));
     }
 
     @Test
@@ -133,9 +133,9 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position = position.move('R');
-        assertThat(position.toString(), is(equalTo(x + " " + y + " " + Constants.WEST)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot = robot.move('R');
+        assertThat(robot.toString(), is(equalTo(x + " " + y + " " + Constants.WEST)));
     }
 
     @Test
@@ -143,9 +143,9 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position = position.move('L');
-        assertThat(position.toString(), is(equalTo(x + " " + y + " " + Constants.EAST)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot = robot.move('L');
+        assertThat(robot.toString(), is(equalTo(x + " " + y + " " + Constants.EAST)));
     }
 
     @Test
@@ -154,8 +154,8 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
-        position.move('D');
+        Robot robot = new RobotImpl(x, y, orientation);
+        robot.move('D');
     }
 
     @Test
@@ -163,9 +163,9 @@ public class PositionTest {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
-        Position position = new PositionImpl(x, y, orientation);
+        Robot robot = new RobotImpl(x, y, orientation);
         char direction = 'D';
         exception.expectMessage(direction + Constants.INVALID_DIRECTION);
-        position.move(direction);
+        robot.move(direction);
     }
 }

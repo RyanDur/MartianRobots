@@ -1,4 +1,4 @@
-package martianRobots.positions;
+package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 
@@ -6,7 +6,7 @@ import static martianRobots.lang.Constants.EAST;
 import static martianRobots.lang.Constants.NORTH;
 import static martianRobots.lang.Constants.SOUTH;
 
-class F extends PositionImpl {
+class F extends RobotImpl {
 
     public F(final int x, final int y, final char orientation) throws ValidationException {
         super(x, y, orientation);

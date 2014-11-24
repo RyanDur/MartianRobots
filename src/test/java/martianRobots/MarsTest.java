@@ -2,40 +2,36 @@ package martianRobots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
-import martianRobots.positions.Position;
-import martianRobots.positions.PositionImpl;
+import martianRobots.robots.Robot;
+import martianRobots.robots.RobotImpl;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class MarsRobotTest {
+public class MarsTest {
 
-    private MarsRobot marsRobot;
+    private Mars mars;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setup() throws ValidationException {
-        marsRobot = new MarsRobotImpl();
-        List<Integer> coordinates = Arrays.asList(5, 3);
-        marsRobot.setup(coordinates);
+        mars = new MarsImpl();
+        mars.setup(5, 3);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotLessThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(-1, 2, orientation);
-        marsRobot.setPosition(position);
+        Robot robot = new RobotImpl(-1, 2, orientation);
+        mars.setRobot(robot);
     }
 
     @Test
@@ -44,84 +40,79 @@ public class MarsRobotTest {
         int x = -1;
         int y = 2;
         exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
-        Position position = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
+        Robot robot = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(6, 2, orientation);
-        marsRobot.setPosition(position);
+        Robot robot = new RobotImpl(6, 2, orientation);
+        mars.setRobot(robot);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotLessThanTheColumnOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(1, -2, orientation);
-        marsRobot.setPosition(position);
+        Robot robot = new RobotImpl(1, -2, orientation);
+        mars.setRobot(robot);
     }
 
     @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheColumnOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(3, 4, orientation);
-        marsRobot.setPosition(position);
+        Robot robot = new RobotImpl(3, 4, orientation);
+        mars.setRobot(robot);
     }
 
     @Test
     public void shouldNotBeAbleToSetAnOrientationThatDoesNotExist() throws ValidationException {
         exception.expect(ValidationException.class);
         char orientation = 'R';
-        Position position = new PositionImpl(1, 2, orientation);
-        marsRobot.setPosition(position);
+        Robot robot = new RobotImpl(1, 2, orientation);
+        mars.setRobot(robot);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws ValidationException {
         exception.expect(ValidationException.class);
-        List<Integer> coordinates = Arrays.asList(3, 51);
-        marsRobot.setup(coordinates);
+        mars.setup(3, 51);
     }
 
     @Test
     public void shouldNGetHelpfulMessageForInvalidGridSetup() throws ValidationException {
         int x = -1;
         int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
         exception.expectMessage("[" + x + ", " + y + "]" + Constants.INVALID_GRID_SIZE);
-        marsRobot.setup(coordinates);
+        mars.setup(x, y);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToSmallOfAYCoordinate() throws ValidationException {
         exception.expect(ValidationException.class);
-        List<Integer> coordinates = Arrays.asList(3, -1);
-        marsRobot.setup(coordinates);
+        mars.setup(3, -1);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToLargeOfAnXCoordinate() throws ValidationException {
         exception.expect(ValidationException.class);
-        List<Integer> coordinates = Arrays.asList(67, 50);
-        marsRobot.setup(coordinates);
+        mars.setup(67, 50);
     }
 
     @Test
     public void shouldNotBeAbleToSetupAGridToSmallOfAnXCoordinate() throws ValidationException {
         exception.expect(ValidationException.class);
-        List<Integer> coordinates = Arrays.asList(-3, 1);
-        marsRobot.setup(coordinates);
+        mars.setup(-3, 1);
     }
 
     @Test
     public void shouldNotBeAbleToInputMoreOrEqualToTheMaxInstructionSizeInstructions() throws ValidationException {
         exception.expect(ValidationException.class);
         String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE]).replace('\0', 'F');
-        marsRobot.move(instructions);
+        mars.move(instructions);
     }
 
     @Test
@@ -130,10 +121,10 @@ public class MarsRobotTest {
         int x = 1;
         int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(x, y, orientation);
-        Position position1 = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.setPosition(position1);
+        Robot robot = new RobotImpl(x, y, orientation);
+        Robot robot1 = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.setRobot(robot1);
     }
 
     @Test
@@ -142,10 +133,10 @@ public class MarsRobotTest {
         int y = 1;
         char orientation = Constants.EAST;
         exception.expectMessage(x + " " + y + " " + orientation + Constants.IS_TAKEN);
-        Position position = new PositionImpl(x, y, orientation);
-        Position position1 = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.setPosition(position1);
+        Robot robot = new RobotImpl(x, y, orientation);
+        Robot robot1 = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.setRobot(robot1);
     }
 
     @Test
@@ -153,13 +144,13 @@ public class MarsRobotTest {
         int x = 1;
         int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(x, y, orientation);
-        Position position1 = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.move("F");
-        marsRobot.setPosition(position1);
-        marsRobot.move("FFFFFFFFFFFFFFFFFFFFF");
-        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        Robot robot1 = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.move("F");
+        mars.setRobot(robot1);
+        mars.move("FFFFFFFFFFFFFFFFFFFFF");
+        assertThat(mars.getRobot(), is(equalTo(x + " " + y + " " + orientation)));
 
     }
 
@@ -169,10 +160,10 @@ public class MarsRobotTest {
         int x = 1;
         int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.move(instructions);
-        assertThat(marsRobot.getPosition(), is(equalTo(5 + " " + y + " " + orientation + " " + Constants.LOST)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.move(instructions);
+        assertThat(mars.getRobot(), is(equalTo(5 + " " + y + " " + orientation + " " + Constants.LOST)));
     }
 
     @Test
@@ -180,10 +171,10 @@ public class MarsRobotTest {
         int x = 1;
         int y = 1;
         char orientation = Constants.WEST;
-        Position position = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.move("LFFLLFF");
-        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + 0 + " " + Constants.SOUTH + " " + Constants.LOST)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.move("LFFLLFF");
+        assertThat(mars.getRobot(), is(equalTo(x + " " + 0 + " " + Constants.SOUTH + " " + Constants.LOST)));
     }
 
     @Test
@@ -191,10 +182,10 @@ public class MarsRobotTest {
         int x = 1;
         int y = 1;
         char orientation = Constants.EAST;
-        Position position = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.move("RFRFRFRF");
-        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + y + " " + orientation)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.move("RFRFRFRF");
+        assertThat(mars.getRobot(), is(equalTo(x + " " + y + " " + orientation)));
     }
 
     @Test
@@ -202,10 +193,10 @@ public class MarsRobotTest {
         int x = 3;
         int y = 2;
         char orientation = Constants.NORTH;
-        Position position = new PositionImpl(x, y, orientation);
-        marsRobot.setPosition(position);
-        marsRobot.move("FRRFLLFFRRFLL");
-        assertThat(marsRobot.getPosition(), is(equalTo(x + " " + 3 + " " + orientation  + " " + Constants.LOST)));
+        Robot robot = new RobotImpl(x, y, orientation);
+        mars.setRobot(robot);
+        mars.move("FRRFLLFFRRFLL");
+        assertThat(mars.getRobot(), is(equalTo(x + " " + 3 + " " + orientation  + " " + Constants.LOST)));
     }
 
     @Test
@@ -213,17 +204,17 @@ public class MarsRobotTest {
         int x = 3;
         int y = 2;
         char north = Constants.NORTH;
-        Position position = new PositionImpl(x, y, north);
-        marsRobot.setPosition(position);
-        marsRobot.move("FRRFLLFFRRFLL");
+        Robot robot = new RobotImpl(x, y, north);
+        mars.setRobot(robot);
+        mars.move("FRRFLLFFRRFLL");
 
         int x1 = 0;
         int y1 = 3;
         char west = Constants.WEST;
-        Position position1 = new PositionImpl(x1, y1, west);
-        marsRobot.setPosition(position1);
-        marsRobot.move("LLFFFLFLFL");
-        assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
+        Robot robot1 = new RobotImpl(x1, y1, west);
+        mars.setRobot(robot1);
+        mars.move("LLFFFLFLFL");
+        assertThat(mars.getRobot(), is(equalTo("2 3 " + Constants.SOUTH)));
     }
 
     @Test
@@ -231,50 +222,50 @@ public class MarsRobotTest {
         int x = 3;
         int y = 2;
         char north = Constants.NORTH;
-        Position position = new PositionImpl(x, y, north);
-        marsRobot.setPosition(position);
-        marsRobot.move("FRRFLLFFRRFLL");
+        Robot robot = new RobotImpl(x, y, north);
+        mars.setRobot(robot);
+        mars.move("FRRFLLFFRRFLL");
 
         int x1 = 0;
         int y1 = 3;
         char west = Constants.WEST;
-        Position position1 = new PositionImpl(x1, y1, west);
-        marsRobot.setPosition(position1);
-        marsRobot.move("LLFFFLFLFL");
-        assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
+        Robot robot1 = new RobotImpl(x1, y1, west);
+        mars.setRobot(robot1);
+        mars.move("LLFFFLFLFL");
+        assertThat(mars.getRobot(), is(equalTo("2 3 " + Constants.SOUTH)));
 
-        marsRobot.setup(Arrays.asList(5, 3));
-        marsRobot.setPosition(position1);
-        marsRobot.move("LLFFFLFLFL");
-        assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
+        mars.setup(5, 3);
+        mars.setRobot(robot1);
+        mars.move("LLFFFLFLFL");
+        assertThat(mars.getRobot(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldSatisfyRequirementsOfChallenge() throws ValidationException {
-        marsRobot.setup(Arrays.asList(5, 3));
+        mars.setup(5, 3);
 
         int x = 1;
         int y = 1;
         char east = Constants.EAST;
-        Position position = new PositionImpl(x, y, east);
-        marsRobot.setPosition(position);
-        marsRobot.move("RFRFRFRF");
-        assertThat(marsRobot.getPosition(), is(equalTo("1 1 " + east)));
+        Robot robot = new RobotImpl(x, y, east);
+        mars.setRobot(robot);
+        mars.move("RFRFRFRF");
+        assertThat(mars.getRobot(), is(equalTo("1 1 " + east)));
 
         int x1 = 3;
         int y1 = 2;
         char north = Constants.NORTH;
-        Position position1 = new PositionImpl(x1, y1, north);
-        marsRobot.setPosition(position1);
-        marsRobot.move("FRRFLLFFRRFLL");
-        assertThat(marsRobot.getPosition(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
+        Robot robot1 = new RobotImpl(x1, y1, north);
+        mars.setRobot(robot1);
+        mars.move("FRRFLLFFRRFLL");
+        assertThat(mars.getRobot(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
 
         int x2 = 0;
         int y2 = 3;
         char west = Constants.WEST;
-        Position position2 = new PositionImpl(x2, y2, west);
-        marsRobot.setPosition(position2);
-        marsRobot.move("LLFFFLFLFL");
-        assertThat(marsRobot.getPosition(), is(equalTo("2 3 " + Constants.SOUTH)));
+        Robot robot2 = new RobotImpl(x2, y2, west);
+        mars.setRobot(robot2);
+        mars.move("LLFFFLFLFL");
+        assertThat(mars.getRobot(), is(equalTo("2 3 " + Constants.SOUTH)));
     }
 }

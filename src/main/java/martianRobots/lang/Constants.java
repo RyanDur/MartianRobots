@@ -8,14 +8,9 @@ public interface Constants {
     final char EAST = 'E';
     final char SOUTH = 'S';
     final char WEST = 'W';
-    final char FORWARD = 'F';
-    final char RIGHT = 'R';
-    final char LEFT = 'L';
     final int MAX_SIZE = 50;
     final int MAX_INSTRUCTION_SIZE = 100;
     final List<Character> COMPASS = Arrays.asList(WEST, NORTH, EAST, SOUTH);
-    final List<Character> VALID_DIRECTIONS = Arrays.asList(FORWARD, RIGHT, LEFT);
-    final List<Integer> MAX_BOUNDS = Arrays.asList(MAX_SIZE, MAX_SIZE);
     final char DOT = '.';
     final String SPACE = " ";
     final String EMPTY = "";

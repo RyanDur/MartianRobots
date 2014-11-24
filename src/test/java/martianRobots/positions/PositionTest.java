@@ -165,7 +165,7 @@ public class PositionTest {
         int y = 2;
         Position position = new PositionImpl(x, y, orientation);
         char direction = 'D';
-        exception.expectMessage(direction + Constants.INVALID_INSTRUCTIONS);
+        exception.expectMessage(direction + Constants.INVALID_DIRECTION);
         position.move(direction);
     }
 }

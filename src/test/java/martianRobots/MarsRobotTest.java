@@ -118,19 +118,6 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldNotBeAbleToInputInvalidInstructions() throws ValidationException {
-        exception.expect(ValidationException.class);
-        marsRobot.move("FFFLLLFlubber");
-    }
-
-    @Test
-    public void shouldGetHelpfulMesageForInvalidInstructions() throws ValidationException {
-        String instructions = "FFFLLLFlubber";
-        exception.expectMessage(instructions + Constants.INVALID_INSTRUCTIONS);
-        marsRobot.move(instructions);
-    }
-
-    @Test
     public void shouldNotBeAbleToInputMoreOrEqualToTheMaxInstructionSizeInstructions() throws ValidationException {
         exception.expect(ValidationException.class);
         String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE]).replace('\0', 'F');

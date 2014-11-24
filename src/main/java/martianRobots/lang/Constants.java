@@ -14,7 +14,7 @@ public interface Constants {
     final int MAX_SIZE = 50;
     final int MAX_INSTRUCTION_SIZE = 100;
     final List<Character> COMPASS = Arrays.asList(WEST, NORTH, EAST, SOUTH);
-    final List<Character> VALID_INSTRUCTIONS = Arrays.asList(FORWARD, RIGHT, LEFT);
+    final List<Character> VALID_DIRECTIONS = Arrays.asList(FORWARD, RIGHT, LEFT);
     final List<Integer> MAX_BOUNDS = Arrays.asList(MAX_SIZE, MAX_SIZE);
     final char DOT = '.';
     final String SPACE = " ";
@@ -22,6 +22,6 @@ public interface Constants {
     final String LOST = "LOST";
     final String NOT_EXISTS = " Does not exist, please use another.";
     final String INVALID_GRID_SIZE = " is an invalid size, please use another.";
-    final String INVALID_INSTRUCTIONS = " are invalid, please correct your input.";
+    final String INVALID_INSTRUCTIONS = " is an invalid instruction, please correct your input.";
     final String IS_TAKEN = " is occupied, please choose another";
 }

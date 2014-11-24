@@ -22,7 +22,6 @@ import static martianRobots.lang.Constants.MAX_BOUNDS;
 import static martianRobots.lang.Constants.MAX_INSTRUCTION_SIZE;
 import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
-import static martianRobots.lang.Constants.VALID_INSTRUCTIONS;
 
 public class MarsRobotImpl implements MarsRobot {
     private Supplier<Position> position;
@@ -84,6 +83,5 @@ public class MarsRobotImpl implements MarsRobot {
 
     private Predicate<List<Integer>> isInvalidSize = bounds -> getBoundary.apply(MAX_BOUNDS).test(bounds);
 
-    private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE ||
-            instructions.chars().filter(c -> !VALID_INSTRUCTIONS.contains((char) c)).count() > 0;
+    private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE;
 }

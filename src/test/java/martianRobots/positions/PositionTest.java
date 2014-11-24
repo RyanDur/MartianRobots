@@ -147,4 +147,25 @@ public class PositionTest {
         position = position.move('L');
         assertThat(position.toString(), is(equalTo(x + " " + y + " " + Constants.EAST)));
     }
+
+    @Test
+    public void shouldNotBeAbleToInputInvalidInstructions() throws ValidationException {
+        exception.expect(ValidationException.class);
+        char orientation = Constants.SOUTH;
+        int x = 1;
+        int y = 2;
+        Position position = new PositionImpl(x, y, orientation);
+        position.move('D');
+    }
+
+    @Test
+    public void shouldGetHelpfulMessageForInvalidInstructions() throws ValidationException {
+        char orientation = Constants.SOUTH;
+        int x = 1;
+        int y = 2;
+        Position position = new PositionImpl(x, y, orientation);
+        char direction = 'D';
+        exception.expectMessage(direction + Constants.INVALID_INSTRUCTIONS);
+        position.move(direction);
+    }
 }

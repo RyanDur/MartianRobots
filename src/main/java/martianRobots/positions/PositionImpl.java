@@ -12,8 +12,10 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.joining;
 import static martianRobots.lang.Constants.COMPASS;
 import static martianRobots.lang.Constants.DOT;
+import static martianRobots.lang.Constants.INVALID_INSTRUCTIONS;
 import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
+import static martianRobots.lang.Constants.VALID_DIRECTIONS;
 
 public class PositionImpl implements Position {
     private Supplier<Character> orientation;
@@ -38,7 +40,8 @@ public class PositionImpl implements Position {
     }
 
     @Override
-    public Position move(final char direction) {
+    public Position move(final char direction) throws ValidationException {
+        if (!VALID_DIRECTIONS.contains(direction)) throw new ValidationException(direction + INVALID_INSTRUCTIONS);
         try {
             return (Position) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
                     .getDeclaredConstructor(int.class, int.class, char.class)

@@ -1,6 +1,6 @@
 package martianRobots.positions;
 
-import martianRobots.exceptions.InvalidException;
+import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToDisplayThePosition() throws InvalidException {
+    public void shouldBeAbleToDisplayThePosition() throws ValidationException {
         int x = 1;
         int y = 1;
         List<Integer> coordinates = Arrays.asList(x, y);
@@ -42,7 +42,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionNorth() throws InvalidException {
+    public void shouldBeAbleToOrientAPositionNorth() throws ValidationException {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
@@ -52,7 +52,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionEast() throws InvalidException {
+    public void shouldBeAbleToOrientAPositionEast() throws ValidationException {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
@@ -62,7 +62,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionSouth() throws InvalidException {
+    public void shouldBeAbleToOrientAPositionSouth() throws ValidationException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -72,7 +72,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionWest() throws InvalidException {
+    public void shouldBeAbleToOrientAPositionWest() throws ValidationException {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
@@ -82,7 +82,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveAPositionForwardEast() throws InvalidException {
+    public void shouldBeAbleToMoveAPositionForwardEast() throws ValidationException {
         char orientation = Constants.EAST;
         int x = 1;
         int y = 2;
@@ -93,7 +93,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardNorth() throws InvalidException {
+    public void shouldBeAbleToMoveARobotForwardNorth() throws ValidationException {
         char orientation = Constants.NORTH;
         int x = 1;
         int y = 2;
@@ -104,7 +104,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardSouth() throws InvalidException {
+    public void shouldBeAbleToMoveARobotForwardSouth() throws ValidationException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -115,7 +115,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToMoveARobotForwardWest() throws InvalidException {
+    public void shouldBeAbleToMoveARobotForwardWest() throws ValidationException {
         char orientation = Constants.WEST;
         int x = 1;
         int y = 2;
@@ -126,7 +126,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToTurnRight() throws InvalidException {
+    public void shouldBeAbleToTurnRight() throws ValidationException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;
@@ -137,7 +137,7 @@ public class PositionTest {
     }
 
     @Test
-    public void shouldBeAbleToTurnLeft() throws InvalidException {
+    public void shouldBeAbleToTurnLeft() throws ValidationException {
         char orientation = Constants.SOUTH;
         int x = 1;
         int y = 2;

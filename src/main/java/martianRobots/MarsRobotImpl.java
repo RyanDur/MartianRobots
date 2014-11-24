@@ -1,6 +1,6 @@
 package martianRobots;
 
-import martianRobots.exceptions.InvalidException;
+import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
 import martianRobots.positions.Position;
 
@@ -17,10 +17,13 @@ import static java.util.stream.Collectors.joining;
 import static martianRobots.lang.Constants.COMPASS;
 import static martianRobots.lang.Constants.EMPTY;
 import static martianRobots.lang.Constants.FORWARD;
+import static martianRobots.lang.Constants.INVALID_GRID_SIZE;
+import static martianRobots.lang.Constants.INVALID_INSTRUCTIONS;
 import static martianRobots.lang.Constants.LEFT;
 import static martianRobots.lang.Constants.LOST;
 import static martianRobots.lang.Constants.MAX_BOUNDS;
 import static martianRobots.lang.Constants.MAX_INSTRUCTION_SIZE;
+import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.RIGHT;
 
 
@@ -30,17 +33,16 @@ public class MarsRobotImpl implements MarsRobot {
     private Set<Position> scents;
     private Predicate<List<Integer>> isOutOfBounds;
 
-
     @Override
-    public void setup(final List<Integer> bounds) throws InvalidException {
-        if (isInvalidSize.test(bounds)) throw new InvalidException(bounds);
+    public void setup(final List<Integer> bounds) throws ValidationException {
+        if (isInvalidSize.test(bounds)) throw new ValidationException(bounds + INVALID_GRID_SIZE);
         setBounds.accept(bounds);
         scents = new HashSet<>();
     }
 
     @Override
-    public void move(final String instructions) throws InvalidException {
-        if (isInvalid.test(instructions)) throw new InvalidException(instructions);
+    public void move(final String instructions) throws ValidationException {
+        if (isInvalid.test(instructions)) throw new ValidationException(instructions + INVALID_INSTRUCTIONS);
         for (int i = 0; i < instructions.length() && !lost.get().equals(LOST); i++) {
             Position newPos = position.get().move(instructions.charAt(i));
             if (!scents.contains(newPos)) {
@@ -53,9 +55,9 @@ public class MarsRobotImpl implements MarsRobot {
     }
 
     @Override
-    public void setPosition(final Position position) throws InvalidException {
+    public void setPosition(final Position position) throws ValidationException {
         if (isOutOfBounds.test(position.getLocation()) || !COMPASS.contains(position.getOrientation()))
-            throw new InvalidException(position);
+            throw new ValidationException(position + NOT_EXISTS);
         setLost.accept(EMPTY);
         setPosition.accept(position);
     }

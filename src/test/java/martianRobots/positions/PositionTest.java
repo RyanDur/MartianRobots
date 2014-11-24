@@ -2,7 +2,9 @@ package martianRobots.positions;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,20 +17,33 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PositionTest {
 
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
     @Test
-    public void shouldBeAbleToCheckTheEqualityOfPositions() {
+    public void shouldBeAbleToCheckTheEqualityOfPositions() throws ValidationException {
         Position position = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
         Position position1 = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
         assertThat(position.equals(position1), is(true));
     }
 
     @Test
-    public void shouldBeAbleToCheckTheContentsOfPositions() {
+    public void shouldBeAbleToCheckTheContentsOfPositions() throws ValidationException {
         Set<Position> scents = new HashSet<>();
         Position position = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
         scents.add(position);
         Position position1 = new PositionImpl(Arrays.asList(1,2), Constants.EAST);
         assertThat(scents.contains(position1), is(true));
+    }
+
+    @Test
+    public void shouldNGetHelpfulMessageForInvalidOrientation() throws ValidationException {
+        char orientation = 'R';
+        int x = 1;
+        int y = 2;
+        List<Integer> coordinates = Arrays.asList(x, y);
+        exception.expectMessage(orientation + Constants.NOT_EXISTS);
+        new PositionImpl(coordinates, orientation);
     }
 
     @Test

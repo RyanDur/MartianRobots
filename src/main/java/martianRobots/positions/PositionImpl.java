@@ -1,19 +1,24 @@
 package martianRobots.positions;
 
+import martianRobots.exceptions.ValidationException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.joining;
+import static martianRobots.lang.Constants.COMPASS;
 import static martianRobots.lang.Constants.DOT;
+import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
 
 public class PositionImpl implements Position {
     private Supplier<Character> orientation;
     private Supplier<List<Integer>> location;
 
-    public PositionImpl(List<Integer> location, char orientation) {
+    public PositionImpl(final List<Integer> location, final char orientation) throws ValidationException {
+        if (!COMPASS.contains(orientation)) throw new ValidationException(orientation + NOT_EXISTS);
         setOrientation.accept(orientation);
         setLocation.accept(location);
     }

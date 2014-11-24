@@ -1,5 +1,7 @@
 package martianRobots.positions;
 
+import martianRobots.exceptions.ValidationException;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +11,7 @@ import static martianRobots.lang.Constants.SOUTH;
 
 class F extends PositionImpl {
 
-    public F(List<Integer> location, char orientation) {
+    public F(List<Integer> location, char orientation) throws ValidationException {
         super(location, orientation);
         setLocation.accept(getMove(location));
     }

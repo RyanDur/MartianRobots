@@ -87,17 +87,6 @@ public class MarsRobotTest {
     }
 
     @Test
-    public void shouldNGetHelpfulMessageForInvalidOrientation() throws ValidationException {
-        char orientation = 'R';
-        int x = 1;
-        int y = 2;
-        List<Integer> coordinates = Arrays.asList(x, y);
-        exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
-        Position position = new PositionImpl(coordinates, orientation);
-        marsRobot.setPosition(position);
-    }
-
-    @Test
     public void shouldNotBeAbleToSetupAGridToLargeOfAYCoordinate() throws ValidationException {
         exception.expect(ValidationException.class);
         List<Integer> coordinates = Arrays.asList(3, 51);

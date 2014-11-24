@@ -1,5 +1,6 @@
 package martianRobots.positions;
 
+import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Constants;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class FTest {
 
     @Test
-    public void shouldMoveOneSpaceEastIfEast() {
+    public void shouldMoveOneSpaceEastIfEast() throws ValidationException {
         int x = 1;
         int y = 2;
         List<Integer> list = Arrays.asList(x, y);
@@ -24,7 +25,7 @@ public class FTest {
     }
 
     @Test
-    public void shouldMoveOneSpaceSouthIfSouth() {
+    public void shouldMoveOneSpaceSouthIfSouth() throws ValidationException {
         int x = 1;
         int y = 2;
         List<Integer> list = Arrays.asList(x, y);
@@ -34,7 +35,7 @@ public class FTest {
     }
 
     @Test
-    public void shouldMoveOneSpaceNorthIfNorth() {
+    public void shouldMoveOneSpaceNorthIfNorth() throws ValidationException {
         int x = 1;
         int y = 2;
         List<Integer> list = Arrays.asList(x, y);
@@ -44,7 +45,7 @@ public class FTest {
     }
 
     @Test
-    public void shouldMoveOneSpaceWestIfWest() {
+    public void shouldMoveOneSpaceWestIfWest() throws ValidationException {
         int x = 1;
         int y = 2;
         List<Integer> list = Arrays.asList(x, y);

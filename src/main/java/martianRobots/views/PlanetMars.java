@@ -56,7 +56,7 @@ public class PlanetMars extends Parent {
 
     private EventHandler<MouseEvent> move(TextField position, TextField instructions, TextArea output) {
         return event -> {
-            String[] pos = position.getText().trim().split(" +");
+            String[] pos = position.getText().trim().split(Constants.MULTI_SPACE);
             try {
                 int x = Integer.parseInt(pos[0]);
                 int y = Integer.parseInt(pos[1]);
@@ -69,11 +69,9 @@ public class PlanetMars extends Parent {
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
-                String message = " is not a number!!";
-                messages.setText(e.getMessage() + message);
+                messages.setText(e.getMessage() + Constants.NOT_A_NUMBER);
             } catch (IllegalArgumentException e) {
-                String message = " is not a Compass position!";
-                messages.setText(pos[2] + message);
+                messages.setText(pos[2] + Constants.NOT_A_COMPASS);
             }
         };
     }
@@ -107,8 +105,7 @@ public class PlanetMars extends Parent {
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
-                String message = " is not a number!!";
-                messages.setText(e.getMessage() + message);
+                messages.setText(e.getMessage() + Constants.NOT_A_NUMBER);
             }
         };
     }

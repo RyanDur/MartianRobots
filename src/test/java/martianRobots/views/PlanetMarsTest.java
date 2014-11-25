@@ -13,6 +13,8 @@ import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -61,6 +63,13 @@ public class PlanetMarsTest extends GuiTest {
     public void shouldBeAbleToHandleIfInputIsNotANumberInY() {
         click("#x").type("6").click("#y").type("tigger").click("#go");
         verifyThat("#messages", hasText("For input string: \"tigger\" is not a number!!"));
+    }
+
+    @Test
+    public void shouldBeAbleToHandleValidationExceptionFromMars() throws ValidationException {
+        doThrow(new ValidationException("Hello")).when(mars).setup(anyInt(), anyInt());
+        click("#x").type("6").click("#y").type("4").click("#go");
+        verifyThat("#messages", hasText("Hello"));
     }
 
     @Test

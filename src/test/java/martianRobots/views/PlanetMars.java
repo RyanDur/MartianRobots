@@ -34,7 +34,7 @@ public class PlanetMars extends Parent {
                 messages.setText(Constants.EMPTY);
                 mars.setup(Integer.parseInt(x.getText()), Integer.parseInt(y.getText()));
             } catch (ValidationException e) {
-                e.printStackTrace();
+                messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
                 String message = " is not a number!!";
                 messages.setText(e.getMessage() + message);

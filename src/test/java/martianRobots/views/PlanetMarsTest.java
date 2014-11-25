@@ -4,7 +4,7 @@ import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
-import martianRobots.robots.Robot;
+import martianRobots.factories.RobotFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -18,6 +18,7 @@ import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class PlanetMarsTest extends GuiTest {
@@ -28,8 +29,8 @@ public class PlanetMarsTest extends GuiTest {
 
     @Override
     protected Parent getRootNode() {
-        Robot robot = mock(Robot.class);
-        return new PlanetMars(mars, robot);
+        RobotFactory robotFactory = mock(RobotFactory.class);
+        return new PlanetMars(mars, robotFactory);
     }
 
     @Test
@@ -114,5 +115,44 @@ public class PlanetMarsTest extends GuiTest {
         exception.expect(NoNodesVisibleException.class);
         click("#x").type("5").click("#y").type("3").click("#go");
         find("#y");
+    }
+
+    @Test
+    public void shouldMakeControlInvisibleWhenReset() {
+        exception.expect(NoNodesVisibleException.class);
+        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
+        find("#control");
+    }
+
+    @Test
+    public void shouldMakeResetInvisibleWhenReset() {
+        exception.expect(NoNodesVisibleException.class);
+        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
+        find("#reset");
+    }
+
+    @Test
+    public void shouldMakeYVisibleWhenReset() {
+        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
+        assertThat(find("#y").isVisible(), is(true));
+    }
+
+    @Test
+    public void shouldMakeXVisibleWhenReset() {
+        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
+        assertThat(find("#x").isVisible(), is(true));
+    }
+
+    @Test
+    public void shouldMakeGoVisibleWhenReset() {
+        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
+        assertThat(find("#go").isVisible(), is(true));
+    }
+
+    @Test
+    public void shouldToReInputNewBoundariesForMars() throws ValidationException {
+        click("#x").type("5").click("#y").type("3").click("#go").click("#reset")
+        .click("#x").type("5").click("#y").type("3").click("#go");
+        verify(mars, times(2)).setup(5, 3);
     }
 }

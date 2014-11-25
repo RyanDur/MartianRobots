@@ -11,8 +11,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
+import martianRobots.factories.RobotFactory;
 import martianRobots.lang.Constants;
-import martianRobots.robots.Robot;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,15 +20,15 @@ import java.util.Arrays;
 public class PlanetMars extends Parent {
 
     private final Mars mars;
-    private final Robot robot;
+    private final RobotFactory robotFactory;
     private Button reset;
     private Button go;
     private Label messages;
     private BorderPane planet;
 
-    public PlanetMars(Mars mars, Robot robot) {
+    public PlanetMars(Mars mars, RobotFactory robotFactory) {
         this.mars = mars;
-        this.robot = robot;
+        this.robotFactory = robotFactory;
         planet = getFXML();
         reset = (Button) planet.getTop().lookup("#reset");
         go = (Button) planet.getTop().lookup("#go");
@@ -37,7 +37,21 @@ public class PlanetMars extends Parent {
         messages = (Label) planet.getBottom();
         setVisible(false, planet.getCenter(), reset);
         go.setOnMouseClicked(goToMars(x, y));
+        reset.setOnMouseClicked(event -> {
+            setVisible(false, planet.getCenter(), reset);
+            resetTextFields(x, y);
+            y.setPromptText("Y");
+            x.setPromptText("X");
+            setVisible(true, x, y, go);
+        });
         this.getChildren().add(planet);
+    }
+
+    private void resetTextFields(TextField... fields) {
+        Arrays.stream(fields).forEach(field -> {
+            field.deselect();
+            field.clear();
+        });
     }
 
     private EventHandler<MouseEvent> goToMars(TextField x, TextField y) {

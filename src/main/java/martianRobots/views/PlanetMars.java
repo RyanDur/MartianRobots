@@ -58,6 +58,12 @@ public class PlanetMars extends Parent {
                 mars.setRobot(robot);
             } catch (ValidationException e) {
                 e.printStackTrace();
+            } catch (NumberFormatException e) {
+                String message = " is not a number!!";
+                messages.setText(e.getMessage() + message);
+            } catch (IllegalArgumentException e) {
+                String message = " is not a Compass position!";
+                messages.setText(pos[2] + message);
             }
         };
     }

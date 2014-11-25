@@ -175,6 +175,7 @@ public class PlanetMarsTest extends GuiTest {
                 .click("#position").type("2 4 N").click("#move");
         verify(mars).setRobot(robot);
     }
+
     @Test
     public void shouldTrimTheSpaceFromInputs() throws ValidationException {
         Robot robot = mock(Robot.class);
@@ -182,5 +183,23 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").type("5   ").click("#y").type("3").click("#go")
                 .click("#position").type("  2   4 N  ").click("#move");
         verify(mars).setRobot(robot);
+    }
+
+    @Test
+    public void shouldNonNumbersFromInputs() throws ValidationException {
+        Robot robot = mock(Robot.class);
+        when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("F 4 N").click("#move");
+        verifyThat("#messages", hasText("For input string: \"F\" is not a number!!"));
+    }
+
+    @Test
+    public void shouldNonCompassFromInputs() throws ValidationException {
+        Robot robot = mock(Robot.class);
+        when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("5 4 R").click("#move");
+        verifyThat("#messages", hasText("R is not a Compass position!"));
     }
 }

@@ -1,6 +1,7 @@
 package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
+import martianRobots.lang.Compass;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -10,19 +11,16 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static martianRobots.lang.Constants.COMPASS;
 import static martianRobots.lang.Constants.DOT;
 import static martianRobots.lang.Constants.INVALID_DIRECTION;
-import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
 
 public class RobotImpl implements Robot {
-    private Supplier<Character> orientation;
+    private Supplier<Compass> orientation;
     private Supplier<Integer> x;
     private Supplier<Integer> y;
 
-    public RobotImpl(final int x, final int y, final char orientation) throws ValidationException {
-        if (!COMPASS.contains(orientation)) throw new ValidationException(orientation + NOT_EXISTS);
+    public RobotImpl(final int x, final int y, final Compass orientation) throws ValidationException {
         setX.accept(x);
         setY.accept(y);
         setOrientation.accept(orientation);
@@ -34,7 +32,7 @@ public class RobotImpl implements Robot {
     }
 
     @Override
-    public Character getOrientation() {
+    public Compass getOrientation() {
         return orientation.get();
     }
 
@@ -42,7 +40,7 @@ public class RobotImpl implements Robot {
     public Robot move(final char direction) throws ValidationException {
         try {
             return (Robot) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
-                    .getDeclaredConstructor(int.class, int.class, char.class)
+                    .getDeclaredConstructor(int.class, int.class, Compass.class)
                     .newInstance(x.get(), y.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                 InstantiationException | InvocationTargetException e) {
@@ -72,5 +70,5 @@ public class RobotImpl implements Robot {
 
     Consumer<Integer> setX = x -> this.x = () -> x;
     Consumer<Integer> setY = y -> this.y = () -> y;
-    Consumer<Character> setOrientation = orientation -> this.orientation = () -> orientation;
+    Consumer<Compass> setOrientation = orientation -> this.orientation = () -> orientation;
 }

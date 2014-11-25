@@ -1,7 +1,7 @@
 package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
-import martianRobots.lang.Constants;
+import martianRobots.lang.Compass;
 import org.junit.Test;
 
 import static martianRobots.lang.Constants.SPACE;
@@ -15,7 +15,7 @@ public class FTest {
     public void shouldMoveOneSpaceEastIfEast() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new F(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(2 + SPACE + y + SPACE + orientation)));
     }
@@ -24,7 +24,7 @@ public class FTest {
     public void shouldMoveOneSpaceSouthIfSouth() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.SOUTH;
+        Compass orientation = Compass.S;
         Robot robot = new F(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE + 1 + SPACE + orientation)));
     }
@@ -33,7 +33,7 @@ public class FTest {
     public void shouldMoveOneSpaceNorthIfNorth() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.NORTH;
+        Compass orientation = Compass.N;
         Robot robot = new F(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE + 3 + SPACE + orientation)));
     }
@@ -42,7 +42,7 @@ public class FTest {
     public void shouldMoveOneSpaceWestIfWest() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.WEST;
+        Compass orientation = Compass.W;
         Robot robot = new F(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(0 + SPACE + y + SPACE + orientation)));
     }

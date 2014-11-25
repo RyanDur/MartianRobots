@@ -1,13 +1,12 @@
 package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
-
-import static martianRobots.lang.Constants.COMPASS;
+import martianRobots.lang.Compass;
 
 class R extends RobotImpl {
-    public R(final int x, final int y, final char orientation) throws ValidationException {
+    public R(final int x, final int y, final Compass orientation) throws ValidationException {
         super(x, y, orientation);
-        int index = COMPASS.indexOf(orientation);
-        setOrientation.accept(COMPASS.get(index + 1 > COMPASS.size() - 1 ? 0 : index + 1));
+        int index = Compass.valueOf(orientation.toString()).ordinal();
+        setOrientation.accept(Compass.values()[index + 1 > Compass.values().length - 1 ? 0 : index + 1]);
     }
 }

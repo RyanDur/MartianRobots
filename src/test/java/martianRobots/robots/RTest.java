@@ -1,7 +1,7 @@
 package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
-import martianRobots.lang.Constants;
+import martianRobots.lang.Compass;
 import org.junit.Test;
 
 import static martianRobots.lang.Constants.SPACE;
@@ -14,8 +14,8 @@ public class RTest {
     public void shouldTurnEastIfNorth() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.NORTH;
-        char turn = Constants.EAST;
+        Compass orientation = Compass.N;
+        Compass turn = Compass.E;
         Robot robot = new R(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
@@ -24,8 +24,8 @@ public class RTest {
     public void shouldTurnWestIfSouth() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.SOUTH;
-        char turn = Constants.WEST;
+        Compass orientation = Compass.S;
+        Compass turn = Compass.W;
         Robot robot = new R(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
@@ -34,8 +34,8 @@ public class RTest {
     public void shouldTurnNorthIfWest() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.WEST;
-        char turn = Constants.NORTH;
+        Compass orientation = Compass.W;
+        Compass turn = Compass.N;
         Robot robot = new R(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }
@@ -44,8 +44,8 @@ public class RTest {
     public void shouldTurnSouthIfEast() throws ValidationException {
         int x = 1;
         int y = 2;
-        char orientation = Constants.EAST;
-        char turn = Constants.SOUTH;
+        Compass orientation = Compass.E;
+        Compass turn = Compass.S;
         Robot robot = new R(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE + y + SPACE + turn)));
     }

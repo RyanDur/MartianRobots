@@ -1,16 +1,8 @@
 package martianRobots.lang;
 
-import java.util.Arrays;
-import java.util.List;
-
 public interface Constants {
-    final char NORTH = 'N';
-    final char EAST = 'E';
-    final char SOUTH = 'S';
-    final char WEST = 'W';
     final int MAX_SIZE = 50;
     final int MAX_INSTRUCTION_SIZE = 100;
-    final List<Character> COMPASS = Arrays.asList(WEST, NORTH, EAST, SOUTH);
     final char DOT = '.';
     final String SPACE = " ";
     final String EMPTY = "";

@@ -1,6 +1,7 @@
 package martianRobots;
 
 import martianRobots.exceptions.ValidationException;
+import martianRobots.lang.Compass;
 import martianRobots.lang.Constants;
 import martianRobots.robots.Robot;
 import martianRobots.robots.RobotImpl;
@@ -29,14 +30,14 @@ public class MarsTest {
     @Test
     public void shouldNotBeAbleToSetARobotLessThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(-1, 2, orientation);
         mars.setRobot(robot);
     }
 
     @Test
     public void shouldNGetHelpfulMessageForInvalidCoordinates() throws ValidationException {
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         int x = -1;
         int y = 2;
         exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
@@ -47,7 +48,7 @@ public class MarsTest {
     @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheRowOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(6, 2, orientation);
         mars.setRobot(robot);
     }
@@ -55,7 +56,7 @@ public class MarsTest {
     @Test
     public void shouldNotBeAbleToSetARobotLessThanTheColumnOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(1, -2, orientation);
         mars.setRobot(robot);
     }
@@ -63,16 +64,8 @@ public class MarsTest {
     @Test
     public void shouldNotBeAbleToSetARobotGreaterThanTheColumnOfTheGrid() throws ValidationException {
         exception.expect(ValidationException.class);
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(3, 4, orientation);
-        mars.setRobot(robot);
-    }
-
-    @Test
-    public void shouldNotBeAbleToSetAnOrientationThatDoesNotExist() throws ValidationException {
-        exception.expect(ValidationException.class);
-        char orientation = 'R';
-        Robot robot = new RobotImpl(1, 2, orientation);
         mars.setRobot(robot);
     }
 
@@ -120,7 +113,7 @@ public class MarsTest {
         exception.expect(ValidationException.class);
         int x = 1;
         int y = 1;
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(x, y, orientation);
         Robot robot1 = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
@@ -131,7 +124,7 @@ public class MarsTest {
     public void shouldGiveHelpfulMessageIfSpotIsTakenOnPlacement() throws ValidationException {
         int x = 1;
         int y = 1;
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         exception.expectMessage(x + " " + y + " " + orientation + Constants.IS_TAKEN);
         Robot robot = new RobotImpl(x, y, orientation);
         Robot robot1 = new RobotImpl(x, y, orientation);
@@ -143,7 +136,7 @@ public class MarsTest {
     public void shouldIgnoreInstructionIfMoveSpaceIsOccupied() throws ValidationException {
         int x = 1;
         int y = 1;
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(x, y, orientation);
         Robot robot1 = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
@@ -159,7 +152,7 @@ public class MarsTest {
         String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE - 1]).replace('\0', 'F');
         int x = 1;
         int y = 1;
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move(instructions);
@@ -170,18 +163,18 @@ public class MarsTest {
     public void shouldIndicateWhenARobotIsLost() throws ValidationException {
         int x = 1;
         int y = 1;
-        char orientation = Constants.WEST;
+        Compass orientation = Compass.W;
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move("LFFLLFF");
-        assertThat(mars.getRobot(), is(equalTo(x + " " + 0 + " " + Constants.SOUTH + " " + Constants.LOST)));
+        assertThat(mars.getRobot(), is(equalTo(x + " " + 0 + " " + Compass.S + " " + Constants.LOST)));
     }
 
     @Test
     public void shouldBeAbleToEndUpInTheSamePlace() throws ValidationException {
         int x = 1;
         int y = 1;
-        char orientation = Constants.EAST;
+        Compass orientation = Compass.E;
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move("RFRFRFRF");
@@ -192,7 +185,7 @@ public class MarsTest {
     public void shouldBeAbleToFallOffTheGrid() throws ValidationException {
         int x = 3;
         int y = 2;
-        char orientation = Constants.NORTH;
+        Compass orientation = Compass.N;
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move("FRRFLLFFRRFLL");
@@ -203,36 +196,36 @@ public class MarsTest {
     public void shouldNotLetAnotherRobotFallOffTheGridAtAPointWhereAPastRobotFell() throws ValidationException {
         int x = 3;
         int y = 2;
-        char north = Constants.NORTH;
+        Compass north = Compass.N;
         Robot robot = new RobotImpl(x, y, north);
         mars.setRobot(robot);
         mars.move("FRRFLLFFRRFLL");
 
         int x1 = 0;
         int y1 = 3;
-        char west = Constants.WEST;
+        Compass west = Compass.W;
         Robot robot1 = new RobotImpl(x1, y1, west);
         mars.setRobot(robot1);
         mars.move("LLFFFLFLFL");
-        assertThat(mars.getRobot(), is(equalTo("2 3 " + Constants.SOUTH)));
+        assertThat(mars.getRobot(), is(equalTo("2 3 " + Compass.S)));
     }
 
     @Test
     public void shouldBeAbleToFallOffTheEdgeIfResetTheGrid() throws ValidationException {
         int x = 3;
         int y = 2;
-        char north = Constants.NORTH;
+        Compass north = Compass.N;
         Robot robot = new RobotImpl(x, y, north);
         mars.setRobot(robot);
         mars.move("FRRFLLFFRRFLL");
 
         int x1 = 0;
         int y1 = 3;
-        char west = Constants.WEST;
+        Compass west = Compass.W;
         Robot robot1 = new RobotImpl(x1, y1, west);
         mars.setRobot(robot1);
         mars.move("LLFFFLFLFL");
-        assertThat(mars.getRobot(), is(equalTo("2 3 " + Constants.SOUTH)));
+        assertThat(mars.getRobot(), is(equalTo("2 3 " + Compass.S)));
 
         mars.setup(5, 3);
         mars.setRobot(robot1);
@@ -246,26 +239,26 @@ public class MarsTest {
 
         int x = 1;
         int y = 1;
-        char east = Constants.EAST;
+        Compass east = Compass.E;
         Robot robot = new RobotImpl(x, y, east);
         mars.setRobot(robot);
         mars.move("RFRFRFRF");
-        assertThat(mars.getRobot(), is(equalTo("1 1 " + east)));
+        assertThat(mars.getRobot(), is(equalTo("1 1 E")));
 
         int x1 = 3;
         int y1 = 2;
-        char north = Constants.NORTH;
+        Compass north = Compass.N;
         Robot robot1 = new RobotImpl(x1, y1, north);
         mars.setRobot(robot1);
         mars.move("FRRFLLFFRRFLL");
-        assertThat(mars.getRobot(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
+        assertThat(mars.getRobot(), is(equalTo("3 3 N LOST")));
 
         int x2 = 0;
         int y2 = 3;
-        char west = Constants.WEST;
+        Compass west = Compass.W;
         Robot robot2 = new RobotImpl(x2, y2, west);
         mars.setRobot(robot2);
         mars.move("LLFFFLFLFL");
-        assertThat(mars.getRobot(), is(equalTo("2 3 " + Constants.SOUTH)));
+        assertThat(mars.getRobot(), is(equalTo("2 3 S")));
     }
 }

@@ -19,8 +19,6 @@ import martianRobots.robots.Robot;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static martianRobots.lang.Constants.SPACE;
-
 public class PlanetMars extends Parent {
 
     private final Mars mars;
@@ -50,7 +48,7 @@ public class PlanetMars extends Parent {
 
     private EventHandler<MouseEvent> move(TextField position) {
         return event -> {
-            String[] pos = position.getText().split(SPACE);
+            String[] pos = position.getText().trim().split(" +");
             try {
                 int x = Integer.parseInt(pos[0]);
                 int y = Integer.parseInt(pos[1]);
@@ -85,7 +83,7 @@ public class PlanetMars extends Parent {
         return event -> {
             try {
                 messages.setText(Constants.EMPTY);
-                mars.setup(Integer.parseInt(x.getText()), Integer.parseInt(y.getText()));
+                mars.setup(Integer.parseInt(x.getText().trim()), Integer.parseInt(y.getText().trim()));
                 setVisible(true, planet.getCenter(), reset);
                 setVisible(false, go, x, y);
             } catch (ValidationException e) {

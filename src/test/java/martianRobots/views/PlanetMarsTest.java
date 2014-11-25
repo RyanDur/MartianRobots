@@ -173,7 +173,14 @@ public class PlanetMarsTest extends GuiTest {
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
         click("#x").type("5").click("#y").type("3").click("#go")
                 .click("#position").type("2 4 N").click("#move");
-        System.out.println(robot);
+        verify(mars).setRobot(robot);
+    }
+    @Test
+    public void shouldTrimTheSpaceFromInputs() throws ValidationException {
+        Robot robot = mock(Robot.class);
+        when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
+        click("#x").type("5   ").click("#y").type("3").click("#go")
+                .click("#position").type("  2   4 N  ").click("#move");
         verify(mars).setRobot(robot);
     }
 }

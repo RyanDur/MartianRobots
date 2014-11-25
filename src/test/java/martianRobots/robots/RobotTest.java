@@ -160,4 +160,5 @@ public class RobotTest {
         exception.expectMessage(direction + Constants.INVALID_DIRECTION);
         robot.move(direction);
     }
+
 }

@@ -237,26 +237,17 @@ public class MarsTest {
     public void shouldSatisfyRequirementsOfChallenge() throws ValidationException {
         mars.setup(5, 3);
 
-        int x = 1;
-        int y = 1;
-        Compass east = Compass.E;
-        Robot robot = new RobotImpl(x, y, east);
+        Robot robot = new RobotImpl(1, 1, Compass.E);
         mars.setRobot(robot);
         mars.move("RFRFRFRF");
         assertThat(mars.getRobot(), is(equalTo("1 1 E")));
 
-        int x1 = 3;
-        int y1 = 2;
-        Compass north = Compass.N;
-        Robot robot1 = new RobotImpl(x1, y1, north);
+        Robot robot1 = new RobotImpl(3, 2, Compass.N);
         mars.setRobot(robot1);
         mars.move("FRRFLLFFRRFLL");
         assertThat(mars.getRobot(), is(equalTo("3 3 N LOST")));
 
-        int x2 = 0;
-        int y2 = 3;
-        Compass west = Compass.W;
-        Robot robot2 = new RobotImpl(x2, y2, west);
+        Robot robot2 = new RobotImpl(0, 3, Compass.W);
         mars.setRobot(robot2);
         mars.move("LLFFFLFLFL");
         assertThat(mars.getRobot(), is(equalTo("2 3 S")));

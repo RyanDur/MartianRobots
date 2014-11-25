@@ -3,6 +3,10 @@ package martianRobots;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.robots.Robot;
 
+/**
+ * The surface of Mars is modelled by a rectangular grid around which
+ * robots are able to move according to instructions provided from Earth.
+ */
 public interface Mars {
 
     /**

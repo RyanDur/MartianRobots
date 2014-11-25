@@ -30,7 +30,8 @@ import static martianRobots.lang.Constants.SPACE;
 public class MarsImpl implements Mars {
     private Supplier<Robot> robot;
     private Supplier<String> lost;
-    private Set<Robot> scents;
+    private Set<Robot> scents;// lost robots leave a robot “scent” that prohibits future robots from dropping off
+    // the world at the same grid point.
     private Set<List<Integer>> occupied;
     private Predicate<List<Integer>> isOutOfBounds;
     private boolean isLost;

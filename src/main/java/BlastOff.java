@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import martianRobots.modules.ViewModule;
 import martianRobots.views.PlanetMars;
 
-public class Main extends Application {
+public class BlastOff extends Application {
     public static void main(String[] args) {
         launch(args);
     }
@@ -16,7 +16,7 @@ public class Main extends Application {
         try {
             Injector injector = Guice.createInjector(new ViewModule());
             PlanetMars pm = injector.getInstance(PlanetMars.class);
-            stage.setScene(new Scene(pm, 570, 650));
+            stage.setScene(new Scene(pm));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

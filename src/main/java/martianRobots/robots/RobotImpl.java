@@ -1,6 +1,5 @@
 package martianRobots.robots;
 
-import com.google.inject.Inject;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
 
@@ -27,14 +26,10 @@ public class RobotImpl implements Robot {
      * @param y           coordinate
      * @param orientation for the direction the robot is facing
      */
-    public RobotImpl(final int x, final int y, final Compass orientation) {
+    public RobotImpl(final int x, final int y, final Compass orientation, Robots robots) {
         setX.accept(x);
         setY.accept(y);
         setOrientation.accept(orientation);
-    }
-
-    @Inject
-    public void setRobotFactory(Robots robots) {
         this.robots = robots;
     }
 
@@ -50,7 +45,7 @@ public class RobotImpl implements Robot {
 
     @Override
     public Robot move(final char direction) throws ValidationException {
-        return robots.createRobot(direction, x.get(), y.get(), orientation.get());
+        return robots.createRobot(direction, x.get(), y.get(), orientation.get(), robots);
     }
 
     /**

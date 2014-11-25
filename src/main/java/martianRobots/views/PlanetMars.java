@@ -80,6 +80,7 @@ public class PlanetMars extends Parent {
 
     private EventHandler<MouseEvent> leaveMars(TextField x, TextField y) {
         return event -> {
+            messages.setText(Constants.EMPTY);
             setVisible(false, planet.getCenter(), reset);
             resetTextFields(x, y, position, instructions);
             output.clear();

@@ -46,6 +46,7 @@
          </children>
       </Pane>
    </center>
+<<<<<<< HEAD
    <bottom>
       <Label id="messages" alignment="CENTER" prefHeight="58.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <font>
@@ -53,4 +54,6 @@
          </font>
       </Label>
    </bottom>
+=======
+>>>>>>> setup gui tests
 </BorderPane>

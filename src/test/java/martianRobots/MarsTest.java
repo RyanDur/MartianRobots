@@ -76,10 +76,18 @@ public class MarsTest {
     }
 
     @Test
-    public void shouldNGetHelpfulMessageForInvalidGridSetup() throws ValidationException {
+    public void shouldNGetHelpfulMessageForInvalidGridSetupForX() throws ValidationException {
         int x = -1;
         int y = 2;
-        exception.expectMessage("[" + x + ", " + y + "]" + Constants.INVALID_GRID_SIZE);
+        exception.expectMessage(x  + Constants.INVALID_GRID_SIZE);
+        mars.setup(x, y);
+    }
+
+    @Test
+    public void shouldNGetHelpfulMessageForInvalidGridSetupForY() throws ValidationException {
+        int x = 1;
+        int y = 72;
+        exception.expectMessage(y  + Constants.INVALID_GRID_SIZE);
         mars.setup(x, y);
     }
 

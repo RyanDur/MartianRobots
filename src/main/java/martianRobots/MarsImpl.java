@@ -3,14 +3,13 @@ package martianRobots;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.robots.Robot;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -22,7 +21,8 @@ import static martianRobots.lang.Constants.INVALID_INSTRUCTIONS;
 import static martianRobots.lang.Constants.IS_TAKEN;
 import static martianRobots.lang.Constants.LOST;
 import static martianRobots.lang.Constants.MAX_INSTRUCTION_SIZE;
-import static martianRobots.lang.Constants.MAX_SIZE;
+import static martianRobots.lang.Constants.MAX_X;
+import static martianRobots.lang.Constants.MAX_Y;
 import static martianRobots.lang.Constants.NOT_EXISTS;
 import static martianRobots.lang.Constants.SPACE;
 
@@ -36,8 +36,9 @@ public class MarsImpl implements Mars {
 
     @Override
     public void setup(final int x, final int y) throws ValidationException {
-        if (isInvalidSize.test(x, y)) throw new ValidationException(Arrays.asList(x, y) + INVALID_GRID_SIZE);
-        setBounds.accept(x, y);
+        if (isInvalidSize.test(MAX_X, x)) throw new ValidationException(x + INVALID_GRID_SIZE);
+        if (isInvalidSize.test(MAX_Y, y)) throw new ValidationException(y + INVALID_GRID_SIZE);
+        setBounds.accept(bound.apply(x), bound.apply(y));
         scents = new HashSet<>();
         occupied = new HashSet<>();
     }
@@ -55,8 +56,8 @@ public class MarsImpl implements Mars {
 
     @Override
     public void setRobot(final Robot robot) throws ValidationException {
-        if (isOutOfBounds.test(robot.getLocation())) throw new ValidationException(robot + NOT_EXISTS);
         if (occupied.contains(robot.getLocation())) throw new ValidationException(robot + IS_TAKEN);
+        if (isOutOfBounds.test(robot.getLocation())) throw new ValidationException(robot + NOT_EXISTS);
         setLost.accept(false);
         setRobot.accept(robot);
         occupied.add(robot.getLocation());
@@ -79,13 +80,9 @@ public class MarsImpl implements Mars {
         } else this.robot = () -> robot;
     };
 
-    private BiFunction<Integer, Integer, Predicate<List<Integer>>> getBoundary = (maxX, maxY) ->
-            loc -> loc.get(0) < 0 || loc.get(0) > maxX || loc.get(1) < 0 || loc.get(1) > maxY;
-
-    private BiConsumer<Integer, Integer> setBounds = (x, y) -> isOutOfBounds = getBoundary.apply(x, y);
-
-    private BiPredicate<Integer, Integer> isInvalidSize = (x, y) ->
-            getBoundary.apply(MAX_SIZE, MAX_SIZE).test(Arrays.asList(x, y));
-
+    private Function<Integer, Predicate<Integer>> bound = max -> loc -> loc < 0 || loc > max;
+    private BiPredicate<Integer, Integer> isInvalidSize = (max, bound) -> this.bound.apply(max).test(bound);
     private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE;
+    private BiConsumer<Predicate<Integer>, Predicate<Integer>> setBounds = (maxX, maxY) ->
+            isOutOfBounds = loc -> maxX.test(loc.get(0)) || maxY.test(loc.get(1));
 }

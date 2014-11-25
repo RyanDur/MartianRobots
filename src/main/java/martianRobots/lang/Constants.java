@@ -1,7 +1,8 @@
 package martianRobots.lang;
 
 public interface Constants {
-    final int MAX_SIZE = 50;
+    final int MAX_X = 50;
+    final int MAX_Y = 50;
     final int MAX_INSTRUCTION_SIZE = 100;
     final char DOT = '.';
     final String SPACE = " ";

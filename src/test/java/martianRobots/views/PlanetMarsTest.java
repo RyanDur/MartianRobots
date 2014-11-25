@@ -88,4 +88,10 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").type("5").click("#y").type("3").click("#go");
         assertThat(find("#control").isVisible(), is(true));
     }
+
+    @Test
+    public void shouldMakeResetVisibleWhenGoingToMars() {
+        click("#x").type("5").click("#y").type("3").click("#go");
+        assertThat(find("#reset").isVisible(), is(true));
+    }
 }

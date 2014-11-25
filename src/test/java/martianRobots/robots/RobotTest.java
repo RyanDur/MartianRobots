@@ -23,6 +23,7 @@ public class RobotTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private Robot robot;
+
     @Before
     public void setup() {
         robot = new RobotImpl(1, 2, Compass.E);
@@ -98,5 +99,17 @@ public class RobotTest {
         char direction = 'L';
         robot = robot.move(direction);
         assertThat(robot.toString(), is(equalTo(1 + " " + 2 + " " + Compass.N)));
+    }
+
+    @Test
+
+    public void shouldGetHelpfulMessageForInvalidInstructions() throws ValidationException {
+        Compass orientation = Compass.S;
+        int x = 1;
+        int y = 2;
+        Robot robot = new RobotImpl(x, y, orientation);
+        char direction = 'D';
+        exception.expectMessage(direction + " " + Messages.INVALID_DIRECTION.toString());
+        robot.move(direction);
     }
 }

@@ -1,12 +1,14 @@
 package martianRobots.robots;
 
 import martianRobots.lang.Compass;
+import org.junit.Before;
 import org.junit.Test;
 
 import static martianRobots.lang.Messages.SPACE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class LTest {
 
@@ -16,6 +18,7 @@ public class LTest {
         int y = 2;
         Compass orientation = Compass.N;
         Compass turn = Compass.W;
+
         Robot robot = new L(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE.toString() + y + SPACE + turn)));
     }
@@ -46,6 +49,7 @@ public class LTest {
         int y = 2;
         Compass orientation = Compass.E;
         Compass turn = Compass.N;
+
         Robot robot = new L(x, y, orientation);
         assertThat(robot.toString(), is(equalTo(x + SPACE.toString() + y + SPACE + turn)));
     }

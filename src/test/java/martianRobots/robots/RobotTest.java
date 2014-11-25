@@ -102,7 +102,6 @@ public class RobotTest {
     }
 
     @Test
-
     public void shouldGetHelpfulMessageForInvalidInstructions() throws ValidationException {
         Compass orientation = Compass.S;
         int x = 1;

@@ -16,8 +16,9 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 import static martianRobots.lang.Constants.EMPTY;
-import static martianRobots.lang.Constants.INVALID_GRID_SIZE;
 import static martianRobots.lang.Constants.INVALID_INSTRUCTIONS;
+import static martianRobots.lang.Constants.INVALID_X_SIZE;
+import static martianRobots.lang.Constants.INVALID_Y_SIZE;
 import static martianRobots.lang.Constants.IS_TAKEN;
 import static martianRobots.lang.Constants.LOST;
 import static martianRobots.lang.Constants.MAX_INSTRUCTION_SIZE;
@@ -36,8 +37,8 @@ public class MarsImpl implements Mars {
 
     @Override
     public void setup(final int x, final int y) throws ValidationException {
-        if (isInvalidSize.test(MAX_X, x)) throw new ValidationException(x + INVALID_GRID_SIZE);
-        if (isInvalidSize.test(MAX_Y, y)) throw new ValidationException(y + INVALID_GRID_SIZE);
+        if (isInvalidSize.test(MAX_X, x)) throw new ValidationException(x + INVALID_X_SIZE);
+        if (isInvalidSize.test(MAX_Y, y)) throw new ValidationException(y + INVALID_Y_SIZE);
         setBounds.accept(bound.apply(x), bound.apply(y));
         scents = new HashSet<>();
         occupied = new HashSet<>();
@@ -81,7 +82,7 @@ public class MarsImpl implements Mars {
     };
 
     private Function<Integer, Predicate<Integer>> bound = max -> loc -> loc < 0 || loc > max;
-    private BiPredicate<Integer, Integer> isInvalidSize = (max, bound) -> this.bound.apply(max).test(bound);
+    private BiPredicate<Integer, Integer> isInvalidSize = (max, size) -> bound.apply(max).test(size);
     private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE;
     private BiConsumer<Predicate<Integer>, Predicate<Integer>> setBounds = (maxX, maxY) ->
             isOutOfBounds = loc -> maxX.test(loc.get(0)) || maxY.test(loc.get(1));

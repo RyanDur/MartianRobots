@@ -16,7 +16,7 @@ public class ValidationExceptionTest {
     public void shouldGetAnAppropriateMessageIfThrown() throws ValidationException {
         int row = 1;
         int column = 2;
-        exception.expectMessage("[" + row + ", " + column + "]" + Constants.INVALID_GRID_SIZE);
-        throw new ValidationException(Arrays.asList(row, column) + Constants.INVALID_GRID_SIZE);
+        exception.expectMessage("[" + row + ", " + column + "]" + Constants.INVALID_X_SIZE);
+        throw new ValidationException(Arrays.asList(row, column) + Constants.INVALID_X_SIZE);
     }
 }

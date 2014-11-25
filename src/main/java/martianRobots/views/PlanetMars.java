@@ -58,7 +58,10 @@ public class PlanetMars extends Parent {
 
     private EventHandler<MouseEvent> move(TextField position, TextField instructions, TextArea output) {
         return event -> {
+<<<<<<< HEAD
             messages.setText(Constants.EMPTY);
+=======
+>>>>>>> Refactor out messages to constants
             String[] pos = position.getText().trim().split(Constants.MULTI_SPACE);
             try {
                 if (pos.length < MAX_NUMBER_COORDS || pos.length > MAX_NUMBER_COORDS) {

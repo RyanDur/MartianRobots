@@ -38,26 +38,12 @@ public class PlanetMarsTest extends GuiTest {
     protected Parent getRootNode() {
         robotFactory = mock(RobotFactory.class);
         return new PlanetMars(mars, robotFactory);
-=======
-import org.junit.Test;
-import org.loadui.testfx.GuiTest;
-
-import static org.loadui.testfx.Assertions.verifyThat;
-import static org.loadui.testfx.controls.Commons.hasText;
-
-public class PlanetMarsTest extends GuiTest{
-
-    @Override
-    protected Parent getRootNode() {
-        return new PlanetMars();
->>>>>>> setup gui tests
     }
 
     @Test
     public void shouldHaveAGoToMarsButton() {
         verifyThat("#go", hasText("Go to Mars"));
     }
-<<<<<<< HEAD
 
     @Test
     public void shouldHaveTheControlsHiddenOnStartup() {
@@ -286,6 +272,4 @@ public class PlanetMarsTest extends GuiTest{
         verifyThat("#instructions", hasText(""));
         verifyThat("#output", hasText(""));
     }
-=======
->>>>>>> setup gui tests
 }

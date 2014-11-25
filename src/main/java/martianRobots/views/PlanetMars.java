@@ -12,10 +12,14 @@ import javafx.scene.layout.BorderPane;
 import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.factories.RobotFactory;
+import martianRobots.lang.Compass;
 import martianRobots.lang.Constants;
+import martianRobots.robots.Robot;
 
 import java.io.IOException;
 import java.util.Arrays;
+
+import static martianRobots.lang.Constants.SPACE;
 
 public class PlanetMars extends Parent {
 
@@ -32,19 +36,42 @@ public class PlanetMars extends Parent {
         planet = getFXML();
         reset = (Button) planet.getTop().lookup("#reset");
         go = (Button) planet.getTop().lookup("#go");
+        Button move = (Button) planet.getCenter().lookup("#move");
         TextField x = (TextField) planet.getTop().lookup("#x");
         TextField y = (TextField) planet.getTop().lookup("#y");
+        TextField position = (TextField) planet.getCenter().lookup("#position");
         messages = (Label) planet.getBottom();
         setVisible(false, planet.getCenter(), reset);
         go.setOnMouseClicked(goToMars(x, y));
-        reset.setOnMouseClicked(event -> {
+        reset.setOnMouseClicked(leaveMars(x, y));
+        move.setOnMouseClicked(move(position));
+        this.getChildren().add(planet);
+    }
+
+    private EventHandler<MouseEvent> move(TextField position) {
+        return event -> {
+            String[] pos = position.getText().split(SPACE);
+            try {
+                int x = Integer.parseInt(pos[0]);
+                int y = Integer.parseInt(pos[1]);
+                Compass orientation = Compass.valueOf(pos[2]);
+
+                Robot robot = robotFactory.createRobot(x, y, orientation);
+                mars.setRobot(robot);
+            } catch (ValidationException e) {
+                e.printStackTrace();
+            }
+        };
+    }
+
+    private EventHandler<MouseEvent> leaveMars(TextField x, TextField y) {
+        return event -> {
             setVisible(false, planet.getCenter(), reset);
             resetTextFields(x, y);
             y.setPromptText("Y");
             x.setPromptText("X");
             setVisible(true, x, y, go);
-        });
-        this.getChildren().add(planet);
+        };
     }
 
     private void resetTextFields(TextField... fields) {

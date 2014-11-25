@@ -5,6 +5,8 @@ import javafx.scene.input.KeyCode;
 import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.factories.RobotFactory;
+import martianRobots.lang.Compass;
+import martianRobots.robots.Robot;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -20,16 +22,18 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class PlanetMarsTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
     private Mars mars = mock(Mars.class);
+    private RobotFactory robotFactory;
 
     @Override
     protected Parent getRootNode() {
-        RobotFactory robotFactory = mock(RobotFactory.class);
+        robotFactory = mock(RobotFactory.class);
         return new PlanetMars(mars, robotFactory);
     }
 
@@ -154,5 +158,22 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").type("5").click("#y").type("3").click("#go").click("#reset")
         .click("#x").type("5").click("#y").type("3").click("#go");
         verify(mars, times(2)).setup(5, 3);
+    }
+
+    @Test
+    public void shouldCreateARobotWhenMoving() {
+        click("#x").type("5").click("#y").type("3").click("#go")
+        .click("#position").type("2 4 N").click("#move");
+        verify(robotFactory).createRobot(2, 4 ,Compass.N);
+    }
+
+    @Test
+    public void shouldPlaceARobotWhenMoving() throws ValidationException {
+        Robot robot = mock(Robot.class);
+        when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("2 4 N").click("#move");
+        System.out.println(robot);
+        verify(mars).setRobot(robot);
     }
 }

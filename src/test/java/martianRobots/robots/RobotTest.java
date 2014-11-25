@@ -20,14 +20,14 @@ public class RobotTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void shouldBeAbleToCheckTheEqualityOfPositions() throws ValidationException {
+    public void shouldBeAbleToCheckTheEqualityOfPositions() {
         Robot robot = new RobotImpl(1, 2, Compass.E);
         Robot robot1 = new RobotImpl(1, 2, Compass.E);
         assertThat(robot.equals(robot1), is(true));
     }
 
     @Test
-    public void shouldBeAbleToCheckTheContentsOfPositions() throws ValidationException {
+    public void shouldBeAbleToCheckTheContentsOfPositions() {
         Set<Robot> scents = new HashSet<>();
         Robot robot = new RobotImpl(1, 2, Compass.E);
         scents.add(robot);
@@ -36,7 +36,7 @@ public class RobotTest {
     }
 
     @Test
-    public void shouldBeAbleToDisplayThePosition() throws ValidationException {
+    public void shouldBeAbleToDisplayThePosition() {
         int x = 1;
         int y = 1;
         Compass orientation = Compass.E;
@@ -45,7 +45,7 @@ public class RobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionNorth() throws ValidationException {
+    public void shouldBeAbleToOrientAPositionNorth() {
         Compass orientation = Compass.N;
         int x = 1;
         int y = 2;
@@ -54,7 +54,7 @@ public class RobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionEast() throws ValidationException {
+    public void shouldBeAbleToOrientAPositionEast() {
         Compass orientation = Compass.E;
         int x = 1;
         int y = 2;
@@ -63,7 +63,7 @@ public class RobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionSouth() throws ValidationException {
+    public void shouldBeAbleToOrientAPositionSouth() {
         Compass orientation = Compass.S;
         int x = 1;
         int y = 2;
@@ -72,7 +72,7 @@ public class RobotTest {
     }
 
     @Test
-    public void shouldBeAbleToOrientAPositionWest() throws ValidationException {
+    public void shouldBeAbleToOrientAPositionWest() {
         Compass orientation = Compass.W;
         int x = 1;
         int y = 2;

@@ -1,5 +1,6 @@
 package martianRobots.views;
 
+import com.google.inject.Inject;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -32,6 +33,7 @@ public class PlanetMars extends Parent {
     private TextField instructions;
     private TextArea output;
 
+    @Inject
     public PlanetMars(Mars mars, RobotFactory robotFactory) {
         this.mars = mars;
         this.robotFactory = robotFactory;

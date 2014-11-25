@@ -252,7 +252,7 @@ public class PlanetMarsTest extends GuiTest {
                 .click("#instructions").type("sdgsdfgsdfg")
                 .click("#move").click("#reset")
                 .click("#x").type("5").click("#y").type("3").click("#go");
-        
+
         verifyThat("#position", hasText(""));
         verifyThat("#instructions", hasText(""));
         verifyThat("#output", hasText(""));

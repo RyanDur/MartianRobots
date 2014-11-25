@@ -1,6 +1,7 @@
 package martianRobots.views;
 
 import javafx.scene.Parent;
+import javafx.scene.input.KeyCode;
 import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.robots.Robot;
@@ -48,5 +49,26 @@ public class PlanetMarsTest extends GuiTest {
     public void shouldBeAbleToInputAGridSizeAndGoToMars() throws ValidationException {
         click("#x").type("5").click("#y").type("3").click("#go");
         verify(mars).setup(5, 3);
+    }
+
+    @Test
+    public void shouldBeAbleToHandleIfInputIsNotANumberInX() {
+        click("#x").type("mop").click("#y").type("4").click("#go");
+        verifyThat("#messages", hasText("For input string: \"mop\" is not a number!!"));
+    }
+
+    @Test
+    public void shouldBeAbleToHandleIfInputIsNotANumberInY() {
+        click("#x").type("6").click("#y").type("tigger").click("#go");
+        verifyThat("#messages", hasText("For input string: \"tigger\" is not a number!!"));
+    }
+
+    @Test
+    public void shouldRemoveMessageIfInputIsCorrect() throws ValidationException {
+        click("#x").type("foo").click("#y").type("4").click("#go");
+        verifyThat("#messages", hasText("For input string: \"foo\" is not a number!!"));
+        click("#x").push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).type("2").click("#go");
+        verify(mars).setup(2, 4);
+        verifyThat("#messages", hasText(""));
     }
 }

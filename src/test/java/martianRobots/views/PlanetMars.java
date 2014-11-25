@@ -3,6 +3,7 @@ package martianRobots.views;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import martianRobots.Mars;
@@ -26,14 +27,19 @@ public class PlanetMars extends Parent {
         Button go = (Button) planet.getTop().lookup("#go");
         TextField x = (TextField) planet.getTop().lookup("#x");
         TextField y = (TextField) planet.getTop().lookup("#y");
+        Label messages = (Label) planet.getBottom();
+        reset.setVisible(false);
         go.setOnMouseClicked(event -> {
             try {
+                messages.setText(Constants.EMPTY);
                 mars.setup(Integer.parseInt(x.getText()), Integer.parseInt(y.getText()));
             } catch (ValidationException e) {
                 e.printStackTrace();
+            } catch (NumberFormatException e) {
+                String message = " is not a number!!";
+                messages.setText(e.getMessage() + message);
             }
         });
-        reset.setVisible(false);
         this.getChildren().add(planet);
     }
 

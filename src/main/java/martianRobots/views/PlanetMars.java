@@ -57,7 +57,7 @@ public class PlanetMars extends Parent {
                 Robot robot = robotFactory.createRobot(x, y, orientation);
                 mars.setRobot(robot);
             } catch (ValidationException e) {
-                e.printStackTrace();
+                messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
                 String message = " is not a number!!";
                 messages.setText(e.getMessage() + message);

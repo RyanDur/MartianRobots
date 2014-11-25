@@ -17,6 +17,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -201,5 +202,16 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").type("5").click("#y").type("3").click("#go")
                 .click("#position").type("5 4 R").click("#move");
         verifyThat("#messages", hasText("R is not a Compass position!"));
+    }
+
+    @Test
+    public void shouldBeAbleToHandleMessagesFromMars() throws ValidationException {
+        doThrow(new ValidationException("Hello")).when(mars).setRobot(any(Robot.class));
+        Robot robot = mock(Robot.class);
+        when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
+
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("5 4 S").click("#move");
+        verifyThat("#messages", hasText("Hello"));
     }
 }

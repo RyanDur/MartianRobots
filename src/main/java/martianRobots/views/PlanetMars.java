@@ -38,24 +38,26 @@ public class PlanetMars extends Parent {
         TextField x = (TextField) planet.getTop().lookup("#x");
         TextField y = (TextField) planet.getTop().lookup("#y");
         TextField position = (TextField) planet.getCenter().lookup("#position");
+        TextField instructions = (TextField) planet.getCenter().lookup("#instructions");
         messages = (Label) planet.getBottom();
         setVisible(false, planet.getCenter(), reset);
         go.setOnMouseClicked(goToMars(x, y));
         reset.setOnMouseClicked(leaveMars(x, y));
-        move.setOnMouseClicked(move(position));
+        move.setOnMouseClicked(move(position, instructions));
         this.getChildren().add(planet);
     }
 
-    private EventHandler<MouseEvent> move(TextField position) {
+    private EventHandler<MouseEvent> move(TextField position, TextField instructions) {
         return event -> {
             String[] pos = position.getText().trim().split(" +");
             try {
                 int x = Integer.parseInt(pos[0]);
                 int y = Integer.parseInt(pos[1]);
-                Compass orientation = Compass.valueOf(pos[2]);
+                Compass orientation = Compass.valueOf(pos[2].toUpperCase());
 
                 Robot robot = robotFactory.createRobot(x, y, orientation);
                 mars.setRobot(robot);
+                mars.move(instructions.getText().toUpperCase());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {

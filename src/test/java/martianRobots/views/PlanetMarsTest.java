@@ -178,6 +178,15 @@ public class PlanetMarsTest extends GuiTest {
     }
 
     @Test
+    public void shouldSetOrientationToUpperCaseWhenPlaceARobotWhenMoving() throws ValidationException {
+        Robot robot = mock(Robot.class);
+        when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("2 4 n").click("#move");
+        verify(robotFactory).createRobot(2, 4, Compass.N);
+    }
+
+    @Test
     public void shouldTrimTheSpaceFromInputs() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
@@ -213,5 +222,14 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").type("5").click("#y").type("3").click("#go")
                 .click("#position").type("5 4 S").click("#move");
         verifyThat("#messages", hasText("Hello"));
+    }
+
+    @Test
+    public void shouldBeAbleToSenInstructionsToMars() throws ValidationException {
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("5 4 S")
+                .click("#instructions").type("sdgsdfgsdfg")
+                .click("#move");
+        verify(mars).move("SDGSDFGSDFG");
     }
 }

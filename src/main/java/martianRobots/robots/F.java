@@ -1,6 +1,5 @@
 package martianRobots.robots;
 
-import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
 
 import static martianRobots.lang.Compass.E;
@@ -9,7 +8,7 @@ import static martianRobots.lang.Compass.S;
 
 class F extends RobotImpl {
 
-    public F(final int x, final int y, final Compass orientation) throws ValidationException {
+    public F(final int x, final int y, final Compass orientation) {
         super(x, y, orientation);
         setMove(x, y);
     }

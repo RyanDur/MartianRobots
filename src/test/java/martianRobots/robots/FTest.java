@@ -1,6 +1,5 @@
 package martianRobots.robots;
 
-import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class FTest {
 
     @Test
-    public void shouldMoveOneSpaceEastIfEast() throws ValidationException {
+    public void shouldMoveOneSpaceEastIfEast() {
         int x = 1;
         int y = 2;
         Compass orientation = Compass.E;
@@ -21,7 +20,7 @@ public class FTest {
     }
 
     @Test
-    public void shouldMoveOneSpaceSouthIfSouth() throws ValidationException {
+    public void shouldMoveOneSpaceSouthIfSouth() {
         int x = 1;
         int y = 2;
         Compass orientation = Compass.S;
@@ -30,7 +29,7 @@ public class FTest {
     }
 
     @Test
-    public void shouldMoveOneSpaceNorthIfNorth() throws ValidationException {
+    public void shouldMoveOneSpaceNorthIfNorth() {
         int x = 1;
         int y = 2;
         Compass orientation = Compass.N;
@@ -39,7 +38,7 @@ public class FTest {
     }
 
     @Test
-    public void shouldMoveOneSpaceWestIfWest() throws ValidationException {
+    public void shouldMoveOneSpaceWestIfWest() {
         int x = 1;
         int y = 2;
         Compass orientation = Compass.W;

@@ -94,4 +94,25 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").type("5").click("#y").type("3").click("#go");
         assertThat(find("#reset").isVisible(), is(true));
     }
+
+    @Test
+    public void shouldMakeGoInvisibleWhenGoingToMars() {
+        exception.expect(NoNodesVisibleException.class);
+        click("#x").type("5").click("#y").type("3").click("#go");
+        find("#go");
+    }
+
+    @Test
+    public void shouldMakeXInvisibleWhenGoingToMars() {
+        exception.expect(NoNodesVisibleException.class);
+        click("#x").type("5").click("#y").type("3").click("#go");
+        find("#x");
+    }
+
+    @Test
+    public void shouldMakeYInvisibleWhenGoingToMars() {
+        exception.expect(NoNodesVisibleException.class);
+        click("#x").type("5").click("#y").type("3").click("#go");
+        find("#y");
+    }
 }

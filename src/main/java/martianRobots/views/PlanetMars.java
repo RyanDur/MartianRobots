@@ -2,6 +2,7 @@ package martianRobots.views;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +15,7 @@ import martianRobots.lang.Constants;
 import martianRobots.robots.Robot;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class PlanetMars extends Parent {
 
@@ -28,13 +30,12 @@ public class PlanetMars extends Parent {
         this.mars = mars;
         this.robot = robot;
         planet = getFXML();
-        planet.getCenter().setVisible(false);
         reset = (Button) planet.getTop().lookup("#reset");
         go = (Button) planet.getTop().lookup("#go");
         TextField x = (TextField) planet.getTop().lookup("#x");
         TextField y = (TextField) planet.getTop().lookup("#y");
         messages = (Label) planet.getBottom();
-        reset.setVisible(false);
+        setVisible(false, planet.getCenter(), reset);
         go.setOnMouseClicked(goToMars(x, y));
         this.getChildren().add(planet);
     }
@@ -44,8 +45,8 @@ public class PlanetMars extends Parent {
             try {
                 messages.setText(Constants.EMPTY);
                 mars.setup(Integer.parseInt(x.getText()), Integer.parseInt(y.getText()));
-                planet.getCenter().setVisible(true);
-                reset.setVisible(true);
+                setVisible(true, planet.getCenter(), reset);
+                setVisible(false, go, x, y);
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
@@ -53,6 +54,10 @@ public class PlanetMars extends Parent {
                 messages.setText(e.getMessage() + message);
             }
         };
+    }
+
+    private void setVisible(boolean visible, Node... nodes) {
+        Arrays.stream(nodes).forEach(node -> node.setVisible(visible));
     }
 
     private BorderPane getFXML() {

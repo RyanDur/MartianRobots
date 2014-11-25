@@ -157,15 +157,15 @@ public class PlanetMarsTest extends GuiTest {
     @Test
     public void shouldToReInputNewBoundariesForMars() throws ValidationException {
         click("#x").type("5").click("#y").type("3").click("#go").click("#reset")
-        .click("#x").type("5").click("#y").type("3").click("#go");
+                .click("#x").type("5").click("#y").type("3").click("#go");
         verify(mars, times(2)).setup(5, 3);
     }
 
     @Test
     public void shouldCreateARobotWhenMoving() {
         click("#x").type("5").click("#y").type("3").click("#go")
-        .click("#position").type("2 4 N").click("#move");
-        verify(robotFactory).createRobot(2, 4 ,Compass.N);
+                .click("#position").type("2 4 N").click("#move");
+        verify(robotFactory).createRobot(2, 4, Compass.N);
     }
 
     @Test
@@ -231,5 +231,30 @@ public class PlanetMarsTest extends GuiTest {
                 .click("#instructions").type("sdgsdfgsdfg")
                 .click("#move");
         verify(mars).move("SDGSDFGSDFG");
+    }
+
+    @Test
+    public void shouldGetDataFromMars() {
+        when(mars.getRobot()).thenReturn("Hello From Mars");
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("5 4 S")
+                .click("#instructions").type("sdgsdfgsdfg")
+                .click("#move");
+
+        verifyThat("#output", hasText("Hello From Mars"));
+    }
+
+    @Test
+    public void shouldResetEverythingWhenReset() {
+        when(mars.getRobot()).thenReturn("Hello From Mars");
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("5 4 S")
+                .click("#instructions").type("sdgsdfgsdfg")
+                .click("#move").click("#reset")
+                .click("#x").type("5").click("#y").type("3").click("#go");
+        
+        verifyThat("#position", hasText(""));
+        verifyThat("#instructions", hasText(""));
+        verifyThat("#output", hasText(""));
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -27,6 +28,9 @@ public class PlanetMars extends Parent {
     private Button go;
     private Label messages;
     private BorderPane planet;
+    private TextField position;
+    private TextField instructions;
+    private TextArea output;
 
     public PlanetMars(Mars mars, RobotFactory robotFactory) {
         this.mars = mars;
@@ -37,17 +41,18 @@ public class PlanetMars extends Parent {
         Button move = (Button) planet.getCenter().lookup("#move");
         TextField x = (TextField) planet.getTop().lookup("#x");
         TextField y = (TextField) planet.getTop().lookup("#y");
-        TextField position = (TextField) planet.getCenter().lookup("#position");
-        TextField instructions = (TextField) planet.getCenter().lookup("#instructions");
+        position = (TextField) planet.getCenter().lookup("#position");
+        instructions = (TextField) planet.getCenter().lookup("#instructions");
+        output = (TextArea) planet.getCenter().lookup("#output");
         messages = (Label) planet.getBottom();
         setVisible(false, planet.getCenter(), reset);
         go.setOnMouseClicked(goToMars(x, y));
         reset.setOnMouseClicked(leaveMars(x, y));
-        move.setOnMouseClicked(move(position, instructions));
+        move.setOnMouseClicked(move(position, instructions, output));
         this.getChildren().add(planet);
     }
 
-    private EventHandler<MouseEvent> move(TextField position, TextField instructions) {
+    private EventHandler<MouseEvent> move(TextField position, TextField instructions, TextArea output) {
         return event -> {
             String[] pos = position.getText().trim().split(" +");
             try {
@@ -58,6 +63,7 @@ public class PlanetMars extends Parent {
                 Robot robot = robotFactory.createRobot(x, y, orientation);
                 mars.setRobot(robot);
                 mars.move(instructions.getText().toUpperCase());
+                output.setText(mars.getRobot());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
@@ -73,7 +79,8 @@ public class PlanetMars extends Parent {
     private EventHandler<MouseEvent> leaveMars(TextField x, TextField y) {
         return event -> {
             setVisible(false, planet.getCenter(), reset);
-            resetTextFields(x, y);
+            resetTextFields(x, y, position, instructions);
+            output.clear();
             y.setPromptText("Y");
             x.setPromptText("X");
             setVisible(true, x, y, go);

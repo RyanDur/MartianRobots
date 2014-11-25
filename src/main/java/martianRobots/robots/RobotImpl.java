@@ -1,9 +1,9 @@
 package martianRobots.robots;
 
+import com.google.inject.Inject;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -11,27 +11,31 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static martianRobots.lang.Constants.DOT;
-import static martianRobots.lang.Constants.INVALID_DIRECTION;
 import static martianRobots.lang.Constants.SPACE;
 
 public class RobotImpl implements Robot {
     private Supplier<Compass> orientation;
     private Supplier<Integer> x;
     private Supplier<Integer> y;
+    private Robots robots;
 
     /**
      * To setup a robot, input an x and y coordinate to define the location
      * and an orientation the robot is facing.
      *
-     * @param x coordinate
-     * @param y coordinate
+     * @param x           coordinate
+     * @param y           coordinate
      * @param orientation for the direction the robot is facing
      */
     public RobotImpl(final int x, final int y, final Compass orientation) {
         setX.accept(x);
         setY.accept(y);
         setOrientation.accept(orientation);
+    }
+
+    @Inject
+    public void setRobotFactory(Robots robots) {
+        this.robots = robots;
     }
 
     @Override
@@ -46,14 +50,7 @@ public class RobotImpl implements Robot {
 
     @Override
     public Robot move(final char direction) throws ValidationException {
-        try {
-            return (Robot) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
-                    .getDeclaredConstructor(int.class, int.class, Compass.class)
-                    .newInstance(x.get(), y.get(), orientation.get());
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                InstantiationException | InvocationTargetException e) {
-            throw new ValidationException(direction + INVALID_DIRECTION);
-        }
+        return robots.createRobot(direction, x.get(), y.get(), orientation.get());
     }
 
     /**

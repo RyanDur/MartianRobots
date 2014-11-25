@@ -11,6 +11,8 @@ import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.loadui.testfx.Assertions.verifyThat;
 import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Matchers.anyInt;
@@ -79,5 +81,11 @@ public class PlanetMarsTest extends GuiTest {
         click("#x").push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).type("2").click("#go");
         verify(mars).setup(2, 4);
         verifyThat("#messages", hasText(""));
+    }
+
+    @Test
+    public void shouldMakeControlVisibleWhenGoingToMars() {
+        click("#x").type("5").click("#y").type("3").click("#go");
+        assertThat(find("#control").isVisible(), is(true));
     }
 }

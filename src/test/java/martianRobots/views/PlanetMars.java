@@ -33,6 +33,7 @@ public class PlanetMars extends Parent {
             try {
                 messages.setText(Constants.EMPTY);
                 mars.setup(Integer.parseInt(x.getText()), Integer.parseInt(y.getText()));
+                planet.getCenter().setVisible(true);
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {

@@ -5,6 +5,11 @@ import martianRobots.lang.Compass;
 
 import java.util.List;
 
+/**
+ * A robot to traverse the surface of mars.
+ * A robots position consists of a grid coordinate (a pair of integers: x-coordinate followed by y-coordinate)
+ * and a Compass orientation (N, S, E, W for north, south, east, and west).
+ */
 public interface Robot {
 
     /**
@@ -22,7 +27,7 @@ public interface Robot {
     Compass getOrientation();
 
     /**
-     * To move a robot, give a valid direction (e.g F, L, R)
+     * To move a robot, provide a valid direction (e.g. F, L, R)
      *
      * @param direction a robot must move
      * @return a robot in the position or orientation specified by the direction

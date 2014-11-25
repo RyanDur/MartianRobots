@@ -1,4 +1,4 @@
-package martianRobots.modules;
+package martianRobots.robots;
 
 import com.google.inject.AbstractModule;
 import martianRobots.robots.Robots;

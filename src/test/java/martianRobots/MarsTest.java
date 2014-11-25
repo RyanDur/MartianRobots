@@ -183,6 +183,7 @@ public class MarsTest {
         mars.setRobot(robot1);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldIgnoreInstructionIfMoveSpaceIsOccupied() throws ValidationException {
         Compass orientation = Compass.E;
@@ -199,14 +200,9 @@ public class MarsTest {
         when(robot1.toString()).thenReturn(x1 + " " + y1 + " " + orientation);
 
         Robot moveRobot = mock(Robot.class);
-        when(moveRobot.getLocation()).thenReturn(Arrays.asList(x + 1, y));
+        when(moveRobot.getLocation()).thenReturn(Arrays.asList(x + 1, y), Arrays.asList(x + 2, y));
         when(moveRobot.getOrientation()).thenReturn(orientation);
-        when(moveRobot.toString()).thenReturn(x + " " + y + " " + orientation);
-
-        Robot moveRobot1 = mock(Robot.class);
-        when(moveRobot1.getLocation()).thenReturn(Arrays.asList(x1 + 1, y1));
-        when(moveRobot1.getOrientation()).thenReturn(orientation);
-        when(moveRobot1.toString()).thenReturn(x1 + " " + y1 + " " + orientation);
+        when(moveRobot.toString()).thenReturn((x + 1) + " " + y + " " + orientation);
 
         char forward = 'F';
         when(robot.move(forward)).thenReturn(moveRobot);
@@ -235,6 +231,7 @@ public class MarsTest {
     public void shouldIndicateWhenARobotIsLost() throws ValidationException {
         int x = 1;
         int y = 1;
+
         Compass orientation = Compass.W;
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);

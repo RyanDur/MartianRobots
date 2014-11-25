@@ -177,6 +177,7 @@ public class MarsTest {
         mars.setRobot(robot1);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldIgnoreInstructionIfMoveSpaceIsOccupied() throws ValidationException {
         Compass orientation = Compass.E;
@@ -193,14 +194,9 @@ public class MarsTest {
         when(robot1.toString()).thenReturn(x1 + " " + y1 + " " + orientation);
 
         Robot moveRobot = mock(Robot.class);
-        when(moveRobot.getLocation()).thenReturn(Arrays.asList(x + 1, y));
+        when(moveRobot.getLocation()).thenReturn(Arrays.asList(x + 1, y), Arrays.asList(x + 2, y));
         when(moveRobot.getOrientation()).thenReturn(orientation);
-        when(moveRobot.toString()).thenReturn(x + " " + y + " " + orientation);
-
-        Robot moveRobot1 = mock(Robot.class);
-        when(moveRobot1.getLocation()).thenReturn(Arrays.asList(x1 + 1, y1));
-        when(moveRobot1.getOrientation()).thenReturn(orientation);
-        when(moveRobot1.toString()).thenReturn(x1 + " " + y1 + " " + orientation);
+        when(moveRobot.toString()).thenReturn((x + 1) + " " + y + " " + orientation);
 
         when(robot.move(forward)).thenReturn(moveRobot);
         when(robot1.move(forward)).thenReturn(moveRobot);
@@ -221,11 +217,11 @@ public class MarsTest {
         when(robot.getLocation()).thenReturn(Arrays.asList(x, y));
         when(robot.getOrientation()).thenReturn(orientation);
         when(robot.toString()).thenReturn(x + " " + y + " " + orientation);
-        Robot moveRobot = mock(Robot.class);
 
+        Robot moveRobot = mock(Robot.class);
         when(moveRobot.getLocation()).thenReturn(Arrays.asList(x + 10, y));
         when(moveRobot.getOrientation()).thenReturn(orientation);
-        when(moveRobot.toString()).thenReturn(x + " " + y + " " + orientation);
+        when(moveRobot.toString()).thenReturn((x + 10) + " " + y + " " + orientation);
         when(robot.move(forward)).thenReturn(moveRobot);
         when(moveRobot.move(forward)).thenReturn(moveRobot);
 

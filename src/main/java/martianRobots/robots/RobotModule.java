@@ -1,8 +1,6 @@
 package martianRobots.robots;
 
 import com.google.inject.AbstractModule;
-import martianRobots.robots.Robots;
-import martianRobots.robots.RobotsImpl;
 
 public class RobotModule extends AbstractModule {
     @Override

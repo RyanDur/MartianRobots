@@ -28,6 +28,7 @@ dependencies {
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
+
     testCompile "junit:junit:4.11",
             'org.mockito:mockito-core:1.10.8',
             'org.loadui:testFx:3.1.2'

@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
+import static martianRobots.lang.Constants.MAX_NUMBER_COORDS;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.loadui.testfx.Assertions.verifyThat;
@@ -169,6 +170,19 @@ public class PlanetMarsTest extends GuiTest {
     }
 
     @Test
+    public void shouldMakeSureThereAreEnoughCoordinatesForARobot() {
+        click("#x").type("5").click("#y").type("3").click("#go").click("#move");
+        verifyThat("#messages", hasText("Max number of coordinates is " + MAX_NUMBER_COORDS));
+    }
+
+    @Test
+    public void shouldMakeSureThereIsNotMoreTHanEnoughCoordinatesForARobot() {
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("1 2 N 4").click("#move");
+        verifyThat("#messages", hasText("Max number of coordinates is " + MAX_NUMBER_COORDS));
+    }
+
+    @Test
     public void shouldPlaceARobotWhenMoving() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
@@ -196,7 +210,7 @@ public class PlanetMarsTest extends GuiTest {
     }
 
     @Test
-    public void shouldNonNumbersFromInputs() throws ValidationException {
+    public void shouldNotAllowNonNumbersFromInputs() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
         click("#x").type("5").click("#y").type("3").click("#go")
@@ -205,7 +219,7 @@ public class PlanetMarsTest extends GuiTest {
     }
 
     @Test
-    public void shouldNonCompassFromInputs() throws ValidationException {
+    public void shouldNotAllowNonCompassFromInputs() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
         click("#x").type("5").click("#y").type("3").click("#go")
@@ -225,7 +239,7 @@ public class PlanetMarsTest extends GuiTest {
     }
 
     @Test
-    public void shouldBeAbleToSenInstructionsToMars() throws ValidationException {
+    public void shouldBeAbleToSendInstructionsToMars() throws ValidationException {
         click("#x").type("5").click("#y").type("3").click("#go")
                 .click("#position").type("5 4 S")
                 .click("#instructions").type("sdgsdfgsdfg")

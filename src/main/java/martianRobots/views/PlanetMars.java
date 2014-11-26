@@ -21,6 +21,8 @@ import martianRobots.robots.Robot;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static martianRobots.lang.Constants.MAX_NUMBER_COORDS;
+
 public class PlanetMars extends Parent {
 
     private final Mars mars;
@@ -56,16 +58,21 @@ public class PlanetMars extends Parent {
 
     private EventHandler<MouseEvent> move(TextField position, TextField instructions, TextArea output) {
         return event -> {
+            messages.setText(Constants.EMPTY);
             String[] pos = position.getText().trim().split(Constants.MULTI_SPACE);
             try {
-                int x = Integer.parseInt(pos[0]);
-                int y = Integer.parseInt(pos[1]);
-                Compass orientation = Compass.valueOf(pos[2].toUpperCase());
+                if (pos.length < MAX_NUMBER_COORDS || pos.length > MAX_NUMBER_COORDS) {
+                    messages.setText("Max number of coordinates is " + MAX_NUMBER_COORDS);
+                } else {
+                    int x = Integer.parseInt(pos[0]);
+                    int y = Integer.parseInt(pos[1]);
+                    Compass orientation = Compass.valueOf(pos[2].toUpperCase());
 
-                Robot robot = robotFactory.createRobot(x, y, orientation);
-                mars.setRobot(robot);
-                mars.move(instructions.getText().toUpperCase());
-                output.setText(mars.getRobot());
+                    Robot robot = robotFactory.createRobot(x, y, orientation);
+                    mars.setRobot(robot);
+                    mars.move(instructions.getText().toUpperCase());
+                    output.setText(mars.getRobot());
+                }
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {

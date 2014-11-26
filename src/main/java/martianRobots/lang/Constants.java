@@ -18,4 +18,5 @@ public interface Constants {
     String NOT_A_NUMBER = " is not a number!!";
     String NOT_A_COMPASS = " is not a Compass position!";
     String MULTI_SPACE = " +";
+    int MAX_NUMBER_COORDS = 3;
 }

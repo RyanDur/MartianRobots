@@ -3,7 +3,7 @@ package martianRobots.robots;
 import martianRobots.lang.Compass;
 import org.junit.Test;
 
-import static martianRobots.lang.Constants.SPACE;
+import static martianRobots.lang.Messages.SPACE;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,7 +16,7 @@ public class FTest {
         int y = 2;
         Compass orientation = Compass.E;
         Robot robot = new F(x, y, orientation);
-        assertThat(robot.toString(), is(equalTo(2 + SPACE + y + SPACE + orientation)));
+        assertThat(robot.toString(), is(equalTo(2 + SPACE.toString() + y + SPACE + orientation)));
     }
 
     @Test
@@ -25,7 +25,7 @@ public class FTest {
         int y = 2;
         Compass orientation = Compass.S;
         Robot robot = new F(x, y, orientation);
-        assertThat(robot.toString(), is(equalTo(x + SPACE + 1 + SPACE + orientation)));
+        assertThat(robot.toString(), is(equalTo(x + SPACE.toString() + 1 + SPACE + orientation)));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class FTest {
         int y = 2;
         Compass orientation = Compass.N;
         Robot robot = new F(x, y, orientation);
-        assertThat(robot.toString(), is(equalTo(x + SPACE + 3 + SPACE + orientation)));
+        assertThat(robot.toString(), is(equalTo(x + SPACE.toString() + 3 + SPACE + orientation)));
     }
 
     @Test
@@ -43,6 +43,6 @@ public class FTest {
         int y = 2;
         Compass orientation = Compass.W;
         Robot robot = new F(x, y, orientation);
-        assertThat(robot.toString(), is(equalTo(0 + SPACE + y + SPACE + orientation)));
+        assertThat(robot.toString(), is(equalTo(0 + SPACE.toString() + y + SPACE + orientation)));
     }
 }

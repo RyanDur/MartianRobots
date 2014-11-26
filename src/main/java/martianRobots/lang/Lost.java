@@ -4,7 +4,7 @@ public enum Lost {
     LOST("LOST"), NOT_LOST("");
     private String lost;
 
-    Lost(String lost) {
+    private Lost(String lost) {
         this.lost = lost;
     }
 

@@ -6,7 +6,7 @@ public enum Max {
     MAX_INSTRUCTION_SIZE(100);
     private int max;
 
-    Max(int max) {
+    private Max(int max) {
         this.max = max;
     }
 

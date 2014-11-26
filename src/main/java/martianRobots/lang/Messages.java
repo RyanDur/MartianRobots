@@ -11,7 +11,7 @@ public enum Messages {
     IS_TAKEN("is occupied, please choose another");
     private String message;
 
-    Messages(String message) {
+    private Messages(String message) {
         this.message = message;
     }
 

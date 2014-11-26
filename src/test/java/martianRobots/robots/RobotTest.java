@@ -2,7 +2,11 @@ package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
+
 import org.junit.Before;
+
+import martianRobots.lang.Messages;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -94,12 +98,5 @@ public class RobotTest {
         char direction = 'L';
         robot = robot.move(direction);
         assertThat(robot.toString(), is(equalTo(1 + " " + 2 + " " + Compass.N)));
-    }
-
-    @Test
-    public void shouldBeAbleToMoveARobotRight() throws ValidationException {
-        char direction = 'R';
-        robot = robot.move(direction);
-        assertThat(robot.toString(), is(equalTo(1 + " " + 2 + " " + Compass.S)));
     }
 }

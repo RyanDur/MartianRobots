@@ -1,6 +1,7 @@
 package martianRobots;
 
 import martianRobots.exceptions.ValidationException;
+import martianRobots.lang.Lost;
 import martianRobots.robots.Robot;
 
 import java.util.HashSet;
@@ -15,21 +16,21 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static martianRobots.lang.Constants.EMPTY;
-import static martianRobots.lang.Constants.INVALID_INSTRUCTIONS;
-import static martianRobots.lang.Constants.INVALID_X_SIZE;
-import static martianRobots.lang.Constants.INVALID_Y_SIZE;
-import static martianRobots.lang.Constants.IS_TAKEN;
-import static martianRobots.lang.Constants.LOST;
-import static martianRobots.lang.Constants.MAX_INSTRUCTION_SIZE;
-import static martianRobots.lang.Constants.MAX_X;
-import static martianRobots.lang.Constants.MAX_Y;
-import static martianRobots.lang.Constants.NOT_EXISTS;
-import static martianRobots.lang.Constants.SPACE;
+import static martianRobots.lang.Lost.LOST;
+import static martianRobots.lang.Lost.NOT_LOST;
+import static martianRobots.lang.Max.MAX_INSTRUCTION_SIZE;
+import static martianRobots.lang.Max.MAX_X;
+import static martianRobots.lang.Max.MAX_Y;
+import static martianRobots.lang.Messages.INVALID_INSTRUCTIONS;
+import static martianRobots.lang.Messages.INVALID_X_SIZE;
+import static martianRobots.lang.Messages.INVALID_Y_SIZE;
+import static martianRobots.lang.Messages.IS_TAKEN;
+import static martianRobots.lang.Messages.NOT_EXISTS;
+import static martianRobots.lang.Messages.SPACE;
 
 public class MarsImpl implements Mars {
     private Supplier<Robot> robot;
-    private Supplier<String> lost;
+    private Supplier<Lost> lost;
     private Set<Robot> scents;// lost robots leave a robot “scent” that prohibits future robots from dropping off
     // the world at the same grid point.
     private Set<List<Integer>> occupied;
@@ -38,8 +39,8 @@ public class MarsImpl implements Mars {
 
     @Override
     public void setup(final int x, final int y) throws ValidationException {
-        if (isInvalidSize.test(MAX_X, x)) throw new ValidationException(x + INVALID_X_SIZE);
-        if (isInvalidSize.test(MAX_Y, y)) throw new ValidationException(y + INVALID_Y_SIZE);
+        if (isInvalidSize.test(MAX_X.getMax(), x)) throw new ValidationException(x, INVALID_X_SIZE);
+        if (isInvalidSize.test(MAX_Y.getMax(), y)) throw new ValidationException(y, INVALID_Y_SIZE);
         setBounds.accept(bound.apply(x), bound.apply(y));
         scents = new HashSet<>();
         occupied = new HashSet<>();
@@ -47,7 +48,7 @@ public class MarsImpl implements Mars {
 
     @Override
     public void move(final String instructions) throws ValidationException {
-        if (isInvalid.test(instructions)) throw new ValidationException(instructions + INVALID_INSTRUCTIONS);
+        if (isInvalid.test(instructions)) throw new ValidationException(instructions, INVALID_INSTRUCTIONS);
         occupied.remove(robot.get().getLocation());
         for (int i = 0; i < instructions.length() && !isLost; i++) {
             Robot robot = this.robot.get().move(instructions.charAt(i));
@@ -58,8 +59,8 @@ public class MarsImpl implements Mars {
 
     @Override
     public void setRobot(final Robot robot) throws ValidationException {
-        if (occupied.contains(robot.getLocation())) throw new ValidationException(robot + IS_TAKEN);
-        if (isOutOfBounds.test(robot.getLocation())) throw new ValidationException(robot + NOT_EXISTS);
+        if (occupied.contains(robot.getLocation())) throw new ValidationException(robot, IS_TAKEN);
+        if (isOutOfBounds.test(robot.getLocation())) throw new ValidationException(robot, NOT_EXISTS);
         setLost.accept(false);
         setRobot.accept(robot);
         occupied.add(robot.getLocation());
@@ -67,12 +68,12 @@ public class MarsImpl implements Mars {
 
     @Override
     public String getRobot() {
-        return Stream.of(robot, lost).map(word -> word.get().toString()).collect(joining(SPACE)).trim();
+        return Stream.of(robot, lost).map(word -> word.get().toString()).collect(joining(SPACE.toString())).trim();
     }
 
     private Consumer<Boolean> setLost = bool -> {
         isLost = bool;
-        lost = () -> isLost ? LOST : EMPTY;
+        lost = () -> isLost ? LOST : NOT_LOST;
     };
 
     private Consumer<Robot> setRobot = robot -> {
@@ -84,7 +85,7 @@ public class MarsImpl implements Mars {
 
     private Function<Integer, Predicate<Integer>> bound = max -> loc -> loc < 0 || loc > max;
     private BiPredicate<Integer, Integer> isInvalidSize = (max, size) -> bound.apply(max).test(size);
-    private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE;
+    private Predicate<String> isInvalid = instructions -> instructions.length() >= MAX_INSTRUCTION_SIZE.getMax();
     private BiConsumer<Predicate<Integer>, Predicate<Integer>> setBounds = (maxX, maxY) ->
             isOutOfBounds = loc -> maxX.test(loc.get(0)) || maxY.test(loc.get(1));
 }

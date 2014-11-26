@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-import static martianRobots.lang.Constants.DOT;
-import static martianRobots.lang.Constants.INVALID_DIRECTION;
-import static martianRobots.lang.Constants.SPACE;
+import static martianRobots.lang.Messages.DOT;
+import static martianRobots.lang.Messages.INVALID_DIRECTION;
+import static martianRobots.lang.Messages.SPACE;
 
 public class RobotImpl implements Robot {
     private Supplier<Compass> orientation;
@@ -52,7 +52,7 @@ public class RobotImpl implements Robot {
                     .newInstance(x.get(), y.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                 InstantiationException | InvocationTargetException e) {
-            throw new ValidationException(direction + INVALID_DIRECTION);
+            throw new ValidationException(direction, INVALID_DIRECTION);
         }
     }
 
@@ -63,7 +63,7 @@ public class RobotImpl implements Robot {
      */
     @Override
     public String toString() {
-        return Stream.of(x, y, orientation).map(word -> word.get().toString()).collect(joining(SPACE));
+        return Stream.of(x, y, orientation).map(word -> word.get().toString()).collect(joining(SPACE.toString()));
     }
 
     /**

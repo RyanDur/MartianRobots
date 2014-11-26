@@ -2,7 +2,9 @@ package martianRobots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
-import martianRobots.lang.Constants;
+import martianRobots.lang.Messages;
+import martianRobots.lang.Lost;
+import martianRobots.lang.Max;
 import martianRobots.robots.Robot;
 import martianRobots.robots.RobotImpl;
 import org.junit.Before;
@@ -40,7 +42,7 @@ public class MarsTest {
         Compass orientation = Compass.E;
         int x = -1;
         int y = 2;
-        exception.expectMessage(x + " " + y + " " + orientation + Constants.NOT_EXISTS);
+        exception.expectMessage(x + " " + y + " " + orientation + " " + Messages.NOT_EXISTS);
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
     }
@@ -79,7 +81,7 @@ public class MarsTest {
     public void shouldNGetHelpfulMessageForInvalidGridSetupForX() throws ValidationException {
         int x = -1;
         int y = 2;
-        exception.expectMessage(x  + Constants.INVALID_X_SIZE);
+        exception.expectMessage(x + " " + Messages.INVALID_X_SIZE.toString());
         mars.setup(x, y);
     }
 
@@ -87,7 +89,7 @@ public class MarsTest {
     public void shouldNGetHelpfulMessageForInvalidGridSetupForY() throws ValidationException {
         int x = 1;
         int y = 72;
-        exception.expectMessage(y  + Constants.INVALID_Y_SIZE);
+        exception.expectMessage(y + " " + Messages.INVALID_Y_SIZE.toString());
         mars.setup(x, y);
     }
 
@@ -112,7 +114,7 @@ public class MarsTest {
     @Test
     public void shouldNotBeAbleToInputMoreOrEqualToTheMaxInstructionSizeInstructions() throws ValidationException {
         exception.expect(ValidationException.class);
-        String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE]).replace('\0', 'F');
+        String instructions = new String(new char[Max.MAX_INSTRUCTION_SIZE.getMax()]).replace('\0', 'F');
         mars.move(instructions);
     }
 
@@ -133,7 +135,7 @@ public class MarsTest {
         int x = 1;
         int y = 1;
         Compass orientation = Compass.E;
-        exception.expectMessage(x + " " + y + " " + orientation + Constants.IS_TAKEN);
+        exception.expectMessage(x + " " + y + " " + orientation + " " + Messages.IS_TAKEN);
         Robot robot = new RobotImpl(x, y, orientation);
         Robot robot1 = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
@@ -157,14 +159,14 @@ public class MarsTest {
 
     @Test
     public void shouldBeAbleToInputJustUnderTheMaxInstructionSize() throws ValidationException {
-        String instructions = new String(new char[Constants.MAX_INSTRUCTION_SIZE - 1]).replace('\0', 'F');
+        String instructions = new String(new char[Max.MAX_INSTRUCTION_SIZE.getMax() - 1]).replace('\0', 'F');
         int x = 1;
         int y = 1;
         Compass orientation = Compass.E;
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move(instructions);
-        assertThat(mars.getRobot(), is(equalTo(5 + " " + y + " " + orientation + " " + Constants.LOST)));
+        assertThat(mars.getRobot(), is(equalTo(5 + " " + y + " " + orientation + " " + Lost.LOST)));
     }
 
     @Test
@@ -175,7 +177,7 @@ public class MarsTest {
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move("LFFLLFF");
-        assertThat(mars.getRobot(), is(equalTo(x + " " + 0 + " " + Compass.S + " " + Constants.LOST)));
+        assertThat(mars.getRobot(), is(equalTo(x + " " + 0 + " " + Compass.S + " " + Lost.LOST)));
     }
 
     @Test
@@ -197,7 +199,7 @@ public class MarsTest {
         Robot robot = new RobotImpl(x, y, orientation);
         mars.setRobot(robot);
         mars.move("FRRFLLFFRRFLL");
-        assertThat(mars.getRobot(), is(equalTo(x + " " + 3 + " " + orientation  + " " + Constants.LOST)));
+        assertThat(mars.getRobot(), is(equalTo(x + " " + 3 + " " + orientation + " " + Lost.LOST)));
     }
 
     @Test
@@ -238,7 +240,7 @@ public class MarsTest {
         mars.setup(5, 3);
         mars.setRobot(robot1);
         mars.move("LLFFFLFLFL");
-        assertThat(mars.getRobot(), is(equalTo("3 3 " + north + " " + Constants.LOST)));
+        assertThat(mars.getRobot(), is(equalTo("3 3 " + north + " " + Lost.LOST)));
     }
 
     @Test

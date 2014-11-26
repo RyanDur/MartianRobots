@@ -8,8 +8,8 @@ import static martianRobots.lang.Compass.S;
 
 class F extends RobotImpl {
 
-    public F(final int x, final int y, final Compass orientation, Robots robots) {
-        super(x, y, orientation, robots);
+    public F(final int x, final int y, final Compass orientation) {
+        super(x, y, orientation);
         setMove(x, y);
     }
 

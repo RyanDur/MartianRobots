@@ -2,7 +2,9 @@ package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
+import martianRobots.lang.Constants;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,7 +18,6 @@ public class RobotImpl implements Robot {
     private Supplier<Compass> orientation;
     private Supplier<Integer> x;
     private Supplier<Integer> y;
-    private Robots robots;
 
     /**
      * To setup a robot, input an x and y coordinate to define the location
@@ -26,11 +27,10 @@ public class RobotImpl implements Robot {
      * @param y           coordinate
      * @param orientation for the direction the robot is facing
      */
-    public RobotImpl(final int x, final int y, final Compass orientation, Robots robots) {
+    public RobotImpl(final int x, final int y, final Compass orientation) {
         setX.accept(x);
         setY.accept(y);
         setOrientation.accept(orientation);
-        this.robots = robots;
     }
 
     @Override
@@ -45,7 +45,14 @@ public class RobotImpl implements Robot {
 
     @Override
     public Robot move(final char direction) throws ValidationException {
-        return robots.createRobot(direction, x.get(), y.get(), orientation.get(), robots);
+        try {
+            return (Robot) Class.forName(this.getClass().getPackage().getName() + Constants.DOT + direction)
+                    .getDeclaredConstructor(int.class, int.class, Compass.class)
+                    .newInstance(x.get(), y.get(), orientation.get());
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                InstantiationException | InvocationTargetException e) {
+            throw new ValidationException(direction + Constants.INVALID_DIRECTION);
+        }
     }
 
     /**

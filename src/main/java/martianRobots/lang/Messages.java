@@ -12,7 +12,10 @@ public enum Messages {
     IS_TAKEN("is occupied, please choose another"), MULTI_SPACE(" +"),
     NOT_A_NUMBER("is not a number!!"),
     NOT_A_COMPASS("is not a Compass position!"),
-    MARS("/mars.fxml");
+    MAX_NUMBER_COORDS_IS("Max number of coordinates is"),
+    Y_PROMPT("Y"),
+    X_PROMPT("X");
+
     private String message;
 
     private Messages(String message) {

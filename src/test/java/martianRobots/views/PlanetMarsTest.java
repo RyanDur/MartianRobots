@@ -10,14 +10,9 @@ import martianRobots.robots.Robot;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.loadui.testfx.GuiTest;
-import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import static martianRobots.lang.Constants.MAX_NUMBER_COORDS;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.loadui.testfx.Assertions.verifyThat;
-import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;

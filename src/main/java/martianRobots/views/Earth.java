@@ -65,27 +65,30 @@ public class Earth extends Parent {
         return event -> {
             messages.setText(EMPTY.toString());
             String[] pos = position.getText().trim().split(MULTI_SPACE.toString());
-            try {
-                if ((pos.length < MAX_NUMBER_COORDS.getMax()) || (pos.length > MAX_NUMBER_COORDS.getMax())) {
-                    messages.setText(formatMessage("Max number of coordinates is", MAX_NUMBER_COORDS));
-                } else {
-                    int x = Integer.parseInt(pos[0]);
-                    int y = Integer.parseInt(pos[1]);
-                    Compass orientation = Compass.valueOf(pos[2].toUpperCase());
-
-                    Robot robot = robotFactory.createRobot(x, y, orientation);
-                    mars.setRobot(robot);
-                    mars.move(instructions.getText().toUpperCase());
-                    output.setText(mars.getRobot());
-                }
+            if ((pos.length < MAX_NUMBER_COORDS.getMax()) || (pos.length > MAX_NUMBER_COORDS.getMax())) {
+                messages.setText(formatMessage("Max number of coordinates is", MAX_NUMBER_COORDS));
+            } else try {
+                mars.setRobot(getRobot(pos));
+                mars.move(instructions.getText().toUpperCase());
+                output.setText(mars.getRobot());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
-            } catch (NumberFormatException e) {
-                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
-            } catch (IllegalArgumentException e) {
-                messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
             }
         };
+    }
+
+    private Robot getRobot(String[] pos) {
+        try {
+            int x = Integer.parseInt(pos[0]);
+            int y = Integer.parseInt(pos[1]);
+            Compass orientation = Compass.valueOf(pos[2].toUpperCase());
+            return robotFactory.createRobot(x, y, orientation);
+        } catch (NumberFormatException e) {
+            messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
+        } catch (IllegalArgumentException e) {
+            messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
+        }
+        return null;
     }
 
     private String formatMessage(Object info, Object message) {

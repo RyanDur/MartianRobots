@@ -20,9 +20,10 @@ import martianRobots.lang.View;
 import martianRobots.robots.Robot;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static martianRobots.lang.Max.MAX_NUMBER_COORDS;
 import static martianRobots.lang.Messages.EMPTY;
@@ -97,7 +98,7 @@ public class Earth extends Parent {
         return event -> {
             try {
                 messages.setText(EMPTY.toString());
-                Integer[] coords = parseInt(x.getText().trim(), y.getText().trim());
+                Integer[] coords = parseInts(x.getText().trim(), y.getText().trim());
                 mars.setup(coords[0], coords[1]);
                 toggleVisible(true, false);
             } catch (ValidationException e) {
@@ -108,7 +109,7 @@ public class Earth extends Parent {
 
     private Robot getRobot(String[] pos) {
         try {
-            Integer[] coords = parseInt(pos[0], pos[1]);
+            Integer[] coords = parseInts(pos[0], pos[1]);
             Compass orientation = Compass.valueOf(pos[2].toUpperCase());
             return robotFactory.createRobot(coords[0], coords[1], orientation);
         } catch (IllegalArgumentException e) {
@@ -118,16 +119,16 @@ public class Earth extends Parent {
     }
 
 
-    private Integer[] parseInt(String... ints) {
-        List<Integer> list = new ArrayList<>();
-        for (String num : ints) {
+    private Integer[] parseInts(String... ints) {
+        List<Integer> integers = Stream.of(ints).map(num -> {
             try {
-                list.add(Integer.parseInt(num));
+                return Integer.parseInt(num);
             } catch (NumberFormatException e) {
                 messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
+                return null;
             }
-        }
-        return list.toArray(new Integer[list.size()]);
+        }).collect(Collectors.toList());
+        return integers.toArray(new Integer[integers.size()]);
     }
 
     private void setupButtons() {

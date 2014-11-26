@@ -2,7 +2,6 @@ package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
-import martianRobots.lang.Constants;
 import martianRobots.lang.Messages;
 
 
@@ -53,7 +52,7 @@ public class RobotImpl implements Robot {
     @Override
     public Robot move(final char direction) throws ValidationException {
         try {
-            return (Robot) Class.forName(this.getClass().getPackage().getName() + Constants.DOT + direction)
+            return (Robot) Class.forName(this.getClass().getPackage().getName() + Messages.DOT + direction)
                     .getDeclaredConstructor(int.class, int.class, Compass.class)
                     .newInstance(x.get(), y.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |

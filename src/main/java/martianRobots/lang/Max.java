@@ -3,7 +3,8 @@ package martianRobots.lang;
 public enum Max {
     MAX_X(50),
     MAX_Y(50),
-    MAX_INSTRUCTION_SIZE(100);
+    MAX_INSTRUCTION_SIZE(100),
+    MAX_NUMBER_COORDS(3);
     private int max;
 
     private Max(int max) {

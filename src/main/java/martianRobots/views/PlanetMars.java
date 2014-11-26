@@ -15,13 +15,18 @@ import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.factories.RobotFactory;
 import martianRobots.lang.Compass;
-import martianRobots.lang.Constants;
+import martianRobots.lang.Messages;
 import martianRobots.robots.Robot;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static martianRobots.lang.Constants.MAX_NUMBER_COORDS;
+import static martianRobots.lang.Max.MAX_NUMBER_COORDS;
+import static martianRobots.lang.Messages.EMPTY;
+import static martianRobots.lang.Messages.MARS;
+import static martianRobots.lang.Messages.MULTI_SPACE;
+import static martianRobots.lang.Messages.NOT_A_COMPASS;
+import static martianRobots.lang.Messages.NOT_A_NUMBER;
 
 public class PlanetMars extends Parent {
 
@@ -58,18 +63,11 @@ public class PlanetMars extends Parent {
 
     private EventHandler<MouseEvent> move(TextField position, TextField instructions, TextArea output) {
         return event -> {
-<<<<<<< HEAD
-<<<<<<< HEAD
-            messages.setText(Constants.EMPTY);
-=======
->>>>>>> Refactor out messages to constants
-=======
-            messages.setText(Constants.EMPTY);
->>>>>>> max number of coordinates
-            String[] pos = position.getText().trim().split(Constants.MULTI_SPACE);
+            messages.setText(EMPTY.toString());
+            String[] pos = position.getText().trim().split(MULTI_SPACE.toString());
             try {
-                if (pos.length < MAX_NUMBER_COORDS || pos.length > MAX_NUMBER_COORDS) {
-                    messages.setText("Max number of coordinates is " + MAX_NUMBER_COORDS);
+                if ((pos.length < MAX_NUMBER_COORDS.getMax()) || (pos.length > MAX_NUMBER_COORDS.getMax())) {
+                    messages.setText(formatMessage("Max number of coordinates is", MAX_NUMBER_COORDS));
                 } else {
                     int x = Integer.parseInt(pos[0]);
                     int y = Integer.parseInt(pos[1]);
@@ -83,16 +81,20 @@ public class PlanetMars extends Parent {
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
-                messages.setText(e.getMessage() + Constants.NOT_A_NUMBER);
+                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
             } catch (IllegalArgumentException e) {
-                messages.setText(pos[2] + Constants.NOT_A_COMPASS);
+                messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
             }
         };
     }
 
+    private String formatMessage(Object info, Object message) {
+        return info.toString() + Messages.SPACE + message;
+    }
+
     private EventHandler<MouseEvent> leaveMars(TextField x, TextField y) {
         return event -> {
-            messages.setText(Constants.EMPTY);
+            messages.setText(EMPTY.toString());
             setVisible(false, planet.getCenter(), reset);
             resetTextFields(x, y, position, instructions);
             output.clear();
@@ -112,14 +114,14 @@ public class PlanetMars extends Parent {
     private EventHandler<MouseEvent> goToMars(TextField x, TextField y) {
         return event -> {
             try {
-                messages.setText(Constants.EMPTY);
+                messages.setText(EMPTY.toString());
                 mars.setup(Integer.parseInt(x.getText().trim()), Integer.parseInt(y.getText().trim()));
                 setVisible(true, planet.getCenter(), reset);
                 setVisible(false, go, x, y);
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
-                messages.setText(e.getMessage() + Constants.NOT_A_NUMBER);
+                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
             }
         };
     }
@@ -130,7 +132,7 @@ public class PlanetMars extends Parent {
 
     private BorderPane getFXML() {
         try {
-            return FXMLLoader.load(getClass().getResource(Constants.MARS));
+            return FXMLLoader.load(getClass().getResource(MARS.toString()));
         } catch (IOException e) {
             e.printStackTrace();
         }

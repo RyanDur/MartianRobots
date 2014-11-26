@@ -6,13 +6,19 @@ import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;
 import martianRobots.factories.RobotFactory;
 import martianRobots.lang.Compass;
+import martianRobots.lang.Max;
+import martianRobots.lang.Messages;
 import martianRobots.robots.Robot;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.loadui.testfx.GuiTest;
+import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
-import static martianRobots.lang.Constants.MAX_NUMBER_COORDS;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.loadui.testfx.Assertions.verifyThat;
+import static org.loadui.testfx.controls.Commons.hasText;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
@@ -71,9 +77,9 @@ public class PlanetMarsTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToHandleValidationExceptionFromMars() throws ValidationException {
-        doThrow(new ValidationException("Hello")).when(mars).setup(anyInt(), anyInt());
+        doThrow(new ValidationException("Hello", Messages.DOT)).when(mars).setup(anyInt(), anyInt());
         click("#x").type("6").click("#y").type("4").click("#go");
-        verifyThat("#messages", hasText("Hello"));
+        verifyThat("#messages", hasText("Hello" + " " + Messages.DOT));
     }
 
     @Test
@@ -167,14 +173,14 @@ public class PlanetMarsTest extends GuiTest {
     @Test
     public void shouldMakeSureThereAreEnoughCoordinatesForARobot() {
         click("#x").type("5").click("#y").type("3").click("#go").click("#move");
-        verifyThat("#messages", hasText("Max number of coordinates is " + MAX_NUMBER_COORDS));
+        verifyThat("#messages", hasText("Max number of coordinates is " + Max.MAX_NUMBER_COORDS));
     }
 
     @Test
     public void shouldMakeSureThereIsNotMoreTHanEnoughCoordinatesForARobot() {
         click("#x").type("5").click("#y").type("3").click("#go")
                 .click("#position").type("1 2 N 4").click("#move");
-        verifyThat("#messages", hasText("Max number of coordinates is " + MAX_NUMBER_COORDS));
+        verifyThat("#messages", hasText("Max number of coordinates is " + Max.MAX_NUMBER_COORDS));
     }
 
     @Test
@@ -224,13 +230,13 @@ public class PlanetMarsTest extends GuiTest {
 
     @Test
     public void shouldBeAbleToHandleMessagesFromMars() throws ValidationException {
-        doThrow(new ValidationException("Hello")).when(mars).setRobot(any(Robot.class));
         Robot robot = mock(Robot.class);
+        doThrow(new ValidationException("Hello", Messages.DOT)).when(mars).setRobot(any(Robot.class));
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
 
         click("#x").type("5").click("#y").type("3").click("#go")
                 .click("#position").type("5 4 S").click("#move");
-        verifyThat("#messages", hasText("Hello"));
+        verifyThat("#messages", hasText("Hello " + Messages.DOT));
     }
 
     @Test

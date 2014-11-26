@@ -52,7 +52,7 @@ public class MarsTest {
         int x = -1;
         int y = 2;
 
-        exception.expectMessage(x + " " + y + " " + orientation + Messages.NOT_EXISTS);
+        exception.expectMessage(x + " " + y + " " + orientation + " " + Messages.NOT_EXISTS);
         when(robot.getLocation()).thenReturn(Arrays.asList(-1, 2));
         when(robot.getOrientation()).thenReturn(orientation);
         when(robot.toString()).thenReturn(x + " " + y + " " + orientation);
@@ -168,7 +168,7 @@ public class MarsTest {
         int x = 1;
         int y = 1;
         Compass orientation1 = Compass.W;
-        exception.expectMessage(x + " " + y + " " + orientation1 + Messages.IS_TAKEN);
+        exception.expectMessage(x + " " + y + " " + orientation1 + " " + Messages.IS_TAKEN);
         when(robot.getLocation()).thenReturn(Arrays.asList(x, y));
         when(robot.getOrientation()).thenReturn(orientation);
         when(robot.toString()).thenReturn(x + " " + y + " " + orientation);
@@ -260,44 +260,24 @@ public class MarsTest {
         mars.move("FRRFLLFFRRFLL");
         assertThat(mars.getRobot(), is(equalTo(x + " " + 3 + " " + orientation + " " + Lost.LOST)));
     }
-//
-//        String instructions = new String(new char[Max.MAX_INSTRUCTION_SIZE.getMax() - 1]).replace('\0', forward);
-//        Compass orientation = Compass.E;
-//        int x = 1;
-//        int y = 1;
-//        when(robot.getLocation()).thenReturn(Arrays.asList(x, y));
-//        when(robot.getOrientation()).thenReturn(orientation);
-//        when(robot.toString()).thenReturn(x + " " + y + " " + orientation);
-//        Robot moveRobot = mock(Robot.class);
-//
-//
-//        when(moveRobot.getLocation()).thenReturn(Arrays.asList(x + 10, y));
-//        when(moveRobot.getOrientation()).thenReturn(orientation);
-//        when(moveRobot.toString()).thenReturn(x + " " + y + " " + orientation);
-//        when(robot.move(forward)).thenReturn(moveRobot);
-//        when(moveRobot.move(forward)).thenReturn(moveRobot);
-//
-//        mars.setRobot(robot);
-//        assertThat(mars.getRobot(), is(equalTo("3 3 " + north + " " + Lost.LOST)));
-//    }
 
-//    @Test
-//    public void shouldSatisfyRequirementsOfChallenge() throws ValidationException {
-//        mars.setup(5, 3);
-//
-//        Robot robot = new RobotImpl(1, 1, Compass.E);
-//        mars.setRobot(robot);
-//        mars.move("RFRFRFRF");
-//        assertThat(mars.getRobot(), is(equalTo("1 1 E")));
-//
-//        Robot robot1 = new RobotImpl(3, 2, Compass.N);
-//        mars.setRobot(robot1);
-//        mars.move("FRRFLLFFRRFLL");
-//        assertThat(mars.getRobot(), is(equalTo("3 3 N LOST")));
-//
-//        Robot robot2 = new RobotImpl(0, 3, Compass.W);
-//        mars.setRobot(robot2);
-//        mars.move("LLFFFLFLFL");
-//        assertThat(mars.getRobot(), is(equalTo("2 3 S")));
-//    }
+    @Test
+    public void shouldSatisfyRequirementsOfChallenge() throws ValidationException {
+        mars.setup(5, 3);
+
+        Robot robot = new RobotImpl(1, 1, Compass.E);
+        mars.setRobot(robot);
+        mars.move("RFRFRFRF");
+        assertThat(mars.getRobot(), is(equalTo("1 1 E")));
+
+        Robot robot1 = new RobotImpl(3, 2, Compass.N);
+        mars.setRobot(robot1);
+        mars.move("FRRFLLFFRRFLL");
+        assertThat(mars.getRobot(), is(equalTo("3 3 N LOST")));
+
+        Robot robot2 = new RobotImpl(0, 3, Compass.W);
+        mars.setRobot(robot2);
+        mars.move("LLFFFLFLFL");
+        assertThat(mars.getRobot(), is(equalTo("2 3 S")));
+    }
 }

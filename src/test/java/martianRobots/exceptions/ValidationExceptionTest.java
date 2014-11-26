@@ -1,6 +1,5 @@
 package martianRobots.exceptions;
 
-import martianRobots.lang.Constants;
 import martianRobots.lang.Messages;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,7 +16,7 @@ public class ValidationExceptionTest {
     public void shouldGetAnAppropriateMessageIfThrown() throws ValidationException {
         int row = 1;
         int column = 2;
-        exception.expectMessage("[" + row + ", " + column + "]" + Constants.INVALID_X_SIZE);
+        exception.expectMessage("[" + row + ", " + column + "]" + " " + Messages.INVALID_X_SIZE);
         throw new ValidationException(Arrays.asList(row, column), Messages.INVALID_X_SIZE);
     }
 }

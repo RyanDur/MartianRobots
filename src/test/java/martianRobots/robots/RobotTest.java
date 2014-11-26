@@ -2,7 +2,7 @@ package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
-import martianRobots.lang.Constants;
+import martianRobots.lang.Messages;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -157,7 +157,7 @@ public class RobotTest {
         int y = 2;
         Robot robot = new RobotImpl(x, y, orientation);
         char direction = 'D';
-        exception.expectMessage(direction + Constants.INVALID_DIRECTION);
+        exception.expectMessage(direction + " " + Messages.INVALID_DIRECTION.toString());
         robot.move(direction);
     }
 

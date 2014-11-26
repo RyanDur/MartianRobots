@@ -1,7 +1,6 @@
 package martianRobots.views;
 
 import javafx.scene.Parent;
-<<<<<<< HEAD
 import javafx.scene.input.KeyCode;
 import martianRobots.Mars;
 import martianRobots.exceptions.ValidationException;

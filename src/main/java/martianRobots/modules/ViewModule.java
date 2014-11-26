@@ -9,7 +9,6 @@ import martianRobots.factories.RobotFactoryImpl;
 public class ViewModule extends AbstractModule {
     @Override
     protected void configure() {
-        install(new RobotFactoryModule());
         bind(Mars.class).to(MarsImpl.class);
         bind(RobotFactory.class).to(RobotFactoryImpl.class);
     }

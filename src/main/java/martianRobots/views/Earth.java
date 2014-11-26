@@ -69,18 +69,25 @@ public class Earth extends Parent {
 
     private EventHandler<MouseEvent> move() {
         return event -> {
-            messages.setText(EMPTY.toString());
             String[] pos = position.getText().trim().split(MULTI_SPACE.toString());
             if ((pos.length < MAX_NUMBER_COORDS.getMax()) || (pos.length > MAX_NUMBER_COORDS.getMax())) {
-                messages.setText(formatMessage(MAX_NUMBER_COORDS_IS, MAX_NUMBER_COORDS));
+                messages.setText(formatMessage(MAX_NUMBER_COORDS_IS, MAX_NUMBER_COORDS.getMax()));
             } else try {
                 mars.setRobot(getRobot(pos));
                 mars.move(instructions.getText().toUpperCase());
-                output.setText(mars.getRobot());
+                setOutput(mars);
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             }
+            resetTextFields(position, instructions);
+            messages.setText(EMPTY.toString());
         };
+    }
+
+    private void setOutput(Mars mars) {
+        String out = output.getText();
+        if (out.length() != 0) out += Messages.NEW_LINE;
+        output.setText(out + mars.getRobot());
     }
 
     private EventHandler<MouseEvent> leaveMars() {
@@ -98,7 +105,7 @@ public class Earth extends Parent {
         return event -> {
             try {
                 messages.setText(EMPTY.toString());
-                Integer[] coords = parseInts(x.getText().trim(), y.getText().trim());
+                Integer[] coords = parseInts(x.getText(), y.getText());
                 mars.setup(coords[0], coords[1]);
                 toggleVisible(true, false);
             } catch (ValidationException e) {
@@ -110,8 +117,7 @@ public class Earth extends Parent {
     private Robot getRobot(String[] pos) {
         try {
             Integer[] coords = parseInts(pos[0], pos[1]);
-            Compass orientation = Compass.valueOf(pos[2].toUpperCase());
-            return robotFactory.createRobot(coords[0], coords[1], orientation);
+            return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
         } catch (IllegalArgumentException e) {
             messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
         }
@@ -122,7 +128,7 @@ public class Earth extends Parent {
     private Integer[] parseInts(String... ints) {
         List<Integer> integers = Stream.of(ints).map(num -> {
             try {
-                return Integer.parseInt(num);
+                return Integer.parseInt(num.trim());
             } catch (NumberFormatException e) {
                 messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
                 return null;

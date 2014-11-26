@@ -4,6 +4,7 @@ public enum Messages {
     DOT("."),
     SPACE(" "),
     EMPTY(""),
+    NEW_LINE("\n"),
     NOT_EXISTS("Does not exist, please use another."),
     INVALID_X_SIZE("is an invalid size for x, please use another."),
     INVALID_Y_SIZE("is an invalid size for y, please use another."),

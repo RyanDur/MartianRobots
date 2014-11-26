@@ -272,4 +272,17 @@ public class EarthTest extends GuiTest {
         verifyThat("#instructions", hasText(""));
         verifyThat("#output", hasText(""));
     }
+
+    @Test
+    public void shouldPutTheNextInoutOnTheFollowingLine() {
+        when(mars.getRobot()).thenReturn("Hello From Mars", "Goodbye From Mars");
+        click("#x").type("5").click("#y").type("3").click("#go")
+                .click("#position").type("5 3 S")
+                .click("#instructions").type("s")
+                .click("#move")
+                .click("#position").type("1 2 N")
+                .click("#instructions").type("sdg")
+                .click("#move");
+        verifyThat("#output", hasText("Hello From Mars\nGoodbye From Mars"));
+    }
 }

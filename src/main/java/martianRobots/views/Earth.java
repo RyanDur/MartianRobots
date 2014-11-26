@@ -28,7 +28,7 @@ import static martianRobots.lang.Messages.MULTI_SPACE;
 import static martianRobots.lang.Messages.NOT_A_COMPASS;
 import static martianRobots.lang.Messages.NOT_A_NUMBER;
 
-public class PlanetMars extends Parent {
+public class Earth extends Parent {
 
     private final Mars mars;
     private final RobotFactory robotFactory;
@@ -41,7 +41,7 @@ public class PlanetMars extends Parent {
     private TextArea output;
 
     @Inject
-    public PlanetMars(Mars mars, RobotFactory robotFactory) {
+    public Earth(Mars mars, RobotFactory robotFactory) {
         this.mars = mars;
         this.robotFactory = robotFactory;
         planet = getFXML();

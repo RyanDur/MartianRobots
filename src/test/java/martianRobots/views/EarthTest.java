@@ -27,7 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PlanetMarsTest extends GuiTest {
+public class EarthTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -37,7 +37,7 @@ public class PlanetMarsTest extends GuiTest {
     @Override
     protected Parent getRootNode() {
         robotFactory = mock(RobotFactory.class);
-        return new PlanetMars(mars, robotFactory);
+        return new Earth(mars, robotFactory);
     }
 
     @Test

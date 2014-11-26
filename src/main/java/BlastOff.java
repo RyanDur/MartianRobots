@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import martianRobots.modules.ViewModule;
 import martianRobots.views.PlanetMars;
 
-public class Earth extends Application {
+public class BlastOff extends Application {
     public static void main(String[] args) {
         launch(args);
     }

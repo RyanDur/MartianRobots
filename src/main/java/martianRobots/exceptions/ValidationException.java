@@ -1,8 +1,10 @@
 package martianRobots.exceptions;
 
+import martianRobots.lang.Messages;
+
 public class ValidationException extends Exception {
 
-    public ValidationException(String message) {
-        super(message);
+    public ValidationException(Object o, Messages message) {
+        super(o + " " + message);
     }
 }

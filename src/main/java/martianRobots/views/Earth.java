@@ -39,8 +39,13 @@ import static martianRobots.lang.Messages.X_PROMPT;
 import static martianRobots.lang.Messages.Y_PROMPT;
 import static martianRobots.lang.View.GO_ID;
 import static martianRobots.lang.View.INSTRUCTIONS_ID;
+import static martianRobots.lang.View.INS_ID;
 import static martianRobots.lang.View.MARS;
+import static martianRobots.lang.View.OUTPUT_ID;
 import static martianRobots.lang.View.POS_ID;
+import static martianRobots.lang.View.RIGHT_ID;
+import static martianRobots.lang.View.SCROLL_ID;
+import static martianRobots.lang.View.START_ID;
 import static martianRobots.lang.View.X_ID;
 import static martianRobots.lang.View.Y_ID;
 
@@ -154,13 +159,13 @@ public class Earth extends Parent {
         y = (TextField) planet.getTop().lookup(Y_ID.toString());
         position = (TextField) planet.getCenter().lookup(POS_ID.toString());
         instructions = (TextField) planet.getCenter().lookup(INSTRUCTIONS_ID.toString());
-        ScrollPane scroll = (ScrollPane) planet.getRight().lookup("#right").lookup("#scroll");
-        output = (TextArea) scroll.getContent().lookup("#output");
+        ScrollPane scroll = (ScrollPane) planet.getRight().lookup(RIGHT_ID.toString()).lookup(SCROLL_ID.toString());
+        output = (TextArea) scroll.getContent().lookup(OUTPUT_ID.toString());
         messages = (Label) planet.getBottom();
         ScrollPane scrollL = (ScrollPane) planet.getLeft();
         SplitPane split = (SplitPane) scrollL.getContent();
-        start = (TextArea) split.getItems().get(0).lookup("#start");
-        ins = (TextArea) split.getItems().get(1).lookup("#ins");
+        start = (TextArea) split.getItems().get(0).lookup(START_ID.toString());
+        ins = (TextArea) split.getItems().get(1).lookup(INS_ID.toString());
     }
 
     private void resetTextFields(TextField... fields) {

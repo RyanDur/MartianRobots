@@ -11,21 +11,19 @@
    <top>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button id="go" mnemonicParsing="false" text="Go to Mars">
+            <Button id="go" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="Go to Mars">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
                <HBox.margin>
-                  <Insets right="28.0" />
+                  <Insets right="35.0" />
                </HBox.margin>
             </Button>
             <TextField id="x" promptText="X" />
-            <TextField id="y" promptText="Y" />
-            <Button id="reset" mnemonicParsing="false" text="Reset">
+            <TextField id="y" promptText="Y">
                <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Button>
+                  <Insets left="35.0" />
+               </HBox.margin></TextField>
          </children>
          <opaqueInsets>
             <Insets />

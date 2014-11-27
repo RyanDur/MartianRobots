@@ -15,8 +15,10 @@ import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
+import static martianRobots.lang.Messages.GO;
 import static martianRobots.lang.Messages.NOT_A_COMPASS;
 import static martianRobots.lang.Messages.NOT_A_NUMBER;
+import static martianRobots.lang.Messages.RESET;
 import static martianRobots.lang.View.CONTROL_ID;
 import static martianRobots.lang.View.GO_ID;
 import static martianRobots.lang.View.INS_ID;
@@ -24,7 +26,6 @@ import static martianRobots.lang.View.MESSAGES_ID;
 import static martianRobots.lang.View.MOVE_ID;
 import static martianRobots.lang.View.OUTPUT_ID;
 import static martianRobots.lang.View.POS_ID;
-import static martianRobots.lang.View.RESET_ID;
 import static martianRobots.lang.View.X_ID;
 import static martianRobots.lang.View.Y_ID;
 import static org.hamcrest.CoreMatchers.is;
@@ -58,19 +59,7 @@ public class EarthTest extends GuiTest {
 
     @Test
     public void shouldHaveAGoToMarsButton() {
-        verifyThat(GO_ID.toString(), hasText("Go to Mars"));
-    }
-
-    @Test
-    public void shouldHaveTheControlsHiddenOnStartup() {
-        exception.expect(NoNodesVisibleException.class);
-        find(CONTROL_ID.toString());
-    }
-
-    @Test
-    public void shouldHideTheResetButtonOnStartup() {
-        exception.expect(NoNodesVisibleException.class);
-        find(RESET_ID.toString());
+        verifyThat(GO_ID.toString(), hasText(GO.toString()));
     }
 
     @Test
@@ -120,16 +109,9 @@ public class EarthTest extends GuiTest {
     }
 
     @Test
-    public void shouldMakeResetVisibleWhenGoingToMars() {
+    public void shouldMakeGoIntoResetWhenGoingToMars() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
-        assertThat(find(RESET_ID.toString()).isVisible(), is(true));
-    }
-
-    @Test
-    public void shouldMakeGoInvisibleWhenGoingToMars() {
-        exception.expect(NoNodesVisibleException.class);
-        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
-        find(GO_ID.toString());
+        verifyThat(GO_ID.toString(), hasText(RESET.toString()));
     }
 
     @Test
@@ -148,43 +130,35 @@ public class EarthTest extends GuiTest {
     public void shouldMakeControlInvisibleWhenReset() {
         exception.expect(NoNodesVisibleException.class);
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
-                click(GO_ID.toString()).click(RESET_ID.toString());
+                click(GO_ID.toString()).click(GO_ID.toString());
         find(CONTROL_ID.toString());
-    }
-
-    @Test
-    public void shouldMakeResetInvisibleWhenReset() {
-        exception.expect(NoNodesVisibleException.class);
-        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
-                click(GO_ID.toString()).click(RESET_ID.toString());
-        find(RESET_ID.toString());
     }
 
     @Test
     public void shouldMakeYEditableWhenReset() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
-                click(GO_ID.toString()).click(RESET_ID.toString());
+                click(GO_ID.toString()).click(GO_ID.toString());
         assertThat(find(Y_ID.toString()).disableProperty().get(), is(false));
     }
 
     @Test
     public void shouldMakeXEditableWhenReset() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
-                click(GO_ID.toString()).click(RESET_ID.toString());
+                click(GO_ID.toString()).click(GO_ID.toString());
         assertThat(find(X_ID.toString()).disableProperty().get(), is(false));
     }
 
     @Test
     public void shouldMakeGoVisibleWhenReset() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
-                click(GO_ID.toString()).click(RESET_ID.toString());
-        assertThat(find(GO_ID.toString()).isVisible(), is(true));
+                click(GO_ID.toString()).click(GO_ID.toString());
+        verifyThat(GO_ID.toString(), hasText(GO.toString()));
     }
 
     @Test
     public void shouldToReInputNewBoundariesForMars() throws ValidationException {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
-                click(GO_ID.toString()).click(RESET_ID.toString())
+                click(GO_ID.toString()).click(GO_ID.toString())
                 .click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
                 click(GO_ID.toString());
         verify(mars, times(2)).setup(5, 3);
@@ -299,7 +273,7 @@ public class EarthTest extends GuiTest {
                 .click(POS_ID.toString()).type("5 4 S")
                 .click(INS_ID.toString()).type("sdgsdfgsdfg")
                 .click(MOVE_ID.toString())
-                .click(RESET_ID.toString())
+                .click(GO_ID.toString())
                 .click(X_ID.toString()).type("5")
                 .click(Y_ID.toString()).type("3")
                 .click(GO_ID.toString());

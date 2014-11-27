@@ -15,7 +15,9 @@ public enum Messages {
     NOT_A_COMPASS("is not a Compass position!"),
     MAX_NUMBER_COORDS_IS("Max number of coordinates is"),
     Y_PROMPT("Y"),
-    X_PROMPT("X");
+    X_PROMPT("X"),
+    GO("Go to Mars"),
+    RESET("Reset");
 
     private String message;
 

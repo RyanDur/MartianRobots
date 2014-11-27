@@ -27,10 +27,12 @@ import java.util.stream.Stream;
 
 import static martianRobots.lang.Max.MAX_NUMBER_COORDS;
 import static martianRobots.lang.Messages.EMPTY;
+import static martianRobots.lang.Messages.GO;
 import static martianRobots.lang.Messages.MAX_NUMBER_COORDS_IS;
 import static martianRobots.lang.Messages.MULTI_SPACE;
 import static martianRobots.lang.Messages.NOT_A_COMPASS;
 import static martianRobots.lang.Messages.NOT_A_NUMBER;
+import static martianRobots.lang.Messages.RESET;
 import static martianRobots.lang.Messages.X_PROMPT;
 import static martianRobots.lang.Messages.Y_PROMPT;
 import static martianRobots.lang.View.GO_ID;
@@ -38,7 +40,6 @@ import static martianRobots.lang.View.INS_ID;
 import static martianRobots.lang.View.MARS;
 import static martianRobots.lang.View.OUTPUT_ID;
 import static martianRobots.lang.View.POS_ID;
-import static martianRobots.lang.View.RESET_ID;
 import static martianRobots.lang.View.X_ID;
 import static martianRobots.lang.View.Y_ID;
 
@@ -102,6 +103,8 @@ public class Earth extends Parent {
             messages.setText(EMPTY.toString());
             y.setPromptText(Y_PROMPT.toString());
             x.setPromptText(X_PROMPT.toString());
+            go.setText(GO.toString());
+            go.setOnMouseClicked(goToMars());
         };
     }
 
@@ -112,6 +115,8 @@ public class Earth extends Parent {
                 Integer[] coords = parseInts(x.getText(), y.getText());
                 mars.setup(coords[0], coords[1]);
                 toggleVisible(true, false);
+                go.setText(RESET.toString());
+                go.setOnMouseClicked(leaveMars());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
             } catch (NumberFormatException e) {
@@ -133,11 +138,9 @@ public class Earth extends Parent {
     }
 
     private void setupButtons() {
-        reset = (Button) planet.getTop().lookup(RESET_ID.toString());
         go = (Button) planet.getTop().lookup(GO_ID.toString());
         Button move = (Button) planet.getCenter().lookup(View.MOVE_ID.toString());
         go.setOnMouseClicked(goToMars());
-        reset.setOnMouseClicked(leaveMars());
         move.setOnMouseClicked(move());
     }
 
@@ -162,8 +165,7 @@ public class Earth extends Parent {
     }
 
     private void toggleVisible(boolean control, boolean menu) {
-        setVisible(control, planet.getCenter(), reset);
-        setVisible(menu, go);
+        setVisible(control, planet.getCenter());
         x.setDisable(!menu);
         y.setDisable(!menu);
     }

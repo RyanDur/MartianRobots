@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import martianRobots.Mars;
@@ -86,7 +87,7 @@ public class Earth extends Parent {
                 setOutput(mars.getRobot(), output);
                 setOutput(position.getText(), start);
                 setOutput(instructions.getText(), ins);
-                resetTextFields(position, instructions);
+                resetText(position, instructions);
                 messages.setText(EMPTY.toString());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
@@ -97,10 +98,7 @@ public class Earth extends Parent {
     private EventHandler<MouseEvent> leaveMars() {
         return event -> {
             toggleDisplay(false, true);
-            resetTextFields(x, y, position, instructions);
-            output.clear();
-            start.clear();
-            ins.clear();
+            resetText(x, y, position, instructions, output, start, ins);
             messages.setText(EMPTY.toString());
             y.setPromptText(Y_PROMPT.toString());
             x.setPromptText(X_PROMPT.toString());
@@ -168,7 +166,7 @@ public class Earth extends Parent {
         ins = (TextArea) split.getItems().get(1).lookup(INS_ID.toString());
     }
 
-    private void resetTextFields(TextField... fields) {
+    private void resetText(TextInputControl... fields) {
         Arrays.stream(fields).forEach(field -> {
             field.deselect();
             field.clear();

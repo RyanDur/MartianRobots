@@ -19,19 +19,20 @@ import martianRobots.lang.View;
 import martianRobots.robots.Robot;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static martianRobots.lang.Max.MAX_NUMBER_COORDS;
 import static martianRobots.lang.Messages.EMPTY;
 import static martianRobots.lang.Messages.GO;
 import static martianRobots.lang.Messages.MAX_NUMBER_COORDS_IS;
 import static martianRobots.lang.Messages.MULTI_SPACE;
+import static martianRobots.lang.Messages.NEW_LINE;
 import static martianRobots.lang.Messages.NOT_A_COMPASS;
 import static martianRobots.lang.Messages.NOT_A_NUMBER;
 import static martianRobots.lang.Messages.RESET;
+import static martianRobots.lang.Messages.SPACE;
 import static martianRobots.lang.Messages.X_PROMPT;
 import static martianRobots.lang.Messages.Y_PROMPT;
 import static martianRobots.lang.View.GO_ID;
@@ -46,8 +47,6 @@ public class Earth extends Parent {
 
     private final Mars mars;
     private final RobotFactory robotFactory;
-    private Button reset;
-    private Button go;
     private Label messages;
     private BorderPane planet;
     private TextField position;
@@ -62,7 +61,8 @@ public class Earth extends Parent {
         this.robotFactory = robotFactory;
         planet = getFXML();
         setupText();
-        setupButtons();
+        planet.getTop().lookup(GO_ID.toString()).setOnMouseClicked(goToMars());
+        planet.getCenter().lookup(View.MOVE_ID.toString()).setOnMouseClicked(move());
         toggleDisplay(false, true);
         this.getChildren().add(planet);
     }
@@ -71,7 +71,7 @@ public class Earth extends Parent {
         return event -> {
             String[] pos = position.getText().trim().split(MULTI_SPACE.toString());
             if ((pos.length < MAX_NUMBER_COORDS.getMax()) || (pos.length > MAX_NUMBER_COORDS.getMax())) {
-                messages.setText(formatMessage(MAX_NUMBER_COORDS_IS, MAX_NUMBER_COORDS.getMax()));
+                messages.setText(MAX_NUMBER_COORDS_IS.toString() + SPACE + MAX_NUMBER_COORDS.getMax());
             } else try {
                 mars.setRobot(getRobot(pos));
                 mars.move(instructions.getText().toUpperCase());
@@ -80,18 +80,8 @@ public class Earth extends Parent {
                 messages.setText(EMPTY.toString());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
-            } catch (NumberFormatException e) {
-                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
-            } catch (IllegalArgumentException e) {
-                messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
             }
         };
-    }
-
-    private void setOutput(Mars mars) {
-        String out = output.getText();
-        if (out.length() != 0) out += Messages.NEW_LINE;
-        output.setText(out + mars.getRobot());
     }
 
     private EventHandler<MouseEvent> leaveMars() {
@@ -102,8 +92,7 @@ public class Earth extends Parent {
             messages.setText(EMPTY.toString());
             y.setPromptText(Y_PROMPT.toString());
             x.setPromptText(X_PROMPT.toString());
-            go.setText(GO.toString());
-            go.setOnMouseClicked(goToMars());
+            setButton((Button) event.getSource(), GO, goToMars());
         };
     }
 
@@ -114,33 +103,43 @@ public class Earth extends Parent {
                 Integer[] coords = parseInts(x.getText(), y.getText());
                 mars.setup(coords[0], coords[1]);
                 toggleDisplay(true, false);
-                go.setText(RESET.toString());
-                go.setOnMouseClicked(leaveMars());
+                setButton((Button) event.getSource(), RESET, leaveMars());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
-            } catch (NumberFormatException e) {
-                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
             }
         };
     }
 
-    private Robot getRobot(String[] pos) {
+    private void setOutput(Mars mars) {
+        String out = output.getText();
+        if (out.length() != 0) out += NEW_LINE;
+        output.setText(out + mars.getRobot());
+    }
+
+    private void setButton(Button source, Messages message, EventHandler<MouseEvent> func) {
+        source.setText(message.toString());
+        source.setOnMouseClicked(func);
+    }
+
+    private Robot getRobot(String[] pos) throws ValidationException {
         Integer[] coords = parseInts(pos[0], pos[1]);
-        return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
+        try {
+            return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(pos[2], NOT_A_COMPASS);
+        }
     }
 
-
-    private Integer[] parseInts(String... ints) {
-        List<Integer> list = Stream.of(ints)
-                .map(num -> Integer.parseInt(num.trim())).collect(Collectors.toList());
+    private Integer[] parseInts(String... ints) throws ValidationException {
+        List<Integer> list = new ArrayList<>();
+        for (String num : ints) {
+            try {
+                list.add(Integer.parseInt(num.trim()));
+            } catch (NumberFormatException e) {
+                throw new ValidationException(num, NOT_A_NUMBER);
+            }
+        }
         return list.toArray(new Integer[list.size()]);
-    }
-
-    private void setupButtons() {
-        go = (Button) planet.getTop().lookup(GO_ID.toString());
-        Button move = (Button) planet.getCenter().lookup(View.MOVE_ID.toString());
-        go.setOnMouseClicked(goToMars());
-        move.setOnMouseClicked(move());
     }
 
     private void setupText() {
@@ -150,10 +149,6 @@ public class Earth extends Parent {
         instructions = (TextField) planet.getCenter().lookup(INS_ID.toString());
         output = (TextArea) planet.getCenter().lookup(OUTPUT_ID.toString());
         messages = (Label) planet.getBottom();
-    }
-
-    private String formatMessage(Object info, Object message) {
-        return info.toString() + Messages.SPACE + message;
     }
 
     private void resetTextFields(TextField... fields) {

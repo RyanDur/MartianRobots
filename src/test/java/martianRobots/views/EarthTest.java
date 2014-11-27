@@ -72,14 +72,14 @@ public class EarthTest extends GuiTest {
     public void shouldBeAbleToHandleIfInputIsNotANumberInX() {
         String mop = "mop";
         click(X_ID.toString()).type(mop).click(Y_ID.toString()).type("3").click(GO_ID.toString());
-        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"" + mop + "\" " + NOT_A_NUMBER));
+        verifyThat(MESSAGES_ID.toString(), hasText(mop + " " + NOT_A_NUMBER));
     }
 
     @Test
     public void shouldBeAbleToHandleIfInputIsNotANumberInY() {
         String tigger = "tigger";
         click(X_ID.toString()).type("6").click(Y_ID.toString()).type(tigger).click(GO_ID.toString());
-        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"" + tigger + "\" " + NOT_A_NUMBER));
+        verifyThat(MESSAGES_ID.toString(), hasText(tigger + " " + NOT_A_NUMBER));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class EarthTest extends GuiTest {
         String text = "foo";
         when(mars.getRobot()).thenReturn("Hello");
         click(X_ID.toString()).type(text).click(Y_ID.toString()).type("4").click(GO_ID.toString());
-        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"" + text + "\" " + NOT_A_NUMBER));
+        verifyThat(MESSAGES_ID.toString(), hasText(text + " " + NOT_A_NUMBER));
         click(X_ID.toString())
                 .push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE)
                 .type("2").click(GO_ID.toString());
@@ -222,7 +222,7 @@ public class EarthTest extends GuiTest {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
                 .click(GO_ID.toString()).click(POS_ID.toString())
                 .type("F 4 N").click(MOVE_ID.toString());
-        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"F\" " + NOT_A_NUMBER));
+        verifyThat(MESSAGES_ID.toString(), hasText("F " + NOT_A_NUMBER));
     }
 
     @Test

@@ -3,7 +3,6 @@ package martianRobots.views;
 import com.google.inject.Inject;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -64,7 +63,7 @@ public class Earth extends Parent {
         planet = getFXML();
         setupText();
         setupButtons();
-        toggleVisible(false, true);
+        toggleDisplay(false, true);
         this.getChildren().add(planet);
     }
 
@@ -97,7 +96,7 @@ public class Earth extends Parent {
 
     private EventHandler<MouseEvent> leaveMars() {
         return event -> {
-            toggleVisible(false, true);
+            toggleDisplay(false, true);
             resetTextFields(x, y, position, instructions);
             output.clear();
             messages.setText(EMPTY.toString());
@@ -114,7 +113,7 @@ public class Earth extends Parent {
                 messages.setText(EMPTY.toString());
                 Integer[] coords = parseInts(x.getText(), y.getText());
                 mars.setup(coords[0], coords[1]);
-                toggleVisible(true, false);
+                toggleDisplay(true, false);
                 go.setText(RESET.toString());
                 go.setOnMouseClicked(leaveMars());
             } catch (ValidationException e) {
@@ -164,14 +163,10 @@ public class Earth extends Parent {
         });
     }
 
-    private void toggleVisible(boolean control, boolean menu) {
-        setVisible(control, planet.getCenter());
+    private void toggleDisplay(boolean control, boolean menu) {
+        planet.getCenter().setVisible(control);
         x.setDisable(!menu);
         y.setDisable(!menu);
-    }
-
-    private void setVisible(boolean visible, Node... nodes) {
-        Arrays.stream(nodes).forEach(node -> node.setVisible(visible));
     }
 
     private BorderPane getFXML() {

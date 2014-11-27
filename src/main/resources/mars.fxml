@@ -37,7 +37,7 @@
          <children>
             <TextField id="position" layoutX="80.0" layoutY="42.0" />
             <TextField id="instructions" layoutX="79.0" layoutY="102.0" />
-            <TextArea id="output" layoutX="309.0" layoutY="42.0" prefHeight="200.0" prefWidth="200.0" />
+            <TextArea id="output" editable="false" layoutX="309.0" layoutY="42.0" prefHeight="200.0" prefWidth="200.0" />
             <Label layoutX="80.0" layoutY="26.0" text="Position" />
             <Label layoutX="79.0" layoutY="86.0" text="Instructions" />
             <Label layoutX="309.0" layoutY="26.0" text="Output" />

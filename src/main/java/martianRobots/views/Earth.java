@@ -163,7 +163,9 @@ public class Earth extends Parent {
 
     private void toggleVisible(boolean control, boolean menu) {
         setVisible(control, planet.getCenter(), reset);
-        setVisible(menu, x, y, go);
+        setVisible(menu, go);
+        x.setDisable(!menu);
+        y.setDisable(!menu);
     }
 
     private void setVisible(boolean visible, Node... nodes) {

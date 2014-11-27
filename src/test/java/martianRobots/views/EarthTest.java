@@ -83,21 +83,21 @@ public class EarthTest extends GuiTest {
     public void shouldBeAbleToHandleIfInputIsNotANumberInX() {
         String mop = "mop";
         click(X_ID.toString()).type(mop).click(Y_ID.toString()).type("3").click(GO_ID.toString());
-        verifyThat("#messages", hasText("For input string: \"" + mop + "\" is not a number!!"));
+        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"" + mop + "\" " + NOT_A_NUMBER));
     }
 
     @Test
     public void shouldBeAbleToHandleIfInputIsNotANumberInY() {
         String tigger = "tigger";
         click(X_ID.toString()).type("6").click(Y_ID.toString()).type(tigger).click(GO_ID.toString());
-        verifyThat("#messages", hasText("For input string: \"" + tigger + "\" is not a number!!"));
+        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"" + tigger + "\" " + NOT_A_NUMBER));
     }
 
     @Test
     public void shouldBeAbleToHandleValidationExceptionFromMars() throws ValidationException {
         doThrow(new ValidationException("Hello", Messages.DOT)).when(mars).setup(anyInt(), anyInt());
         click(X_ID.toString()).type("6").click(Y_ID.toString()).type("4").click(GO_ID.toString());
-        verifyThat("#messages", hasText("Hello" + " " + Messages.DOT));
+        verifyThat(MESSAGES_ID.toString(), hasText("Hello" + " " + Messages.DOT));
     }
 
     @Test
@@ -133,17 +133,15 @@ public class EarthTest extends GuiTest {
     }
 
     @Test
-    public void shouldMakeXInvisibleWhenGoingToMars() {
-        exception.expect(NoNodesVisibleException.class);
+    public void shouldDisableXWhenGoingToMars() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
-        find(X_ID.toString());
+        assertThat(find(X_ID.toString()).disableProperty().get(), is(true));
     }
 
     @Test
-    public void shouldMakeYInvisibleWhenGoingToMars() {
-        exception.expect(NoNodesVisibleException.class);
+    public void shouldDisableYWhenGoingToMars() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
-        find(Y_ID.toString());
+        assertThat(find(Y_ID.toString()).disableProperty().get(), is(true));
     }
 
     @Test
@@ -163,17 +161,17 @@ public class EarthTest extends GuiTest {
     }
 
     @Test
-    public void shouldMakeYVisibleWhenReset() {
+    public void shouldMakeYEditableWhenReset() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
                 click(GO_ID.toString()).click(RESET_ID.toString());
-        assertThat(find(Y_ID.toString()).isVisible(), is(true));
+        assertThat(find(Y_ID.toString()).disableProperty().get(), is(false));
     }
 
     @Test
-    public void shouldMakeXVisibleWhenReset() {
+    public void shouldMakeXEditableWhenReset() {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
                 click(GO_ID.toString()).click(RESET_ID.toString());
-        assertThat(find(X_ID.toString()).isVisible(), is(true));
+        assertThat(find(X_ID.toString()).disableProperty().get(), is(false));
     }
 
     @Test

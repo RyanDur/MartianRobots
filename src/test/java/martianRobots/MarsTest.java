@@ -8,17 +8,18 @@ import martianRobots.lang.Lost;
 import martianRobots.lang.Max;
 import martianRobots.lang.Messages;
 import martianRobots.robots.Robot;
-import martianRobots.robots.RobotImpl;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.anyChar;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -216,68 +217,66 @@ public class MarsTest {
     }
 
     @Test
-    public void shouldBeAbleToInputJustUnderTheMaxInstructionSize() throws ValidationException {
-        String instructions = new String(new char[Max.MAX_INSTRUCTION_SIZE.getMax() - 1]).replace('\0', 'F');
+    public void shouldNotBeAbleToInputTheMaxInstructionSize() throws ValidationException {
+        exception.expect(ValidationException.class);
+        String instructions = new String(new char[Max.MAX_INSTRUCTION_SIZE.getMax()]).replace('\0', 'F');
         int x = 1;
         int y = 1;
-        Compass orientation = Compass.E;
-        Robot robot = new RobotImpl(x, y, orientation);
+        when(robot.getLocation()).thenReturn(Arrays.asList(x, y));
+        when(robot.getOrientation()).thenReturn(Compass.E);
         mars.setRobot(robot);
         mars.move(instructions);
-        assertThat(mars.getRobot(), is(equalTo(5 + " " + y + " " + orientation + " " + Lost.LOST)));
+    }
+
+    @Test
+    public void shouldNGetAHelpfulMessageWhenInputingTheMaxInstructionSize() throws ValidationException {
+        String instructions = new String(new char[Max.MAX_INSTRUCTION_SIZE.getMax()]).replace('\0', 'F');
+        exception.expectMessage(instructions + " " + Messages.INVALID_INSTRUCTIONS);
+        int x = 1;
+        int y = 1;
+        when(robot.getLocation()).thenReturn(Arrays.asList(x, y));
+        when(robot.getOrientation()).thenReturn(Compass.E);
+        mars.setRobot(robot);
+        mars.move(instructions);
     }
 
     @Test
     public void shouldIndicateWhenARobotIsLost() throws ValidationException {
-        int x = 1;
-        int y = 1;
+        int x = 0;
+        int y = 0;
 
         Compass orientation = Compass.W;
-        Robot robot = new RobotImpl(x, y, orientation);
+        List<Integer> integers = Arrays.asList(x, y);
+        List<Integer> integers1 = Arrays.asList(-1, 0);
+        when(robot.move(anyChar())).thenReturn(robot);
+        when(robot.toString()).thenReturn(x + " " + y + " " + Compass.S);
+        when(robot.getLocation()).thenReturn(integers, integers, integers, integers, integers1);
+        when(robot.getOrientation()).thenReturn(orientation);
         mars.setRobot(robot);
-        mars.move("LFFLLFF");
-        assertThat(mars.getRobot(), is(equalTo(x + " " + 0 + " " + Compass.S + " " + Lost.LOST)));
+        mars.move("F");
+        assertThat(mars.getRobot(), is(equalTo(x + " " + y + " " + Compass.S + " " + Lost.LOST)));
     }
 
     @Test
-    public void shouldBeAbleToEndUpInTheSamePlace() throws ValidationException {
-        int x = 1;
-        int y = 1;
-        Compass orientation = Compass.E;
-        Robot robot = new RobotImpl(x, y, orientation);
+    public void shouldIgnoreMoveThatHasAScentToMoveOffTheBoard() throws ValidationException {
+        int x = 0;
+        int y = 0;
+
+        Compass orientation = Compass.W;
+        List<Integer> integers = Arrays.asList(x, y);
+        List<Integer> integers1 = Arrays.asList(-1, 0);
+        Robot robot1 = mock(Robot.class);
+        when(robot.move(anyChar())).thenReturn(robot1);
+        when(robot1.move(anyChar())).thenReturn(robot1);
+        when(robot1.toString()).thenReturn(x + " " + y + " " + Compass.S);
+        when(robot.getLocation()).thenReturn(integers);
+        when(robot1.getLocation()).thenReturn(integers1, integers1, integers, integers, integers, integers, integers1);
+        when(robot.getOrientation()).thenReturn(orientation);
+        when(robot1.getOrientation()).thenReturn(orientation);
         mars.setRobot(robot);
-        mars.move("RFRFRFRF");
-        assertThat(mars.getRobot(), is(equalTo(x + " " + y + " " + orientation)));
-    }
-
-    @Test
-    public void shouldBeAbleToFallOffTheGrid() throws ValidationException {
-        int x = 3;
-        int y = 2;
-        Compass orientation = Compass.N;
-        Robot robot = new RobotImpl(x, y, orientation);
-        mars.setRobot(robot);
-        mars.move("FRRFLLFFRRFLL");
-        assertThat(mars.getRobot(), is(equalTo(x + " " + 3 + " " + orientation + " " + Lost.LOST)));
-    }
-
-    @Test
-    public void shouldSatisfyRequirementsOfChallenge() throws ValidationException {
-        mars.setup(5, 3);
-
-        Robot robot = new RobotImpl(1, 1, Compass.E);
-        mars.setRobot(robot);
-        mars.move("RFRFRFRF");
-        assertThat(mars.getRobot(), is(equalTo("1 1 E")));
-
-        Robot robot1 = new RobotImpl(3, 2, Compass.N);
+        mars.move("F");
         mars.setRobot(robot1);
-        mars.move("FRRFLLFFRRFLL");
-        assertThat(mars.getRobot(), is(equalTo("3 3 N LOST")));
-
-        Robot robot2 = new RobotImpl(0, 3, Compass.W);
-        mars.setRobot(robot2);
-        mars.move("LLFFFLFLFL");
-        assertThat(mars.getRobot(), is(equalTo("2 3 S")));
+        mars.move("F");
+        assertThat(mars.getRobot(), is(equalTo(x + " " + y + " " + Compass.S)));
     }
 }

@@ -52,9 +52,7 @@ public class MarsImpl implements Mars {
         occupied.remove(robot.get().getLocation());
         for (int i = 0; i < instructions.length() && !isLost; i++) {
             Robot robot = this.robot.get().move(instructions.charAt(i));
-            if (!scents.contains(robot) &&
-                    !occupied.contains(robot.getLocation()))
-                setRobot.accept(robot);
+            if (!scents.contains(robot) && !occupied.contains(robot.getLocation())) setRobot.accept(robot);
         }
         if (!isLost) occupied.add(robot.get().getLocation());
     }

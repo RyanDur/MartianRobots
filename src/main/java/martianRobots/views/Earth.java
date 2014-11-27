@@ -76,11 +76,15 @@ public class Earth extends Parent {
                 mars.setRobot(getRobot(pos));
                 mars.move(instructions.getText().toUpperCase());
                 setOutput(mars);
+                resetTextFields(position, instructions);
+                messages.setText(EMPTY.toString());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
+            } catch (NumberFormatException e) {
+                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
+            } catch (IllegalArgumentException e) {
+                messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
             }
-            resetTextFields(position, instructions);
-            messages.setText(EMPTY.toString());
         };
     }
 
@@ -92,10 +96,10 @@ public class Earth extends Parent {
 
     private EventHandler<MouseEvent> leaveMars() {
         return event -> {
-            messages.setText(EMPTY.toString());
             toggleVisible(false, true);
             resetTextFields(x, y, position, instructions);
             output.clear();
+            messages.setText(EMPTY.toString());
             y.setPromptText(Y_PROMPT.toString());
             x.setPromptText(X_PROMPT.toString());
         };
@@ -110,31 +114,22 @@ public class Earth extends Parent {
                 toggleVisible(true, false);
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
+            } catch (NumberFormatException e) {
+                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
             }
         };
     }
 
     private Robot getRobot(String[] pos) {
-        try {
-            Integer[] coords = parseInts(pos[0], pos[1]);
-            return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            messages.setText(formatMessage(pos[2], NOT_A_COMPASS));
-        }
-        return null;
+        Integer[] coords = parseInts(pos[0], pos[1]);
+        return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
     }
 
 
     private Integer[] parseInts(String... ints) {
-        List<Integer> integers = Stream.of(ints).map(num -> {
-            try {
-                return Integer.parseInt(num.trim());
-            } catch (NumberFormatException e) {
-                messages.setText(formatMessage(e.getMessage(), NOT_A_NUMBER));
-                return null;
-            }
-        }).collect(Collectors.toList());
-        return integers.toArray(new Integer[integers.size()]);
+        List<Integer> list = Stream.of(ints)
+                .map(num -> Integer.parseInt(num.trim())).collect(Collectors.toList());
+        return list.toArray(new Integer[list.size()]);
     }
 
     private void setupButtons() {

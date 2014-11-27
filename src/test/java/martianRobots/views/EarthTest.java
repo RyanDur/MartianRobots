@@ -15,6 +15,18 @@ import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
 import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
+import static martianRobots.lang.Messages.NOT_A_COMPASS;
+import static martianRobots.lang.Messages.NOT_A_NUMBER;
+import static martianRobots.lang.View.CONTROL_ID;
+import static martianRobots.lang.View.GO_ID;
+import static martianRobots.lang.View.INS_ID;
+import static martianRobots.lang.View.MESSAGES_ID;
+import static martianRobots.lang.View.MOVE_ID;
+import static martianRobots.lang.View.OUTPUT_ID;
+import static martianRobots.lang.View.POS_ID;
+import static martianRobots.lang.View.RESET_ID;
+import static martianRobots.lang.View.X_ID;
+import static martianRobots.lang.View.Y_ID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.loadui.testfx.Assertions.verifyThat;
@@ -31,164 +43,185 @@ public class EarthTest extends GuiTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
-    private Mars mars = mock(Mars.class);
+    private Mars mars;
     private RobotFactory robotFactory;
+    private Robot robot;
 
     @Override
     protected Parent getRootNode() {
+        mars = mock(Mars.class);
         robotFactory = mock(RobotFactory.class);
+        robot = mock(Robot.class);
+        when(robotFactory.createRobot(anyInt(), anyInt(), any(Compass.class))).thenReturn(robot);
         return new Earth(mars, robotFactory);
     }
 
     @Test
     public void shouldHaveAGoToMarsButton() {
-        verifyThat("#go", hasText("Go to Mars"));
+        verifyThat(GO_ID.toString(), hasText("Go to Mars"));
     }
 
     @Test
     public void shouldHaveTheControlsHiddenOnStartup() {
         exception.expect(NoNodesVisibleException.class);
-        find("#control");
+        find(CONTROL_ID.toString());
     }
 
     @Test
     public void shouldHideTheResetButtonOnStartup() {
         exception.expect(NoNodesVisibleException.class);
-        find("#reset");
+        find(RESET_ID.toString());
     }
 
     @Test
     public void shouldBeAbleToInputAGridSizeAndGoToMars() throws ValidationException {
-        click("#x").type("5").click("#y").type("3").click("#go");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
         verify(mars).setup(5, 3);
     }
 
     @Test
     public void shouldBeAbleToHandleIfInputIsNotANumberInX() {
-        click("#x").type("mop").click("#y").type("4").click("#go");
-        verifyThat("#messages", hasText("For input string: \"mop\" is not a number!!"));
+        String mop = "mop";
+        click(X_ID.toString()).type(mop).click(Y_ID.toString()).type("3").click(GO_ID.toString());
+        verifyThat("#messages", hasText("For input string: \"" + mop + "\" is not a number!!"));
     }
 
     @Test
     public void shouldBeAbleToHandleIfInputIsNotANumberInY() {
-        click("#x").type("6").click("#y").type("tigger").click("#go");
-        verifyThat("#messages", hasText("For input string: \"tigger\" is not a number!!"));
+        String tigger = "tigger";
+        click(X_ID.toString()).type("6").click(Y_ID.toString()).type(tigger).click(GO_ID.toString());
+        verifyThat("#messages", hasText("For input string: \"" + tigger + "\" is not a number!!"));
     }
 
     @Test
     public void shouldBeAbleToHandleValidationExceptionFromMars() throws ValidationException {
         doThrow(new ValidationException("Hello", Messages.DOT)).when(mars).setup(anyInt(), anyInt());
-        click("#x").type("6").click("#y").type("4").click("#go");
+        click(X_ID.toString()).type("6").click(Y_ID.toString()).type("4").click(GO_ID.toString());
         verifyThat("#messages", hasText("Hello" + " " + Messages.DOT));
     }
 
     @Test
     public void shouldRemoveMessageIfInputIsCorrect() throws ValidationException {
-        click("#x").type("foo").click("#y").type("4").click("#go");
-        verifyThat("#messages", hasText("For input string: \"foo\" is not a number!!"));
-        click("#x").push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).type("2").click("#go");
+        String text = "foo";
+        when(mars.getRobot()).thenReturn("Hello");
+        click(X_ID.toString()).type(text).click(Y_ID.toString()).type("4").click(GO_ID.toString());
+        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"" + text + "\" " + NOT_A_NUMBER));
+        click(X_ID.toString())
+                .push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE).push(KeyCode.BACK_SPACE)
+                .type("2").click(GO_ID.toString());
         verify(mars).setup(2, 4);
-        verifyThat("#messages", hasText(""));
+        verifyThat(MESSAGES_ID.toString(), hasText(""));
     }
 
     @Test
     public void shouldMakeControlVisibleWhenGoingToMars() {
-        click("#x").type("5").click("#y").type("3").click("#go");
-        assertThat(find("#control").isVisible(), is(true));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
+        assertThat(find(CONTROL_ID.toString()).isVisible(), is(true));
     }
 
     @Test
     public void shouldMakeResetVisibleWhenGoingToMars() {
-        click("#x").type("5").click("#y").type("3").click("#go");
-        assertThat(find("#reset").isVisible(), is(true));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
+        assertThat(find(RESET_ID.toString()).isVisible(), is(true));
     }
 
     @Test
     public void shouldMakeGoInvisibleWhenGoingToMars() {
         exception.expect(NoNodesVisibleException.class);
-        click("#x").type("5").click("#y").type("3").click("#go");
-        find("#go");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
+        find(GO_ID.toString());
     }
 
     @Test
     public void shouldMakeXInvisibleWhenGoingToMars() {
         exception.expect(NoNodesVisibleException.class);
-        click("#x").type("5").click("#y").type("3").click("#go");
-        find("#x");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
+        find(X_ID.toString());
     }
 
     @Test
     public void shouldMakeYInvisibleWhenGoingToMars() {
         exception.expect(NoNodesVisibleException.class);
-        click("#x").type("5").click("#y").type("3").click("#go");
-        find("#y");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").click(GO_ID.toString());
+        find(Y_ID.toString());
     }
 
     @Test
     public void shouldMakeControlInvisibleWhenReset() {
         exception.expect(NoNodesVisibleException.class);
-        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
-        find("#control");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString()).click(RESET_ID.toString());
+        find(CONTROL_ID.toString());
     }
 
     @Test
     public void shouldMakeResetInvisibleWhenReset() {
         exception.expect(NoNodesVisibleException.class);
-        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
-        find("#reset");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString()).click(RESET_ID.toString());
+        find(RESET_ID.toString());
     }
 
     @Test
     public void shouldMakeYVisibleWhenReset() {
-        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
-        assertThat(find("#y").isVisible(), is(true));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString()).click(RESET_ID.toString());
+        assertThat(find(Y_ID.toString()).isVisible(), is(true));
     }
 
     @Test
     public void shouldMakeXVisibleWhenReset() {
-        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
-        assertThat(find("#x").isVisible(), is(true));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString()).click(RESET_ID.toString());
+        assertThat(find(X_ID.toString()).isVisible(), is(true));
     }
 
     @Test
     public void shouldMakeGoVisibleWhenReset() {
-        click("#x").type("5").click("#y").type("3").click("#go").click("#reset");
-        assertThat(find("#go").isVisible(), is(true));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString()).click(RESET_ID.toString());
+        assertThat(find(GO_ID.toString()).isVisible(), is(true));
     }
 
     @Test
     public void shouldToReInputNewBoundariesForMars() throws ValidationException {
-        click("#x").type("5").click("#y").type("3").click("#go").click("#reset")
-                .click("#x").type("5").click("#y").type("3").click("#go");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString()).click(RESET_ID.toString())
+                .click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
+                click(GO_ID.toString());
         verify(mars, times(2)).setup(5, 3);
     }
 
     @Test
     public void shouldCreateARobotWhenMoving() {
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("2 4 N").click("#move");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("2 4 N").click(MOVE_ID.toString());
         verify(robotFactory).createRobot(2, 4, Compass.N);
     }
 
     @Test
     public void shouldMakeSureThereAreEnoughCoordinatesForARobot() {
-        click("#x").type("5").click("#y").type("3").click("#go").click("#move");
-        verifyThat("#messages", hasText("Max number of coordinates is " + Max.MAX_NUMBER_COORDS));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(MOVE_ID.toString());
+        verifyThat(MESSAGES_ID.toString(), hasText("Max number of coordinates is " + Max.MAX_NUMBER_COORDS.getMax()));
     }
 
     @Test
     public void shouldMakeSureThereIsNotMoreTHanEnoughCoordinatesForARobot() {
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("1 2 N 4").click("#move");
-        verifyThat("#messages", hasText("Max number of coordinates is " + Max.MAX_NUMBER_COORDS));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("1 2 N 4").click(MOVE_ID.toString());
+        verifyThat(MESSAGES_ID.toString(), hasText("Max number of coordinates is " + Max.MAX_NUMBER_COORDS.getMax()));
     }
 
     @Test
     public void shouldPlaceARobotWhenMoving() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("2 4 N").click("#move");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("2 4 N").click(MOVE_ID.toString());
         verify(mars).setRobot(robot);
     }
 
@@ -196,36 +229,38 @@ public class EarthTest extends GuiTest {
     public void shouldSetOrientationToUpperCaseWhenPlaceARobotWhenMoving() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("2 4 n").click("#move");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("2 4 n").click(MOVE_ID.toString());
         verify(robotFactory).createRobot(2, 4, Compass.N);
     }
 
     @Test
     public void shouldTrimTheSpaceFromInputs() throws ValidationException {
-        Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
-        click("#x").type("5   ").click("#y").type("3").click("#go")
-                .click("#position").type("  2   4 N  ").click("#move");
+        click(X_ID.toString()).type("5    ").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("  2   4 N  ").click(MOVE_ID.toString());
         verify(mars).setRobot(robot);
     }
 
     @Test
     public void shouldNotAllowNonNumbersFromInputs() throws ValidationException {
-        Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("F 4 N").click("#move");
-        verifyThat("#messages", hasText("For input string: \"F\" is not a number!!"));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("F 4 N").click(MOVE_ID.toString());
+        verifyThat(MESSAGES_ID.toString(), hasText("For input string: \"F\" " + NOT_A_NUMBER));
     }
 
     @Test
     public void shouldNotAllowNonCompassFromInputs() throws ValidationException {
         Robot robot = mock(Robot.class);
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("5 4 R").click("#move");
-        verifyThat("#messages", hasText("R is not a Compass position!"));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("5 4 R").click(MOVE_ID.toString());
+        verifyThat(MESSAGES_ID.toString(), hasText("R " + NOT_A_COMPASS));
     }
 
     @Test
@@ -234,55 +269,59 @@ public class EarthTest extends GuiTest {
         doThrow(new ValidationException("Hello", Messages.DOT)).when(mars).setRobot(any(Robot.class));
         when(robotFactory.createRobot(2, 4, Compass.N)).thenReturn(robot);
 
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("5 4 S").click("#move");
-        verifyThat("#messages", hasText("Hello " + Messages.DOT));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString())
+                .type("5 4 S").click(MOVE_ID.toString());
+        verifyThat(MESSAGES_ID.toString(), hasText("Hello " + Messages.DOT));
     }
 
     @Test
     public void shouldBeAbleToSendInstructionsToMars() throws ValidationException {
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("5 4 S")
-                .click("#instructions").type("sdgsdfgsdfg")
-                .click("#move");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString()).type("5 4 S")
+                .click(INS_ID.toString()).type("sdgsdfgsdfg").click(MOVE_ID.toString());
         verify(mars).move("SDGSDFGSDFG");
     }
 
     @Test
     public void shouldGetDataFromMars() {
         when(mars.getRobot()).thenReturn("Hello From Mars");
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("5 4 S")
-                .click("#instructions").type("sdgsdfgsdfg")
-                .click("#move");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString()).click(POS_ID.toString()).type("5 4 S")
+                .click(INS_ID.toString()).type("sdgsdfgsdfg").click(MOVE_ID.toString());
 
-        verifyThat("#output", hasText("Hello From Mars"));
+        verifyThat(OUTPUT_ID.toString(), hasText("Hello From Mars"));
     }
 
     @Test
     public void shouldResetEverythingWhenReset() {
         when(mars.getRobot()).thenReturn("Hello From Mars");
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("5 4 S")
-                .click("#instructions").type("sdgsdfgsdfg")
-                .click("#move").click("#reset")
-                .click("#x").type("5").click("#y").type("3").click("#go");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString())
+                .click(POS_ID.toString()).type("5 4 S")
+                .click(INS_ID.toString()).type("sdgsdfgsdfg")
+                .click(MOVE_ID.toString())
+                .click(RESET_ID.toString())
+                .click(X_ID.toString()).type("5")
+                .click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString());
 
-        verifyThat("#position", hasText(""));
-        verifyThat("#instructions", hasText(""));
-        verifyThat("#output", hasText(""));
+        verifyThat(POS_ID.toString(), hasText(""));
+        verifyThat(INS_ID.toString(), hasText(""));
+        verifyThat(OUTPUT_ID.toString(), hasText(""));
     }
 
     @Test
     public void shouldPutTheNextInoutOnTheFollowingLine() {
         when(mars.getRobot()).thenReturn("Hello From Mars", "Goodbye From Mars");
-        click("#x").type("5").click("#y").type("3").click("#go")
-                .click("#position").type("5 3 S")
-                .click("#instructions").type("s")
-                .click("#move")
-                .click("#position").type("1 2 N")
-                .click("#instructions").type("sdg")
-                .click("#move");
-        verifyThat("#output", hasText("Hello From Mars\nGoodbye From Mars"));
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString())
+                .click(POS_ID.toString()).type("5 3 S")
+                .click(INS_ID.toString()).type("s")
+                .click(MOVE_ID.toString())
+                .click(POS_ID.toString()).type("1 2 N")
+                .click(INS_ID.toString()).type("sdg")
+                .click(MOVE_ID.toString());
+        verifyThat(OUTPUT_ID.toString(), hasText("Hello From Mars\nGoodbye From Mars"));
     }
 }

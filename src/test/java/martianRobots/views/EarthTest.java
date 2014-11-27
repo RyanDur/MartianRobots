@@ -21,11 +21,13 @@ import static martianRobots.lang.Messages.NOT_A_NUMBER;
 import static martianRobots.lang.Messages.RESET;
 import static martianRobots.lang.View.CONTROL_ID;
 import static martianRobots.lang.View.GO_ID;
+import static martianRobots.lang.View.INSTRUCTIONS_ID;
 import static martianRobots.lang.View.INS_ID;
 import static martianRobots.lang.View.MESSAGES_ID;
 import static martianRobots.lang.View.MOVE_ID;
 import static martianRobots.lang.View.OUTPUT_ID;
 import static martianRobots.lang.View.POS_ID;
+import static martianRobots.lang.View.START_ID;
 import static martianRobots.lang.View.X_ID;
 import static martianRobots.lang.View.Y_ID;
 import static org.hamcrest.CoreMatchers.is;
@@ -251,7 +253,7 @@ public class EarthTest extends GuiTest {
     public void shouldBeAbleToSendInstructionsToMars() throws ValidationException {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
                 .click(GO_ID.toString()).click(POS_ID.toString()).type("5 4 S")
-                .click(INS_ID.toString()).type("sdgsdfgsdfg").click(MOVE_ID.toString());
+                .click(INSTRUCTIONS_ID.toString()).type("sdgsdfgsdfg").click(MOVE_ID.toString());
         verify(mars).move("SDGSDFGSDFG");
     }
 
@@ -260,7 +262,7 @@ public class EarthTest extends GuiTest {
         when(mars.getRobot()).thenReturn("Hello From Mars");
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
                 .click(GO_ID.toString()).click(POS_ID.toString()).type("5 4 S")
-                .click(INS_ID.toString()).type("sdgsdfgsdfg").click(MOVE_ID.toString());
+                .click(INSTRUCTIONS_ID.toString()).type("sdgsdfgsdfg").click(MOVE_ID.toString());
 
         verifyThat(OUTPUT_ID.toString(), hasText("Hello From Mars"));
     }
@@ -271,7 +273,7 @@ public class EarthTest extends GuiTest {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
                 .click(GO_ID.toString())
                 .click(POS_ID.toString()).type("5 4 S")
-                .click(INS_ID.toString()).type("sdgsdfgsdfg")
+                .click(INSTRUCTIONS_ID.toString()).type("sdgsdfgsdfg")
                 .click(MOVE_ID.toString())
                 .click(GO_ID.toString())
                 .click(X_ID.toString()).type("5")
@@ -279,7 +281,7 @@ public class EarthTest extends GuiTest {
                 .click(GO_ID.toString());
 
         verifyThat(POS_ID.toString(), hasText(""));
-        verifyThat(INS_ID.toString(), hasText(""));
+        verifyThat(INSTRUCTIONS_ID.toString(), hasText(""));
         verifyThat(OUTPUT_ID.toString(), hasText(""));
     }
 
@@ -289,11 +291,26 @@ public class EarthTest extends GuiTest {
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
                 .click(GO_ID.toString())
                 .click(POS_ID.toString()).type("5 3 S")
-                .click(INS_ID.toString()).type("s")
+                .click(INSTRUCTIONS_ID.toString()).type("s")
                 .click(MOVE_ID.toString())
                 .click(POS_ID.toString()).type("1 2 N")
-                .click(INS_ID.toString()).type("sdg")
+                .click(INSTRUCTIONS_ID.toString()).type("sdg")
                 .click(MOVE_ID.toString());
         verifyThat(OUTPUT_ID.toString(), hasText("Hello From Mars\nGoodbye From Mars"));
+    }
+
+    @Test
+    public void shouldPutTheStartAndInsOnMutlipleLinesLine() {
+        when(mars.getRobot()).thenReturn("Hello From Mars", "Goodbye From Mars");
+        click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3")
+                .click(GO_ID.toString())
+                .click(POS_ID.toString()).type("5 3 S")
+                .click(INSTRUCTIONS_ID.toString()).type("s")
+                .click(MOVE_ID.toString())
+                .click(POS_ID.toString()).type("1 2 N")
+                .click(INSTRUCTIONS_ID.toString()).type("sdg")
+                .click(MOVE_ID.toString());
+        verifyThat(START_ID.toString(), hasText("5 3 S\n1 2 N"));
+        verifyThat(INS_ID.toString(), hasText("s\nsdg"));
     }
 }

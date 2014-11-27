@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -36,9 +38,8 @@ import static martianRobots.lang.Messages.SPACE;
 import static martianRobots.lang.Messages.X_PROMPT;
 import static martianRobots.lang.Messages.Y_PROMPT;
 import static martianRobots.lang.View.GO_ID;
-import static martianRobots.lang.View.INS_ID;
+import static martianRobots.lang.View.INSTRUCTIONS_ID;
 import static martianRobots.lang.View.MARS;
-import static martianRobots.lang.View.OUTPUT_ID;
 import static martianRobots.lang.View.POS_ID;
 import static martianRobots.lang.View.X_ID;
 import static martianRobots.lang.View.Y_ID;
@@ -54,6 +55,8 @@ public class Earth extends Parent {
     private TextArea output;
     private TextField x;
     private TextField y;
+    private TextArea start;
+    private TextArea ins;
 
     @Inject
     public Earth(Mars mars, RobotFactory robotFactory) {
@@ -75,7 +78,9 @@ public class Earth extends Parent {
             } else try {
                 mars.setRobot(getRobot(pos));
                 mars.move(instructions.getText().toUpperCase());
-                setOutput(mars);
+                setOutput(mars.getRobot(), output);
+                setOutput(position.getText(), start);
+                setOutput(instructions.getText(), ins);
                 resetTextFields(position, instructions);
                 messages.setText(EMPTY.toString());
             } catch (ValidationException e) {
@@ -89,6 +94,8 @@ public class Earth extends Parent {
             toggleDisplay(false, true);
             resetTextFields(x, y, position, instructions);
             output.clear();
+            start.clear();
+            ins.clear();
             messages.setText(EMPTY.toString());
             y.setPromptText(Y_PROMPT.toString());
             x.setPromptText(X_PROMPT.toString());
@@ -110,10 +117,10 @@ public class Earth extends Parent {
         };
     }
 
-    private void setOutput(Mars mars) {
-        String out = output.getText();
+    private void setOutput(String put, TextArea area) {
+        String out = area.getText();
         if (out.length() != 0) out += NEW_LINE;
-        output.setText(out + mars.getRobot());
+        area.setText(out + put);
     }
 
     private void setButton(Button source, Messages message, EventHandler<MouseEvent> func) {
@@ -146,9 +153,14 @@ public class Earth extends Parent {
         x = (TextField) planet.getTop().lookup(X_ID.toString());
         y = (TextField) planet.getTop().lookup(Y_ID.toString());
         position = (TextField) planet.getCenter().lookup(POS_ID.toString());
-        instructions = (TextField) planet.getCenter().lookup(INS_ID.toString());
-        output = (TextArea) planet.getCenter().lookup(OUTPUT_ID.toString());
+        instructions = (TextField) planet.getCenter().lookup(INSTRUCTIONS_ID.toString());
+        ScrollPane scroll = (ScrollPane) planet.getRight().lookup("#right").lookup("#scroll");
+        output = (TextArea) scroll.getContent().lookup("#output");
         messages = (Label) planet.getBottom();
+        ScrollPane scrollL = (ScrollPane) planet.getLeft();
+        SplitPane split = (SplitPane) scrollL.getContent();
+        start = (TextArea) split.getItems().get(0).lookup("#start");
+        ins = (TextArea) split.getItems().get(1).lookup("#ins");
     }
 
     private void resetTextFields(TextField... fields) {

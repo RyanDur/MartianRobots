@@ -9,11 +9,8 @@ import martianRobots.lang.Compass;
 import martianRobots.lang.Max;
 import martianRobots.lang.Messages;
 import martianRobots.robots.Robot;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.loadui.testfx.GuiTest;
-import org.loadui.testfx.exceptions.NoNodesVisibleException;
 
 import static martianRobots.lang.Messages.GO;
 import static martianRobots.lang.Messages.NOT_A_COMPASS;
@@ -42,10 +39,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+//import org.loadui.testfx.exceptions.NoNodesVisibleException;
+
 public class EarthTest extends GuiTest {
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
     private Mars mars;
     private RobotFactory robotFactory;
     private Robot robot;
@@ -130,9 +127,9 @@ public class EarthTest extends GuiTest {
 
     @Test
     public void shouldMakeControlInvisibleWhenReset() {
-        exception.expect(NoNodesVisibleException.class);
         click(X_ID.toString()).type("5").click(Y_ID.toString()).type("3").
                 click(GO_ID.toString()).click(GO_ID.toString());
+        assertThat(find(CONTROL_ID.toString()).disableProperty().get(), is(true));
         find(CONTROL_ID.toString());
     }
 

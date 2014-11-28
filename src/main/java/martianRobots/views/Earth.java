@@ -54,6 +54,7 @@ public class Earth extends Parent {
 
     private final Mars mars;
     private final RobotFactory robotFactory;
+    private boolean toggle;
     private Label messages;
     private BorderPane planet;
     private TextField position;
@@ -68,11 +69,12 @@ public class Earth extends Parent {
     public Earth(Mars mars, RobotFactory robotFactory) {
         this.mars = mars;
         this.robotFactory = robotFactory;
+        toggle = true;
         planet = getFXML();
         setupText();
         planet.getTop().lookup(GO_ID.toString()).setOnMouseClicked(goToMars());
         planet.getCenter().lookup(View.MOVE_ID.toString()).setOnMouseClicked(move());
-        toggleDisplay(false, true);
+        toggleDisplay();
         this.getChildren().add(planet);
     }
 
@@ -97,7 +99,7 @@ public class Earth extends Parent {
 
     private EventHandler<MouseEvent> leaveMars() {
         return event -> {
-            toggleDisplay(false, true);
+            toggleDisplay();
             resetText(x, y, position, instructions, output, start, ins);
             messages.setText(EMPTY.toString());
             y.setPromptText(Y_PROMPT.toString());
@@ -112,7 +114,7 @@ public class Earth extends Parent {
                 messages.setText(EMPTY.toString());
                 Integer[] coords = parseInts(x.getText(), y.getText());
                 mars.setup(coords[0], coords[1]);
-                toggleDisplay(true, false);
+                toggleDisplay();
                 setButton((Button) event.getSource(), RESET, leaveMars());
             } catch (ValidationException e) {
                 messages.setText(e.getMessage());
@@ -173,10 +175,11 @@ public class Earth extends Parent {
         });
     }
 
-    private void toggleDisplay(boolean control, boolean menu) {
-        planet.getCenter().setVisible(control);
-        x.setDisable(!menu);
-        y.setDisable(!menu);
+    private void toggleDisplay() {
+        toggle = !toggle;
+        planet.getCenter().setDisable(!toggle);
+        x.setDisable(toggle);
+        y.setDisable(toggle);
     }
 
     private BorderPane getFXML() {

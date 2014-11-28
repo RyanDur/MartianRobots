@@ -71,9 +71,7 @@ public class Earth extends Parent {
         this.robotFactory = robotFactory;
         toggle = true;
         planet = getFXML();
-        setupText();
-        planet.getTop().lookup(GO_ID.toString()).setOnMouseClicked(goToMars());
-        planet.getCenter().lookup(View.MOVE_ID.toString()).setOnMouseClicked(move());
+        setup();
         toggleDisplay();
         this.getChildren().add(planet);
     }
@@ -86,9 +84,9 @@ public class Earth extends Parent {
             } else try {
                 mars.setRobot(getRobot(pos));
                 mars.move(instructions.getText().toUpperCase());
-                setOutput(mars.getRobot(), output);
-                setOutput(position.getText(), start);
-                setOutput(instructions.getText(), ins);
+                setText(mars.getRobot(), output);
+                setText(position.getText(), start);
+                setText(instructions.getText(), ins);
                 resetText(position, instructions);
                 messages.setText(EMPTY.toString());
             } catch (ValidationException e) {
@@ -122,7 +120,7 @@ public class Earth extends Parent {
         };
     }
 
-    private void setOutput(String put, TextArea area) {
+    private void setText(String put, TextArea area) {
         String out = area.getText();
         if (out.length() != 0) out += NEW_LINE;
         area.setText(out + put);
@@ -154,18 +152,40 @@ public class Earth extends Parent {
         return list.toArray(new Integer[list.size()]);
     }
 
-    private void setupText() {
-        x = (TextField) planet.getTop().lookup(X_ID.toString());
-        y = (TextField) planet.getTop().lookup(Y_ID.toString());
+    private void setup() {
+        setupTop();
+        setupRight();
+        setupCenter();
+        setupLeft();
+        setupBottom();
+    }
+
+    private void setupCenter() {
+        planet.getCenter().lookup(View.MOVE_ID.toString()).setOnMouseClicked(move());
         position = (TextField) planet.getCenter().lookup(POS_ID.toString());
         instructions = (TextField) planet.getCenter().lookup(INSTRUCTIONS_ID.toString());
+    }
+
+    private void setupTop() {
+        planet.getTop().lookup(GO_ID.toString()).setOnMouseClicked(goToMars());
+        x = (TextField) planet.getTop().lookup(X_ID.toString());
+        y = (TextField) planet.getTop().lookup(Y_ID.toString());
+    }
+
+    private void setupRight() {
         ScrollPane scroll = (ScrollPane) planet.getRight().lookup(RIGHT_ID.toString()).lookup(SCROLL_ID.toString());
         output = (TextArea) scroll.getContent().lookup(OUTPUT_ID.toString());
-        messages = (Label) planet.getBottom();
+    }
+
+    private void setupLeft() {
         ScrollPane scrollL = (ScrollPane) planet.getLeft();
         SplitPane split = (SplitPane) scrollL.getContent();
         start = (TextArea) split.getItems().get(0).lookup(START_ID.toString());
         ins = (TextArea) split.getItems().get(1).lookup(INS_ID.toString());
+    }
+
+    private void setupBottom() {
+        messages = (Label) planet.getBottom();
     }
 
     private void resetText(TextInputControl... fields) {

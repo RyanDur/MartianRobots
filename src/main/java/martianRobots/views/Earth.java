@@ -119,38 +119,6 @@ public class Earth extends Parent {
         };
     }
 
-    private void setText(String put, TextArea area) {
-        String out = area.getText();
-        if (out.length() != 0) out += NEW_LINE;
-        area.setText(out + put);
-    }
-
-    private void setButton(Button source, Messages message, EventHandler<MouseEvent> func) {
-        source.setText(message.toString());
-        source.setOnMouseClicked(func);
-    }
-
-    private Robot getRobot(String[] pos) throws ValidationException {
-        Integer[] coords = parseInts(pos[0], pos[1]);
-        try {
-            return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException(pos[2], NOT_A_COMPASS);
-        }
-    }
-
-    private Integer[] parseInts(String... ints) throws ValidationException {
-        List<Integer> list = new ArrayList<>();
-        for (String num : ints) {
-            try {
-                list.add(Integer.parseInt(num.trim()));
-            } catch (NumberFormatException e) {
-                throw new ValidationException(num, NOT_A_NUMBER);
-            }
-        }
-        return list.toArray(new Integer[list.size()]);
-    }
-
     private void setup() {
         setupTop();
         setupRight();
@@ -185,6 +153,38 @@ public class Earth extends Parent {
 
     private void setupBottom() {
         messages = (Label) planet.getBottom();
+    }
+
+    private void setText(String put, TextArea area) {
+        String out = area.getText();
+        if (out.length() != 0) out += NEW_LINE;
+        area.setText(out + put);
+    }
+
+    private void setButton(Button source, Messages message, EventHandler<MouseEvent> func) {
+        source.setText(message.toString());
+        source.setOnMouseClicked(func);
+    }
+
+    private Robot getRobot(String[] pos) throws ValidationException {
+        Integer[] coords = parseInts(pos[0], pos[1]);
+        try {
+            return robotFactory.createRobot(coords[0], coords[1], Compass.valueOf(pos[2].toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(pos[2], NOT_A_COMPASS);
+        }
+    }
+
+    private Integer[] parseInts(String... ints) throws ValidationException {
+        List<Integer> list = new ArrayList<>();
+        for (String num : ints) {
+            try {
+                list.add(Integer.parseInt(num.trim()));
+            } catch (NumberFormatException e) {
+                throw new ValidationException(num, NOT_A_NUMBER);
+            }
+        }
+        return list.toArray(new Integer[list.size()]);
     }
 
     private void resetText(TextInputControl... fields) {

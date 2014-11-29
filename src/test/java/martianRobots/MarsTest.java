@@ -240,6 +240,7 @@ public class MarsTest {
         mars.move(instructions);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldIndicateWhenARobotIsLost() throws ValidationException {
         int x = 0;
@@ -257,6 +258,7 @@ public class MarsTest {
         assertThat(mars.getRobot(), is(equalTo(x + " " + y + " " + Compass.S + " " + Lost.LOST)));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void shouldIgnoreMoveThatHasAScentToMoveOffTheBoard() throws ValidationException {
         int x = 0;

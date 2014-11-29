@@ -1,12 +1,14 @@
 language: java
+script: ./gradlew build jacocoTestReport
 jdk:
   - oraclejdk8
 
 env:
-- TERM=dumb
+  matrix:
+  - TERM=dumb
 
 after_success:
-- ./gradlew cobertura coveralls
+- ./gradlew jacocoRootReport coveralls
 
 before_install:
   - "export DISPLAY=:99.0"

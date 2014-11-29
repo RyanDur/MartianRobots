@@ -10,8 +10,18 @@
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'cobertura'
-apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: "jacoco"
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1x"
+    }
+}
+
+apply plugin: "com.github.kt3k.coveralls"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,9 +39,6 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.7',
             'com.google.inject:guice:4.0-beta4'
 
-    classpath 'net.saliman:gradle-cobertura-plugin:2.0.0' // cobertura plugin
-    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
-
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
@@ -42,7 +49,25 @@ dependencies {
             'org.loadui:testFx:3.1.2'
 }
 
-cobertura.coverageFormats = ['html', 'xml'] // coveralls plugin depends on xml format report
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
+
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn = subprojects.test
+    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(subprojects.sourceSets.main.output)
+    executionData = files(subprojects.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
 
 test {
     testLogging {

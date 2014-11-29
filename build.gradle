@@ -37,6 +37,15 @@ dependencies {
             'org.loadui:testFx:3.1.2'
 }
 
+test {
+    testLogging {
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                println "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+            }
+        }
+    }
+}
 
 task(blastoff, dependsOn: 'classes', type: JavaExec) {
     main = 'Houston'

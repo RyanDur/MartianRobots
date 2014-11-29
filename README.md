@@ -1,4 +1,4 @@
-MartianRobots [![Build Status](https://travis-ci.org/RyanDur/MartianRobots.svg)](https://travis-ci.org/RyanDur/MartianRobots) [![Coverage Status](https://coveralls.io/repos/RyanDur/MartianRobots/badge.png)](https://coveralls.io/r/RyanDur/MartianRobots)
+MartianRobots [![Build Status](https://travis-ci.org/RyanDur/MartianRobots.svg)](https://travis-ci.org/RyanDur/MartianRobots) [![Coverage Status](https://coveralls.io/repos/RyanDur/MartianRobots/badge.png?branch=dependencyInjection)](https://coveralls.io/r/RyanDur/MartianRobots?branch=dependencyInjection)
 =============
 
 Java Version = 1.8

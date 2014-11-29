@@ -69,7 +69,6 @@ public class Earth extends Parent {
     public Earth(Mars mars, RobotFactory robotFactory) {
         this.mars = mars;
         this.robotFactory = robotFactory;
-        toggle = true;
         planet = getFXML();
         setup();
         toggleDisplay();
@@ -196,10 +195,10 @@ public class Earth extends Parent {
     }
 
     private void toggleDisplay() {
-        toggle = !toggle;
         planet.getCenter().setDisable(!toggle);
         x.setDisable(toggle);
         y.setDisable(toggle);
+        toggle = !toggle;
     }
 
     private BorderPane getFXML() {

@@ -1,4 +1,4 @@
-MartianRobots
+MartianRobots [![Build Status](https://travis-ci.org/RyanDur/MartianRobots.svg)](https://travis-ci.org/RyanDur/MartianRobots)
 =============
 
 Java Version = 1.8

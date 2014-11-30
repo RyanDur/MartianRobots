@@ -2,8 +2,6 @@ package martianRobots.robots;
 
 import martianRobots.exceptions.ValidationException;
 import martianRobots.lang.Compass;
-import martianRobots.lang.Messages;
-
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -13,9 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
-
-
-
+import static martianRobots.lang.Messages.DOT;
 import static martianRobots.lang.Messages.INVALID_DIRECTION;
 import static martianRobots.lang.Messages.SPACE;
 
@@ -52,7 +48,7 @@ public class RobotImpl implements Robot {
     @Override
     public Robot move(final char direction) throws ValidationException {
         try {
-            return (Robot) Class.forName(this.getClass().getPackage().getName() + Messages.DOT + direction)
+            return (Robot) Class.forName(this.getClass().getPackage().getName() + DOT + direction)
                     .getDeclaredConstructor(int.class, int.class, Compass.class)
                     .newInstance(x.get(), y.get(), orientation.get());
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
